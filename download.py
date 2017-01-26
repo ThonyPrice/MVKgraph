@@ -1,12 +1,12 @@
-import urllib2, json
+import urllib.request, urllib.error, urllib.parse, json
 
 """
 Downloads and returns a list of all departments on KTH
 """
 def getDepCodes():
-    response = urllib2.urlopen('https://www.kth.se/api/kopps/v2/departments.sv.json')
-    html = response.read()
-    d = json.loads(html)
+    response = urllib.request.urlopen('https://www.kth.se/api/kopps/v2/departments.sv.json')
+    str_response = response.readall().decode('utf-8')
+    d = json.loads(str_response)
     return [x['code'] for x in d]
 
 """
@@ -15,14 +15,11 @@ Downloads all courses associated with the department.
 @return python list with course codes related to the department or None if that fails
 """
 def getCourses(department):
-    response = urllib2.urlopen('https://www.kth.se/api/kopps/v2/courses/{}.json?l=en'.format(department))
-    try:
-        d = json.loads(response.read())['courses']
-        return [x['code'] for x in d]
-    except e:
-        print("Department {} does not exist".format(department))
-        print(e)
-        return None
+    response = urllib.request.urlopen('https://www.kth.se/api/kopps/v2/courses/{}.json?l=en'.format(department))
+    str_response = response.readall().decode('utf-8')
+    d = json.loads(str_response)['courses']
+    return [x['code'] for x in d]
+
 
 
 
