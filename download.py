@@ -1,4 +1,5 @@
 import urllib.request, urllib.error, urllib.parse, json
+import xml.etree.ElementTree as ET
 
 """
 Downloads and returns a list of all departments on KTH
@@ -22,12 +23,47 @@ def getCourses(department):
 
 
 
-
 """
 Downloads eligibility text to given course
 @param code course code
-@return couse eligibility text
+@return course eligibility text
 """
 def getEligibility(code):
+    print(code)
+    response = urllib.request.urlopen('http://www.kth.se/api/kopps/v1/course/{}/plan'.format(code))
+    str_response = response.readall().decode('utf-8')
+    tree = ET.fromstring(str_response)
+    eligibility = tree.findall('eligibility')[-1].text
     # TODO: write function
-    return ""
+    return eligibility
+
+
+"""
+"""
+def getEligibilityDict():
+    elDict = {}
+    dept = getDepCodes()
+    for d in dept:
+        codes = getCourses(d)
+        for i in codes:
+            try:
+                elDict[i] = getEligibility(i)
+            except:
+                print("Couldn't get eligibility for course: {}".format(i))
+    return elDict
+
+
+def testEligibility(d):
+    elDict = {}
+    codes = getCourses(d)
+    print(codes)
+    for i in codes:
+        try:
+            elDict[i] = getEligibility(i)
+        except IndexError:
+            elDict[i] = "No requirements"
+        except:
+            print("Couldn't get eligibility for course: {}".format(i))
+    return elDict
+            
+
