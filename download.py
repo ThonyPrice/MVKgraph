@@ -39,6 +39,8 @@ def getEligibility(code):
 
 
 """
+Creates a dict with the course code as key and the eligibility text for the course as data.
+@return dict with eligibility
 """
 def getEligibilityDict():
     elDict = {}
