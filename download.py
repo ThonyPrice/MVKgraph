@@ -50,6 +50,8 @@ def getEligibilityDict():
         for i in codes:
             try:
                 elDict[i] = getEligibility(i)
+            except IndexError:
+                elDict[i] = "No requirements"
             except:
                 print("Couldn't get eligibility for course: {}".format(i))
     return elDict
