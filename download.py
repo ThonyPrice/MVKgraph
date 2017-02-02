@@ -1,14 +1,17 @@
 import urllib.request, urllib.error, urllib.parse, json
 import xml.etree.ElementTree as ET
+from dependency import *
+
 
 """
 Downloads and returns a list of all departments on KTH
 """
 def getDepCodes():
     response = urllib.request.urlopen('https://www.kth.se/api/kopps/v2/departments.sv.json')
-    str_response = response.readall().decode('utf-8')
+    str_response = response.read().decode('utf-8')
     d = json.loads(str_response)
     return [x['code'] for x in d]
+
 
 """
 Downloads all courses associated with the department.
@@ -17,10 +20,9 @@ Downloads all courses associated with the department.
 """
 def getCourses(department):
     response = urllib.request.urlopen('https://www.kth.se/api/kopps/v2/courses/{}.json?l=en'.format(department))
-    str_response = response.readall().decode('utf-8')
+    str_response = response.read().decode('utf-8')
     d = json.loads(str_response)['courses']
     return [x['code'] for x in d]
-
 
 
 """
@@ -31,11 +33,12 @@ Downloads eligibility text to given course
 def getEligibility(code):
     print(code)
     response = urllib.request.urlopen('http://www.kth.se/api/kopps/v1/course/{}/plan'.format(code))
-    str_response = response.readall().decode('utf-8')
+    str_response = response.read().decode('utf-8')
     tree = ET.fromstring(str_response)
-    eligibility = tree.findall('eligibility')[-1].text
-    # TODO: write function
-    return eligibility
+    eligibility_text = tree.findall('eligibility')[-1].text
+    # print(eligibility_text)
+    # TODO: eligibility_list = getDependencies(eligibility_text) # In dependency.py
+    return eligibility_text
 
 
 """
@@ -70,4 +73,3 @@ def testEligibility(d):
             print("Couldn't get eligibility for course: {}".format(i))
     return elDict
             
-
