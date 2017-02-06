@@ -1,1 +1,39 @@
+
+
+
+markera med ett 'k' om ett department är klart och 'p' för påbörjat.
+departments : 
+['AAB'k, 'ADB'k, 'ADC'p, 'ADD', 'ADF', 'AEC', 'AFA', 'AFB', 'AFC', 'AFD', 'AFE', 'AFF', 'AFH', 'AFK', 'AFL', 'AFM', 'AG', 'AGB', 'AGC', 'AGF', 'AHB', 'AHD', 'AHE', 'AIB', 'AIC', 'AID', 'AIE', 'AKB', 'AKC', 'AL', 'ALA', 'ALB', 'ALC', 'ALD', 'AMB', 'BA', 'BB', 'DA', 'DAG', 'DD', 'DH', 'DK', 'DL', 'DM', 'DME', 'DN', 'DO', 'DS', 'DT', 'ED', 'EF', 'EI', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'HA', 'HLA', 'HLF', 'HLK', 'HLL', 'HLM', 'HP', 'HPC', 'HPG', 'HPM', 'HPN', 'HSE', 'HSL', 'HSN', 'IA', 'ID', 'IDD', 'IE', 'IF', 'IFB', 'IG', 'IK', 'KA', 'KD', 'KE', 'KF', 'KH', 'KHB', 'KHD', 'LAC', 'LGC', 'LJ', 'LP', 'LPA', 'LPB', 'LS', 'MAC', 'MD', 'ME', 'MF', 'MG', 'MJEA', 'MJEC', 'ML', 'MV', 'SA', 'SD', 'SE', 'SF', 'SG', 'SH', 'SHB', 'SI', 'SIB', 'SK', 'SKB', 'UL']
+
+&#160; = (non-breaking space) 
+&#180; = ´ 
+&#183; = ·
+&#229; = å 
+&#228; = ä  
+&#246; = ö
+
 DD = 
+
+AAB: 
+	minst 120 h&#246;gskolepo&#228;ng h&#246;gskoleingenj&#246;r, varav 60 h&#246;gskolepo&#228;ng inom huvudomr&#229;det 
+ADB: 
+	A11HIB. antagen &#229;rskurs 1
+	A21HIC. fully approved first/second academic year
+	A21HIA. kursen &#228;r &#246;ppen f&#246;r alla s&#246;kande
+	A21HIB. grundkursen i &#229;rskurs 1
+	A31HIA|A31HIB. uppfylla uppflyttningskraven &#229;rskurs 3|trejde &#229;rskursen
+	A11CCA. (kursen inleder utbildningen)
+	A21CCA. uppflyttad till &#229;k 2
+	A31P3A.Kandidatexamen 180 hp arkitekturutbildningen
+	A11P2B. approved Arkitecture project (special)
+	A11P2A|A11POA. <arkitekturprojekt|architecture project> <\d:\d> < - \d:\d>?
+	A21P2A. projektet Tektonik
+	A31EXA. passed all <obligatory>? courses from year 1-3
+	A21P2A. inledande kurs \d, <Arkitektur \d:\d>+
+	A31STA. two years sarchitectual studies
+ADC: 
+	A42H1A. Bachelor&#8217;s Degree ... field of Architecture
+	A52H1A. One year architecual studies at advanced level
+	AD221V. grundl&#228;ggande beh&#246;righet
+	A52ARX. efterbliven beskrivning
+	A42SEH. 
