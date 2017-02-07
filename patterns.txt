@@ -3,7 +3,7 @@
 
 markera med ett 'k' om ett department är klart och 'p' för påbörjat.
 departments : 
-['AAB'k, 'ADB'k, 'ADC'k, 'ADD'p, 'ADF', 'AEC', 'AFA', 'AFB', 'AFC', 'AFD', 'AFE', 'AFF', 'AFH', 'AFK', 'AFL', 'AFM', 'AG', 'AGB', 'AGC', 'AGF', 'AHB', 'AHD', 'AHE', 'AIB', 'AIC', 'AID', 'AIE', 'AKB', 'AKC', 'AL', 'ALA', 'ALB', 'ALC', 'ALD', 'AMB', 'BA', 'BB', 'DA', 'DAG', 'DD', 'DH', 'DK', 'DL', 'DM', 'DME', 'DN', 'DO', 'DS', 'DT', 'ED', 'EF', 'EI', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'HA', 'HLA', 'HLF', 'HLK', 'HLL', 'HLM', 'HP', 'HPC', 'HPG', 'HPM', 'HPN', 'HSE', 'HSL', 'HSN', 'IA', 'ID', 'IDD', 'IE', 'IF', 'IFB', 'IG', 'IK', 'KA', 'KD', 'KE', 'KF', 'KH', 'KHB', 'KHD', 'LAC', 'LGC', 'LJ', 'LP', 'LPA', 'LPB', 'LS', 'MAC', 'MD', 'ME', 'MF', 'MG', 'MJEA', 'MJEC', 'ML', 'MV', 'SA', 'SD', 'SE', 'SF', 'SG', 'SH', 'SHB', 'SI', 'SIB', 'SK', 'SKB', 'UL']
+[('AAB'k, 'ADB'k, 'ADC'k, 'ADD'p, 'ADF', 'AEC', 'AFA', 'AFB', 'AFC', 'AFD', 'AFE', 'AFF', 'AFH', 'AFK', 'AFL', 'AFM', 'AG', 'AGB', 'AGC', 'AGF', 'AHB', 'AHD', 'AHE', 'AIB', 'AIC', 'AID', 'AIE', 'AKB', 'AKC', 'AL', 'ALA', 'ALB', 'ALC', 'ALD', 'AMB'), 'BA', 'BB', 'DA', 'DAG', 'DD', 'DH', 'DK', 'DL', 'DM', 'DME', 'DN', 'DO', 'DS', 'DT', 'ED', 'EF', 'EI', 'EK', 'EL', 'EM', 'EN', 'EO', 'EP', 'HA', 'HLA', 'HLF', 'HLK', 'HLL', 'HLM', 'HP', 'HPC', 'HPG', 'HPM', 'HPN', 'HSE', 'HSL', 'HSN', 'IA', 'ID', 'IDD', 'IE', 'IF', 'IFB', 'IG', 'IK', 'KA', 'KD', 'KE', 'KF', 'KH', 'KHB', 'KHD', 'LAC', 'LGC', 'LJ', 'LP', 'LPA', 'LPB', 'LS', 'MAC', 'MD', 'ME', 'MF', 'MG', 'MJEA', 'MJEC', 'ML', 'MV', 'SA', 'SD', 'SE', 'SF', 'SG', 'SH', 'SHB', 'SI', 'SIB', 'SK', 'SKB', 'UL']
 
 &#160; = (non-breaking space) 
 &#180; = ´ 
@@ -12,9 +12,111 @@ departments :
 &#228; = ä  
 &#246; = ö
 &#8217; = ’
+&#8226; = •
 
+ECTS-credits = måste inte vara 120 hp i sverige utan kan komma från ett annat land
+-----------------------Datakurser-----------------------
+	Idé: om en eligiability inleds med "Single course students:" komplementera med information från rekomenderade förkunskaper för att se för program-studenter.
 DD = 
 
+DA = 
+	för att söka Degree of Bachelor 
+	Completed upper secondary education including Mathematic C or Mathematic 3b alt 3c  
+	seek admission to one of the degree programs of the CSC School, and permission of the program director of that degree programme Decision about, kan tillkomma (possibly supplementary assignment and its examination format are taken by the examiner in each independent case. Both oral and written examination can occur) 
+
+DAG = 
+	för att söka Degree of Bachelor + två utan beroende
+
+DH = 
+	Ingen kurs har något beronde
+
+DK = 
+	till största del uppfångas kurser av regex med r'\d{2}[A-Z]{4}' 
+ 	DD142X. At least 101 credits of the compulsory courses in year 1, 2 and period 1 from year three  
+ 	DD144X . At least 120 credits, including the following, </li><li>at least 30 hp courses in mathematics/numerical analysis,</li><li>at least 40 credits with increasingly in-depth studies in Computer Science and Engineering
+ 	DD1345. completed upper secondary education including documented proficiency in Swedish corresponding to Swedish B, English corresponding to English A. Furthermore:7,5 hp in mathematics and 6 hp in computer science or programming techniques
+ 	DH2323. 120 ECTS-credits including 45 university credits in Mathematics and/or Information Technology
+ 	DD2356. Experience in programming in C/C++ and/or Fortran is necessary.
+
+DL = 
+	bra nyckelord som inte är kurser: mathematics, computer science, english b, information technology, (credits = hp =  university credits), programming technics
+
+	till största del uppfångas kurser av regex med r'\d{2}[A-Z]{4}', om det inled med:  
+	"For non-program students" eller "single course students" finns det ofta kompletterande information i rekommenderade förkunskaper
+	ex: 
+		one of the courses DD1320, DD1321, DD1322, DD1325 or DN1243 
+
+		SF1604 Linear algebra, SF1625 Calculus in one variable, SF1901 Probability theory and statistics, SF1630 Discrete mathematics, DD1337 Programming, DD1338 Algorithms and Data Structures, DD1352 Algorithms, Data Structures and Complexity or corresponding courses
+
+		One of the courses DD1352 Algorithms, Data Structures, and Complexity, DD2352 Algorithms and Complexity
+
+DM = 
+	bra nyckelord som inte är kurser: Degree of Bachelor, basic knowledge, Matlab, Python, Swedish B, English A, mathematics, programming techniques, university studies in the area of electrical principals and waves, computer science, information technology, credits, compulsory courses, 
+	
+	Till största del uppfångas kurser av regex med r'\d{2}[A-Z]{4}', om det inled med:  
+	"For non-program students" eller "single course students" finns det ofta kompletterande information i rekommenderade förkunskaper
+	ex:
+		DM2531. Single course students: 90 university credits including 45 university credits in Mathematics or Information Technology.&#160;Swedish B, or equivalent and English A
+		i reckommenderade förkunskaper finns: DM1570 Grafisk teknik 1 eller DM1573 Grafisk teknik eller motsvarande
+
+	DM2532. Master of science in engineering in Media Techonology, the Master programme in Media Technology or Media Management
+
+	DH252V. General eligibility <---annorlunda struktur på kurskod
+
+	DM2593. first two years of the Media Technology Programme
+
+	DM228X. at least 240 credits (210 credits for students on 270 credit programmes) from completed courses within the engineering programme
+
+	DM100X. At least 120 university credits within the programme, plus approved courses within the application area of the degree project
+
+	DM128X. At least 75 % of the compulsory credit from school year 1, school year 2 and period 1 in school year 3 in the engineering programme in media and communication technology
+
+	DM129X. at least 120 hp from year 1-3 within the Degree program in Media Technology
+
+	DH224X. Students on engineering programmes should have at least 240 credits (210 credits for students on 270 credit programmes) from completed courses within the engineering programme.
+
+	DH3358. har none som eligibility
+
+	DM1902. Depends on the contents of the course
+
+	DM2577. compulsory courses of the Media Technology Program plus at least one completed area of specialization
+
+	DM1572. The course is available only for students [studying Master of Science in Engineering, Media Technology (CMETE)] | [studying TMMTM or TMETM] | [at DCATE-STEK]
+
+	DM2701. At least 90 university credits	
+
+	DH1608. har bara "." som eligibility
+
+	DM2067. Moved up to school year 4 of an engineering programme, or admitted to a Master's (120 credits) programme
+
+	DM3507. All doctoral students or researchers, with either computer science/technical background or background in art and design
+
+	DM2704. At least 90 university credits and have finished DM2703
+
+	DH2610. Admitted to the Master's programme in HCI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------Arkitektkurser-----------------------
 AAB: 
 	minst 120 h&#246;gskolepo&#228;ng h&#246;gskoleingenj&#246;r, varav 60 h&#246;gskolepo&#228;ng inom huvudomr&#229;det 
 ADB: 
@@ -42,4 +144,18 @@ ADC:
 	A10INA. year 1 of the Degree program in Architecture
 	A52O1A. [ARKIT]|[TARKM] [Advanced level of the KTH Degree]|[Master´s] [p|P]rogramme in Architecture \d{2}hp 
 	A42SEV. Year \d, [ARKTI]|[TARKM]
+
+ADD: 
+	AD12DA. Students at the Architecture programme
+	AD13DA. Studerande p&#229; arkitektprogrammet
+	University studies of 60 credits (hp) and Swedish B/Swedish 3 and English A/English 6
+	AD244V. &#8226; 60 credits within the field of architecture and the built environment &#8226; Documented proficiency in Swedish B and English A
+	AD1AB1. Grundl&#228;ggande beh&#246;righet: avslutad gymnasieutbildning inlk. svenska och engelska
+	1A5031. Masters&#180;degree in Architecture or adjoining fields
+	AD234V. 60 credits within a broad field of architecture and the build environment ... Documented proficiency in Swedish B and English A
+	AD245V. 60 university credits within the fields of architecture, built environment and caring Documented proficiency in Swedish B and English A
+
+
+
+
 
