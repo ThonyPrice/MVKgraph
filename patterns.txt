@@ -17,9 +17,53 @@ departments :
 ECTS-credits = måste inte vara 120 hp i sverige utan kan komma från ett annat land
 -----------------------Datakurser-----------------------
 	Idé: om en eligiability inleds med "Single course students:" komplementera med information från rekomenderade förkunskaper för att se för program-studenter.
-DD = 
 
-DA = 
+DD =
+    DD228V - "Single course students: <Number> university credits including <Number> university credits in Mathematics or Informational Technology. English B, or equivalent."
+
+    DD3372 - "Courses equivalent to <Course> and <Course>"
+
+    DD2396 - "<Course>/<Course> and <Course>/<Course> and basic computer knowledge equivalent to <Course> or <Course>."
+
+    DD1051 - "First year courses of bachelor's program in media technology or equivalent."
+
+    DD3313 - "The student must carry out research on PhD level within <Field> or a close field."
+
+    DD226X - "The degree project should constitute a part of an advanced study within the program and should normally be carried ou
+t under the last semester of the education.</p><p>Students on engineering programmes should have at least 240 credits (2
+10 credits for students on 270 credit programmes) from completed courses within the engineering programme. Student
+s on Master's programmes should have at least 60 credits within the program of which 30 credits with advanced second cyc
+le study within the main field of study. The examiner should verify that the entry requirements are satisfied, bef
+ore the work is started. Exemption can after assessment be granted by the director of first and second cycle education."
+
+    DD245X - "Completed 15 of the ECTS credits in the program."
+
+    DD1335 - "General requirements, i.e. completed upper secondary education including documented proficiency in English A&#16
+0;or equivalent and 6 hp course in Programming (e.g. Programming Technique, 2D1310/DD1310 or Program Constructio
+n 2D1311/DD1311)."
+
+    DD3344 - "This course is for PhD students in Computer Science or related subjects."
+
+    DD3336 - "PhD Students in computer science or other programming related subject. <Irrelevant info>."
+
+    DD2377 - "Mathematics D or equivalent, and 15 university credits and <Irrelevant info>."
+    Note: Dont think this is a relevant one, since we are after course prerequisites mostly. Scope?
+
+    DD3460 - "The student must carry out research on third-cycle level within computer science with a specialisation in computer science education."
+
+    DD3447 - "For non-program students, 90 credits are required, of which 45 credits have to be within mathematics or information t
+echnology. Furthermore, English B or the equivalent is required."
+
+    DD2483 - "Knowledge of&#160;Mathematics D,&#160;Physics B and Chemistry A is required or&#160;equivalent&#160;and</li><li>
+documented proficiency in Swedish B&#160;or English A or equivalent and 90 hp in Information Technology or Mathe
+matics."
+
+    DD3436 - "<Course> or the equivalent "
+
+
+
+
+DA =
 	för att söka Degree of Bachelor 
 	Completed upper secondary education including Mathematic C or Mathematic 3b alt 3c  
 	seek admission to one of the degree programs of the CSC School, and permission of the program director of that degree programme Decision about, kan tillkomma (possibly supplementary assignment and its examination format are taken by the examiner in each independent case. Both oral and written examination can occur) 
