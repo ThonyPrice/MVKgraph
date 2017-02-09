@@ -139,7 +139,81 @@ DM =
 
 	DH2610. Admitted to the Master's programme in HCI
 
+DME = 
+	Kurstyp 1 = <[A-Z]{2}\d{4}>
+	Kurstyp 2 = <\d[A-Z]\d{4}>
 
+	exempel där "and" finns med i kursnamnet och det är "or" mellan kurserna: 
+		DH2651. <kurskod>Computer graphics and interaction or 2D1640/DH2640 Graphics and Interaction programming, and 2D1620/DH2520 Human Computer- Interaction, Introductory course or 2I1029/IC1000 Human-Computer Interaction 
+
+	DM2532. Student on the Master of science in engineering in media technology, the master programme in media technology or media management
+
+	DM1021. <Kurskod> <kursnamn> for bachelors
+
+	DM1576. <...> furthermore 7,5 hp in mathematics and university studies in the area of electrical principals and waves, as well as basic computer science
+
+	DM2416. Equivalent to the first two years  of the Media Technology programme at KTH
+
+	DM228X. <...>Student on the engineering programme should have at least 240 credits(210 credits for the students on 270 credit programme) from completed courses within the engineering programme. <...> Students on Master's programmes should have at least 60 credits within the programme which 30 credits with advanced second cycle study within the main field of study.
+
+	DM100X. at least 120 University credits within the programme, plus approved courses within the application area of the degree project
+
+	DM2577. the compulsory courses of the media programme plus at least one completed area of specialization <...>
+
+	DH2626. 90 univerity credits including 45 university credits in mathematics or information technology
+
+	DH1701. The course is only available for student at CDATE-STEK
+
+	DM2701. At least 90 university credits
+
+	DM2702. At least 90 university credits and have finished <kurstyp 1>
+
+	DM2076. Moved up to school year of an engineering programme, or admitted to a Master's(120 credits) programme
+
+	DH2621. One of the courses <Kurstyp 2>/<kurstyp 1> <kursnamn> and <kurstyp 1><kursnamn>
+
+	DM3507. All doctorates or reaseachers, with either computer science/technical background or background in art and design
+
+	DH2603. <Kurstyp 2>/<Kurstyp 1> or <kurstyp 1> or equivalent
+
+DN = (bara en kurs)
+	DN2258. <...> 90 university credits including 45 university credits in mathematics or information technology
+
+DO = 
+	DD2380. 90 university credits including 45 university credits in mathematics and/or information technology and the courses <kurskod><kursnamn> ... <kurskod><kursnamn> and <kurskod><kursnamn> or equivalent
+
+	DD2438. KTH-students: <kurskod><kursnamn> and <kurskod><kursnamn> or <kurskod><kursnamn>. <...> <kurskod><kursnamn> or equivalent is recomended. <...> for single course students: <...> 90 university credits including 45 university credits in mathematics or information technology
+
+	DD2427. <...> <kurskod><kursnamn>, <kurskod><kursnamn>, <kurskod><kursnamn>, <kurskod><kursnamn> or equivalent
+
+	DD1368. <...> furthermore: 7,5 hp in mathematics and 6 hp in computer science or programming technics
+
+	DD2425. <...> Bachelor of Science degree or equivalent including 45 university credits in mathematics or information technology
+
+	DD2325. Bachelor of Science or corresponding and 15 university credits in  mathematics and 6 university credits in computer science or programming techniques
+
+DS = Finns inte när man söker med API, men finns på KTH:s hemsida: https://www.kth.se/student/kurser/org/DS
+
+DT = 
+	DT2410. <\d{2}> univerity credits including <\d{2}> university credits in mathematics or <information technology>|<computer science>
+
+	DT2217. Depending on the course content
+
+	DT2400.  <...>Student on the engineering program should have at least 240 credits(210 credits for the students on 270 credit program) from completed courses in the program and students on the Computer Science and engineering program must have at least have a maximum of three unfinished compulsory courses from study years 1-3. <...>  Students on a master of science program should have at least 60 credits in the program, including 30 credits with specialization in the second cycle within the main field of study.
+
+	DT220X.  <...>Student on the engineering programme should have at least 240 credits(210 credits for the students on 270 credit programme) from completed courses within the engineering programme. <...> Students on Master's programmes should have at least 60 credits within the programme which 30 credits with advanced second cycle study within the main field of study.
+
+	DT225X. The degree project should constitute a part of an advanced study within the program and should be normally be carried out under the last semester of the education. <...> Student on the engineering programme should have at least 240 credits(210 credits for the students on 270 credit programme) from completed courses within the engineering programme.
+
+	DT1175. <...>Furthermore: 15 hp in mathematics
+
+	DD1350. <...>Furthermore: 7,5 hp in mathematics and 6 hp in computer science or programming technics
+
+	DT1602. <...>Furthermore: passing an audition of playing a self-elected instrumential piece, scales, and sight-reading
+
+	DT211V. 120 ECTS of which at least 30 ECTS in singing/voice or equivalent
+
+	DT2112. 60 ECTS of which at least 30 ECTS within mathematics or computational lingvistics
 
 
 
