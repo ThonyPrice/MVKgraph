@@ -1,6 +1,6 @@
 import urllib.request, urllib.error, urllib.parse, json
 import xml.etree.ElementTree as ET
-from dependency import *
+from parse import parseText
 
 
 """
@@ -31,14 +31,15 @@ Downloads eligibility text to given course
 @return course eligibility text
 """
 def getEligibility(code):
-    print(code)
+    print('\n' + code)
     response = urllib.request.urlopen('http://www.kth.se/api/kopps/v1/course/{}/plan'.format(code))
     str_response = response.read().decode('utf-8')
     tree = ET.fromstring(str_response)
     eligibility_text = tree.findall('eligibility')[-1].text
-    # print(eligibility_text)
-    # TODO: eligibility_list = getDependencies(eligibility_text) # In dependency.py
-    return eligibility_text
+    print("Deptext:", eligibility_text)
+    dependencies = parseText(eligibility_text)
+    # print(dependencies)
+    return dependencies
 
 
 """
@@ -47,12 +48,13 @@ Creates a dict with the course code as key and the eligibility text for the cour
 """
 def getEligibilityDict():
     elDict = {}
-    dept = getDepCodes()
+    dept = ['DD'] # <- Only CompSci. For all change to getDepCodes()
     for d in dept:
         codes = getCourses(d)
         for i in codes:
             try:
                 elDict[i] = getEligibility(i)
+                print(elDict[i])
             except IndexError:
                 elDict[i] = "No requirements"
             except:
