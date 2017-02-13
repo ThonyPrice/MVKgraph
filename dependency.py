@@ -17,6 +17,12 @@ Make tokens of keywords from eligibility text
 
 def mkTokens(text):
     return Tokens
+
+#Courses:   "\w{2}\d{4}\w?"  , alternatives to \w? Since it takes numbers aswell. Should genereally not be a problem though.
+#One: "(one|One)"
+#Or: (or|Or|\/) , I dont think that normal slash is a special character. Could possibly be just /.
+#And: (and|And|)
+
     
 """
 Parse tokens to find reqiered corses / credits / etc.
