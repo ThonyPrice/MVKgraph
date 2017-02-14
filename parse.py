@@ -34,7 +34,7 @@ def getDepCourses(text):
                         ~(Optional(OneOrMore(alphas)) + andWord + \
                         (Optional(OneOrMore(alphas)))))) + \
                     Optional(Suppress(orWord) + course))) \
-                    ^ OneOrMore(course)
+                ^ OneOrMore(course)
     return keywords.searchString(text).asList()
     
 def getDepCredits(text):    
