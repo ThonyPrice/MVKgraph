@@ -47,7 +47,6 @@ Parse for "credits" in text. E.g. "At least 30 credits" or "PhD students only"
 @return string with necessary credits
 """
 
-<<<<<<< HEAD
 def getDepCredits(text):    
     text += '.'
     points = Regex('[1-9](\.|,)?\d+')
