@@ -13,23 +13,28 @@ import re
 
 class DependencyObject():
     
-    def __init__ (self):
+    def __init__(self):
         self.courses = []
-        self.credits = "No other requirements"
-        self.recommend = "No recomendations"
+        self.credits = ""
+        self.recommend = ""
     
-    def setCredits (self, credits):
+    def setCredits(self, credits):
         # TODO: Correct special characters (e.g. &#160)
         if len(credits) > 0:
-            self.credits = re.sub('</[li]><li>', ' ', " ".join(credits[0]))
+            self.credits = self.rmBadEncoding(" ".join(credits[0]))
         
-    def getRecommended (self, rec):
+    def setRecCourses(self, rec):
         # TODO: Correct special characters (e.g. &#160)
         if len(rec):
             tmp = ""
             for x in rec:
                 tmp += " ".join(x) + ". "
             self.recommend = tmp
+    
+    def rmBadEncoding(self, string):
+        string = re.sub('\s&#8217;', "'", string)
+        string = re.sub('</li><li>|<p>|</p>', ' ', string)
+        return string
             
     # Debug representation
     def __str__ (self):
@@ -38,8 +43,7 @@ class DependencyObject():
                         \nRecomen: {recommend}".format(
             courses = self.courses, 
             credits = self.credits,
-            recommend = self.recommend
-        )
+            recommend = self.recommend)
         
     def __repr__(self):
         return self.__str__()
