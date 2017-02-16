@@ -48,7 +48,7 @@ Creates a dict with the course code as key and the eligibility text for the cour
 """
 def getEligibilityDict():
     elDict = {}
-    dept = ['DD'] # <- Only CompSci. For all change to getDepCodes()
+    dept = ['ME'] # <- Only CompSci. For all change to getDepCodes()
     for d in dept:
         codes = getCourses(d)
         for i in codes:
@@ -61,8 +61,8 @@ def getEligibilityDict():
                 print("Couldn't get eligibility for course: {}".format(i))
     return elDict
 
-
-def testEligibility(d):
+"""Tests a department"""
+def testEligibilityDepartment(d):
     elDict = {}
     codes = getCourses(d)
     print(codes)
@@ -74,4 +74,15 @@ def testEligibility(d):
         except:
             print("Couldn't get eligibility for course: {}".format(i))
     return elDict
-            
+
+"""Tests a course"""
+def testEligibilityCourse(c):
+    elDict = {}
+    try:
+        elDict[0] = getEligibility(c)
+    except IndexError:
+        elDict[0] = "No requirements"
+    except:
+        print("Couldn't get eligibility for the course: {}".format(c))
+
+    return elDict
