@@ -4,48 +4,59 @@ from pyparsing import *
 # Avaliable at: http://pyparsing.wikispaces.com/
 
 """
-Parse text for dependent courses and credits
+Extract dependencies in text to dependency object
 @param course eligibility text
-@return DependencyObject containing dependent courses and credits
+@return DependencyObject with dependent courses etc. as attributes
 """
 
 def parseText(text):
     Dependency = DependencyObject()
     Dependency.courses = getDepCourses(text)
-    depCredits = getDepCredits(text)
-    Dependency.setCredits(depCredits)
-    recCourses = getRecomendCourses(text)
-    Dependency.getRecommended(recCourses)
-    print(Dependency)
+    Dependency.setCredits(getDepCredits(text))
+    Dependency.setRecCourses(getRecomendCourses(text))
+    # print(Dependency)
     return Dependency
     
+"""
+Parse for courses in text
+@param course eligibility text
+@return a list of lists. E.g. [[X,Y][Z]] should be interpreted as courses
+        (X or Y) and Z.
+"""
+
 def getDepCourses(text):    
     course = Regex('([A-Z]{2}|\d[A-Z])(\d{4}|\d{3}[A-Z])')
     orWord = oneOf('or eller /', caseless=True)
-    signs = oneOf('- , . ')
     andWord = oneOf('and + och also', caseless=True)
-    keywords =  OneOrMore(\
-                    Suppress(Optional(orWord)) + course + \
-                    Suppress(Optional(OneOrMore(~orWord + \
-                        (Word(alphas)^signs)))) + \
-                    OneOrMore(Suppress(orWord) + course) + \
-                    Suppress(Optional(OneOrMore((Word(alphas) ^ \
-                        signs) + ~(andWord + course) + \
-                        ~(Optional(OneOrMore(alphas)) + andWord + \
-                        (Optional(OneOrMore(alphas)))))) + \
+    signs = oneOf('- , . ')
+    parseC= OneOrMore(\
+                Suppress(Optional(orWord)) + course + \
+                Suppress(Optional(OneOrMore(~orWord + (Word(alphas)^signs)))) +\
+                OneOrMore(Suppress(orWord) + course) + \
+                Suppress(Optional(OneOrMore(\
+                    (Word(alphas) ^ signs) + ~(andWord + course) + \
+                    ~(Optional(OneOrMore(alphas)) + andWord + \
+                    (Optional(OneOrMore(alphas)))))) + \
                     Optional(Suppress(orWord) + course))) \
                 ^ OneOrMore(course)
-    return keywords.searchString(text).asList()
-    
+    return parseC.searchString(text).asList()
+
+"""
+
+"""
+
 def getDepCredits(text):    
-    eduLevel = Regex('[P|p]h[d|.\s[D|d].?') ^ CaselessLiteral('Bacherlor')        
+    eduLevel = Regex('[P|p]h[d|.\s[D|d].??') ^ oneOf('Bachelor Master', caseless = True)
+    amount = CaselessLiteral('At least') ^ CaselessLiteral('Completed')
+    notOfInterest = CaselessLiteral('single course students:') ^ CaselessLiteral('Non-program students,')
+    specCase1 = CaselessLiteral('All courses that are required for issuing the Degree of')
     # TODO: Credits can be represented with commas (e.g. 7,5 hp)    
-    credits =       (~(CaselessLiteral('single course students:')) + \
-                    Word(nums, max=3) + Optional('of the') + \
+    credits =       MatchFirst(Suppress( notOfInterest + SkipTo('.'))) \
+                    ^ (Optional(amount) + Word(nums, max=3) + Optional('of the') + \
                     (oneOf('university credits ects hp', caseless=True) ^
                     CaselessLiteral('higher education credits')) + \
                     SkipTo('.', include=False)) ^ \
-                    (eduLevel + SkipTo('.'))
+                    (Optional(specCase1) + eduLevel + SkipTo('.'))
     return credits.searchString(text)
     
 def getRecomendCourses (text):
