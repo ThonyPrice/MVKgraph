@@ -48,19 +48,23 @@ Parse for "credits" in text. E.g. "At least 30 credits" or "PhD students only"
 """
 
 def getDepCredits(text):    
-    # TODO: Add doctoral
+    text += '.'
     points = Regex('[1-9](\.|,)?\d+')
-    eduLevel = Regex('[P|p]h\.?\s?[Dd]\.?') ^ CaselessLiteral('Bachelor') ^ Regex('[M|m]aster((\')?s)?') 
+    eduLevel = Regex('[P|p]h\.?\s?[Dd]\.?') ^ oneOf('Bachelor Doctoral', caseless=True) ^ Regex('[M|m]aster((\')?s)?') 
     amount = CaselessLiteral('At least') ^ CaselessLiteral('Completed')
     notOfInterest = CaselessLiteral('single course students:') ^ CaselessLiteral('Non-program students,')
+    participation = CaselessLiteral('Admitted to') ^ CaselessLiteral('Enrolled at')
     specCase1 = CaselessLiteral('All courses that are required for issuing the Degree of')
-    # TODO: Credits can be represented with commas (e.g. 7,5 hp)    
+    specCase2 = CaselessLiteral('Accepted to')
     credits =       MatchFirst(Suppress( notOfInterest + SkipTo('.'))) \
                     ^ (Optional(amount) + points + Optional('of the') + \
                     (oneOf('university credits ects hp', caseless=True) ^
                     CaselessLiteral('higher education credits')) + \
-                    SkipTo('.', include=False)) ^ \
-                    (Optional(specCase1) + eduLevel + (MatchFirst(SkipTo('.')) ^ SkipTo(',')))
+                    SkipTo('.')) \
+                    ^ (Optional(specCase1 ^ specCase2) + eduLevel + \
+                        (MatchFirst(SkipTo('.')) ^ SkipTo(','))) \
+                    ^ (CaselessLiteral('Only available to') + (SkipTo('.'))) \
+                    ^ (participation + SkipTo('.'))
     return credits.searchString(text)
 
 """
@@ -70,10 +74,11 @@ Parse for recommended courses in text.
 """
 
 def getRecomendCourses (text):
+    text += '.'
     startWord = Regex('[A-Z][a-z]+') ^ Suppress(oneOf('. ,'))    
     recommended =   (MatchFirst(startWord) \
                     ^ OneOrMore(~CaselessLiteral('Recommended') + \
-                    Word(alphas))) + \
+                    Word(alphanums))) + \
                     CaselessLiteral('Recommended') + \
                     SkipTo('.')
     return recommended.searchString(text)
