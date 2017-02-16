@@ -16,7 +16,7 @@ def parseText(text):
     Dependency.setRecCourses(getRecomendCourses(text))
     print(Dependency)
     return Dependency
-    
+
 """
 Parse for courses in text
 @param course eligibility text
@@ -24,7 +24,7 @@ Parse for courses in text
         (X or Y) and Z.
 """
 
-def getDepCourses(text):    
+def getDepCourses(text):
     course = Regex('([A-Z]{2}|\d[A-Z])(\d{4}|\d{3}[A-Z])')
     orWord = oneOf('or eller /', caseless=True)
     andWord = oneOf('and + och also', caseless=True)
@@ -47,14 +47,14 @@ Parse for "credits" in text. E.g. "At least 30 credits" or "PhD students only"
 @return string with necessary credits
 """
 
-def getDepCredits(text):    
+def getDepCredits(text):
     # TODO: Add doctoral
     points = Regex('[1-9](\.|,)?\d+')
-    eduLevel = Regex('[P|p]h\.?\s?[Dd]\.?') ^ CaselessLiteral('Bachelor') ^ Regex('[M|m]aster((\')?s)?') 
+    eduLevel = Regex('[P|p]h\.?\s?[Dd]\.?') ^ CaselessLiteral('Bachelor') ^ Regex('[M|m]aster((\')?s)?') ^ CaselessLiteral('Doctoral')
     amount = CaselessLiteral('At least') ^ CaselessLiteral('Completed')
     notOfInterest = CaselessLiteral('single course students:') ^ CaselessLiteral('Non-program students,')
     specCase1 = CaselessLiteral('All courses that are required for issuing the Degree of')
-    # TODO: Credits can be represented with commas (e.g. 7,5 hp)    
+    # TODO: Credits can be represented with commas (e.g. 7,5 hp)
     credits =       MatchFirst(Suppress( notOfInterest + SkipTo('.'))) \
                     ^ (Optional(amount) + points + Optional('of the') + \
                     (oneOf('university credits ects hp', caseless=True) ^
@@ -70,11 +70,10 @@ Parse for recommended courses in text.
 """
 
 def getRecomendCourses (text):
-    startWord = Regex('[A-Z][a-z]+') ^ Suppress(oneOf('. ,'))    
+    startWord = Regex('[A-Z][a-z]+') ^ Suppress(oneOf('. ,'))
     recommended =   (MatchFirst(startWord) \
                     ^ OneOrMore(~CaselessLiteral('Recommended') + \
                     Word(alphas))) + \
                     CaselessLiteral('Recommended') + \
                     SkipTo('.')
     return recommended.searchString(text)
-
