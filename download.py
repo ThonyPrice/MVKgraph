@@ -63,8 +63,8 @@ def getEligibilityDict():
                 print("Couldn't get eligibility for course: {}".format(i))
     return elDict
 
-
-def testEligibility(d):
+"""Tests a department"""
+def testEligibilityDepartment(d):
     elDict = {}
     codes = getCourses(d)
     print(codes)
@@ -76,4 +76,15 @@ def testEligibility(d):
         except:
             print("Couldn't get eligibility for course: {}".format(i))
     return elDict
-            
+
+"""Tests a course"""
+def testEligibilityCourse(c):
+    elDict = {}
+    try:
+        elDict[0] = getEligibility(c)
+    except IndexError:
+        elDict[0] = "No requirements"
+    except:
+        print("Couldn't get eligibility for the course: {}".format(c))
+
+    return elDict
