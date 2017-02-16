@@ -1,16 +1,5 @@
 import re
 
-# TODO: Special characters to replace while adding data;
-# &#64257; == fi
-# &#160; = (non-breaking space)
-# &#180; = ´
-# &#183; = ·
-# &#229; = å
-# &#228; = ä
-# &#246; = ö
-# &#8217; = ’
-# &#8226; = •
-
 class DependencyObject():
 
     def __init__(self):
@@ -19,25 +8,26 @@ class DependencyObject():
         self.recommend = ""
 
     def setCredits(self, credits):
-        # TODO: Correct special characters (e.g. &#160)
-        if len(credits) > 0:
-            self.credits = self.rmBadEncoding(" ".join(credits[0]))
+        if len(credits):
+            self.credits = self.rmBadEncoding(credits)
 
     def setRecCourses(self, rec):
-        # TODO: Correct special characters (e.g. &#160)
         if len(rec):
-            tmp = ""
-            for x in rec:
-                tmp += " ".join(x) + ". "
-            self.recommend = self.rmBadEncoding(tmp)
+            self.recommend = self.rmBadEncoding(rec)
 
-    def rmBadEncoding(self, string):
-        string = re.sub('\s&#8217;', "'", string)
+    def rmBadEncoding(self, raw_string):
+        string = ""
+        for x in raw_string:
+            string += " ".join(x) + ". "
+        string = re.sub('\s&#8217;', "'", string)        
         string = re.sub('&#160;', "", string)
+        string = re.sub('&#180;', "´", string)
+        string = re.sub('&#229;', "a", string)        
+        string = re.sub('&#228;', "a", string)
         string = re.sub('&#246;', "o", string)
-        string = re.sub('&#229;', "a", string)
         string = re.sub('&#195;&#182;', "o", string)
-        string = re.sub('</li>|<li>|<p>|</p>|<strong>|</strong>|<ul>|</ul>', ' ', string)
+        string = re.sub('&#64257;', "fi", string)
+        string = re.sub('</?li>|</?p>|</?strong>|</?ul>|</?ol>', '', string)
         return string
 
     # Debug representation
