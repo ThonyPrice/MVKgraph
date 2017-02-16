@@ -48,7 +48,9 @@ Creates a dict with the course code as key and the eligibility text for the cour
 """
 def getEligibilityDict():
     elDict = {}
-    dept = ['DD'] # <- Only CompSci. For all change to getDepCodes()
+    dept = ['ME'] # <- Only CompSci's courses. For all change to getDepCodes()
+    # Competed (functioning) departments; DD, DA, DH, SF, IS, ID
+    # Departments to do; ME
     for d in dept:
         codes = getCourses(d)
         for i in codes:
