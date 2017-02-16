@@ -14,7 +14,7 @@ def parseText(text):
     Dependency.courses = getDepCourses(text)
     Dependency.setCredits(getDepCredits(text))
     Dependency.setRecCourses(getRecomendCourses(text))
-    # print(Dependency)
+    print(Dependency)
     return Dependency
     
 """
@@ -42,23 +42,33 @@ def getDepCourses(text):
     return parseC.searchString(text).asList()
 
 """
-
+Parse for "credits" in text. E.g. "At least 30 credits" or "PhD students only"
+@param course eligibility text
+@return string with necessary credits
 """
 
 def getDepCredits(text):    
-    eduLevel = Regex('[P|p]h[d|.\s[D|d].??') ^ oneOf('Bachelor Master', caseless = True)
+    # TODO: Add doctoral
+    points = Regex('[1-9](\.|,)?\d+')
+    eduLevel = Regex('[P|p]h\.?\s?[Dd]\.?') ^ CaselessLiteral('Bachelor') ^ Regex('[M|m]aster((\')?s)?') 
     amount = CaselessLiteral('At least') ^ CaselessLiteral('Completed')
     notOfInterest = CaselessLiteral('single course students:') ^ CaselessLiteral('Non-program students,')
     specCase1 = CaselessLiteral('All courses that are required for issuing the Degree of')
     # TODO: Credits can be represented with commas (e.g. 7,5 hp)    
     credits =       MatchFirst(Suppress( notOfInterest + SkipTo('.'))) \
-                    ^ (Optional(amount) + Word(nums, max=3) + Optional('of the') + \
+                    ^ (Optional(amount) + points + Optional('of the') + \
                     (oneOf('university credits ects hp', caseless=True) ^
                     CaselessLiteral('higher education credits')) + \
                     SkipTo('.', include=False)) ^ \
-                    (Optional(specCase1) + eduLevel + SkipTo('.'))
+                    (Optional(specCase1) + eduLevel + (MatchFirst(SkipTo('.')) ^ SkipTo(',')))
     return credits.searchString(text)
-    
+
+"""
+Parse for recommended courses in text.
+@param course eligibility text
+@return string with recommended courses
+"""
+
 def getRecomendCourses (text):
     startWord = Regex('[A-Z][a-z]+') ^ Suppress(oneOf('. ,'))    
     recommended =   (MatchFirst(startWord) \

@@ -29,11 +29,17 @@ class DependencyObject():
             tmp = ""
             for x in rec:
                 tmp += " ".join(x) + ". "
-            self.recommend = tmp
+
+            self.recommend = self.rmBadEncoding(tmp)
 
     def rmBadEncoding(self, string):
         string = re.sub('\s&#8217;', "'", string)
+        string = re.sub('&#160;', "", string)
+        string = re.sub('&#246;', "o", string)
+        string = re.sub('&#229;', "a", string)
+        string = re.sub('&#195;&#182;', "o", string)
         string = re.sub('</li>|<li>|<p>|</p>|<strong>|<\strong>|<ul>|<\ul>', ' ', string)
+
         return string
 
     # Debug representation
