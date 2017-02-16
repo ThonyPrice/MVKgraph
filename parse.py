@@ -48,7 +48,6 @@ Parse for "credits" in text. E.g. "At least 30 credits" or "PhD students only"
 """
 
 def getDepCredits(text):
-    # TODO: Add doctoral
     points = Regex('[1-9](\.|,)?\d+')
     eduLevel = Regex('[P|p]h\.?\s?[Dd]\.?') ^ CaselessLiteral('Bachelor') ^ Regex('[M|m]aster((\')?s)?') ^ CaselessLiteral('Doctoral')
     amount = CaselessLiteral('At least') ^ CaselessLiteral('Completed')
