@@ -14,7 +14,7 @@ def parseText(text):
     Dependency.courses = getDepCourses(text)
     Dependency.setCredits(getDepCredits(text))
     Dependency.setRecCourses(getRecomendCourses(text))
-    print(Dependency)
+    # print(Dependency)
     return Dependency
 
 """
@@ -58,13 +58,11 @@ def getDepCredits(text):
     specCase2 = CaselessLiteral('Accepted to')
     credits =       MatchFirst(Suppress( notOfInterest + SkipTo('.'))) \
                     ^ (Optional(amount) + points + Optional('of the') + \
-                    (oneOf('university credits ects hp', caseless=True) ^
-                    CaselessLiteral('higher education credits')) + \
-                    SkipTo('.')) \
-                    ^ (Optional(specCase1 ^ specCase2) + eduLevel + \
-                        (MatchFirst(SkipTo('.')) ^ SkipTo(','))) \
+                    (oneOf('university credits ects hp', caseless=True) \
+                    ^ CaselessLiteral('higher education credits')) + SkipTo('.')) \
+                    ^ (Optional(specCase1 ^ specCase2) + eduLevel + (MatchFirst(SkipTo('.')) ^ SkipTo(','))) \
                     ^ (CaselessLiteral('Only available to') + (SkipTo('.'))) \
-                    ^ (participation + SkipTo('.'))
+                    ^ (participation + SkipTo('.', include=False))
     return credits.searchString(text)
 
 """
