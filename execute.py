@@ -16,6 +16,9 @@ These courses are being used for debugging, do not remove them
 
 # getEligibility('XXXXXX')
 
+# getEligibility('DD2352') # TODO
+# getEligibility('DH2321') # TODO
+
 # getEligibility('ME2079') # TODO
 # getEligibility('ME2805') # - Solved!
 # getEligibility('ME2831') #TODO
