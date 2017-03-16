@@ -51,7 +51,8 @@ def getCourseInfo(code):
     str_response = response.read().decode('utf-8')
     d = json.loads(str_response)
     info = {}
-    info['name'] = d['title']['en']
+    info['name_en'] = d['title']['en']
+    info['name_sv'] = d['title']['sv']
     info['hp'] = d['credits']
     return info
 
