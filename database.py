@@ -7,7 +7,8 @@ Add information about courses to database
 @param dictionary of following format:
     courses = {
         "DD1234": {
-            "name": "Course name",
+            "name_en": "Course name",
+            "name_sv": "Course name",
             "hp": 0,
             "eligibility": {
                 "courses": [[]],
@@ -19,7 +20,7 @@ Add information about courses to database
 def addToDatabase(courses):
     for courseID, course in courses.items():
         course["courseID"] = courseID
-        cID = convertToKey(code)
+        cID = convertToKey(courseID)
         res = es.index(index="courses", doc_type="course", id=int(cID), body=course)
 
 """
