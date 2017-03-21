@@ -54,6 +54,7 @@ def getCourseInfo(code):
     info['name_en'] = d['title']['en']
     info['name_sv'] = d['title']['sv']
     info['hp'] = d['credits']
+    info['href'] = d['href']['sv']
     return info
 
 """
@@ -74,14 +75,33 @@ def getEligibilityDict():
                 #print(getEligibility(i))
                 courseDict["eligibility"] = getEligibility(i)
             except:
-                courseDict["eligibility"] = {"courses": [],
+                courseDict["eligibility"] = {"courses": [[]],
                                 "credits": "",
                                 "recommend": ""}
                     
                 #print("Couldn't get eligibility for course: {}".format(i))
             courseDict.update(getCourseInfo(i))
             elDict[i] = courseDict
+    addNeededBy(elDict)
     return elDict
+
+
+
+"""
+Adds a 'needed by' field to dictionary
+"""
+def addNeededBy(d):
+    for course in d:
+        for courseList in d[course]["eligibility"]["courses"]:
+            for courses in courseList:
+                try:
+                    if not "neededBy" in d[courses]:
+                        d[courses]["neededBy"] = []
+                    d[courses]["neededBy"] += [course]
+                except KeyError:
+                    pass
+
+
 
 """Tests a department"""
 def testEligibilityDepartment(d):

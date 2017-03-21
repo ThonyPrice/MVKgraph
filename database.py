@@ -1,6 +1,6 @@
 from datetime import datetime
 from elasticsearch import Elasticsearch
-#es = Elasticsearch()
+es = Elasticsearch()
 
 """
 Add information about courses to database
@@ -10,6 +10,7 @@ Add information about courses to database
             "name_en": "Course name",
             "name_sv": "Course name",
             "hp": 0,
+            "href": "http://kth.se...",
             "eligibility": {
                 "courses": [[]],
                 "credits": "Credits for course",
