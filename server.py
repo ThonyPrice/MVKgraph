@@ -17,7 +17,7 @@ class Handler(BaseHTTPRequestHandler):
                     self.send_header('Content-type','text/html')
                     self.end_headers()
                     # Send the html message
-                    self.wfile.write(bytes(json.dumps(body)))
+                    self.wfile.write(bytearray(json.dumps(body), 'UTF-8'))
                     return
             
 try:
