@@ -1,7 +1,9 @@
 from datetime import datetime
 from elasticsearch import Elasticsearch
-es = Elasticsearch()
+#es = Elasticsearch()
 
+
+## Testcourses
 courses = {
     "DD1234": {
         "name": "programmering",
@@ -23,15 +25,19 @@ courses = {
     }
 }
 
-for courseID, course in courses.items():
-    course["courseID"] = courseID
-    cID = ""
-    for s in courseID:
+
+def addCoursesToDatabase(courses, es=None):
+    if not es:
+        es = Elasticsearch()
+    for courseID, course in courses.items():
+        course["courseID"] = courseID
+        cID = ""
+        for s in courseID:
             if s.isalpha():
-                    cID += str(ord(s))
+                cID += str(ord(s))
             else:
-                    cID += s
-    res = es.index(index="courses", doc_type="course", id=int(cID), body=course)
+                cID += s
+        res = es.index(index="courses", doc_type="course", id=int(cID), body=course)
 
 
 # 

@@ -7,6 +7,13 @@ class DependencyObject():
         self.credits = ""
         self.recommend = ""
 
+    def toDict(self):
+        return {
+            "courses": self.courses,
+            "credits": self.credits,
+            "recommend": self.recommend
+        }
+        
     def setCredits(self, credits):
         if len(credits):
             self.credits = self.rmBadEncoding(credits)

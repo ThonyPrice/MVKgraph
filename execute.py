@@ -2,6 +2,11 @@
 from download import getEligibility
 from download import getEligibilityDict
 
+if __name__ == "__name__":
+    eligebility_dict = getEligibilityDict()
+
+
+
 """
 Print the dictionary, course codes are keys and dependencies for the 
 course are values. Comment in the print statement in getEligibility in
