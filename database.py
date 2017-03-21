@@ -2,8 +2,66 @@ from datetime import datetime
 from elasticsearch import Elasticsearch
 #es = Elasticsearch()
 
+"""
+Add information about courses to database
+@param dictionary of following format:
+    courses = {
+        "DD1234": {
+            "name_en": "Course name",
+            "name_sv": "Course name",
+            "hp": 0,
+            "eligibility": {
+                "courses": [[]],
+                "credits": "Credits for course",
+                "recommend": "Recommended prerequisites"
+@return Update instances of database
+"""
 
-## Testcourses
+def addToDatabase(courses):
+    for courseID, course in courses.items():
+        course["courseID"] = courseID
+        cID = convertToKey(courseID)
+        res = es.index(index="courses", doc_type="course", id=int(cID), body=course)
+
+"""
+Convert course code to a unique key of digits by convert letters to ASCII
+@param str Course code. E.g. DD1327
+@return str Key. E.g. 68681327
+"""
+
+def convertToKey(code):
+    cID = ""
+    for s in code:
+        if s.isalpha():
+            cID += str(ord(s))
+        else:
+            cID += s
+    return cID
+
+"""
+Return instances of the database (default view 5 instances)
+@param None
+@return None
+"""
+
+def match_all():
+    res = es.search(index="courses", body={"query": {"match_all": {}}})
+    print(res)
+
+"""
+Search for a course, by it's course code.
+@param str Course code
+@return None
+"""
+
+def getCourse(code):
+    res = es.get(index="courses", doc_type='course', id=convertToKey(code))
+    return res['_source']
+
+"""
+For test purposes (format of courses in database)
+"""
+
 courses = {
     "DD1234": {
         "name": "programmering",

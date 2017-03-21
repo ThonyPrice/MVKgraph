@@ -1,18 +1,19 @@
 # This file can be used to try execute the existing parts of the software
 from download import getEligibility
 from download import getEligibilityDict
-
-if __name__ == "__name__":
-    eligebility_dict = getEligibilityDict()
-
-
-
+from database import addToDatabase
+import database
 """
 Print the dictionary, course codes are keys and dependencies for the 
 course are values. Comment in the print statement in getEligibility in
 download.py to alse show the eligibility text from kth.se
 """
-# eligebility_dict = getEligibilityDict()
+if __name__ == '__main__':
+    eligebility_dict = getEligibilityDict()
+    addToDatabase(eligebility_dict)
+    database.match_all()
+
+
 
 """
 Insert course code to show it's eligibility

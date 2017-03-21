@@ -31,36 +31,56 @@ Downloads eligibility text to given course
 @return course eligibility text
 """
 def getEligibility(code):
-    print('\n' + code)
     response = urllib.request.urlopen('http://www.kth.se/api/kopps/v1/course/{}/plan'.format(code))
+    # print('\n' + code)
     str_response = response.read().decode('utf-8')
     tree = ET.fromstring(str_response)
     eligibility_text = tree.findall('eligibility')[-1].text
-    print("Deptext:", eligibility_text)
+    # print("Deptext:", eligibility_text)
     dependencies = parseText(eligibility_text)
     # print(dependencies)
-    return dependencies
+    return dependencies.toDict()
 
+"""
+Creates and returns a dict containing course info such as name and hp
+@param str course code
+@return dict dict containing course info
+"""
+def getCourseInfo(code):
+    response = urllib.request.urlopen('http://www.kth.se/api/kopps/v2/course/{}'.format(code))
+    str_response = response.read().decode('utf-8')
+    d = json.loads(str_response)
+    info = {}
+    info['name_en'] = d['title']['en']
+    info['name_sv'] = d['title']['sv']
+    info['hp'] = d['credits']
+    return info
 
 """
 Creates a dict with the course code as key and the eligibility text for the course as data.
-@return dict with eligibility
+@return dict with eligibility, name, hp
 """
 def getEligibilityDict():
     elDict = {}
-    dept = ['DL'] # <- Only CompSci's courses. For all change to getDepCodes()
-    # Competed (functioning) departments; DD, DA, DAG, DH, DK, DL, SF, IS, ID
-    # Departments to do; ME
+    dept = ['DD', 'DA', 'DAG', 'DH', 'DK', 'DL', 'SF', 'ID', 'IDD', 'DL']
+    # ^ Only CompSci's courses. For all change to getDepCodes()
+    # Competed (functioning) departments; DD, DA, DAG, DH, DK, DL, SF, IS, ID, IDD 
+    # Departments to do; ME..?
     for d in dept:
         codes = getCourses(d)
         for i in codes:
+            courseDict = {}
             try:
-                elDict[i] = getEligibility(i)
-                print(elDict[i])
-            except IndexError:
-                elDict[i] = "No requirements"
+                #print(getEligibility(i))
+                courseDict["eligibility"] = getEligibility(i)
             except:
-                print("Couldn't get eligibility for course: {}".format(i))
+                courseDict["eligibility"] = {"courses": [],
+                                "credits": "",
+                                "recommend": ""}
+                    
+                #print("Couldn't get eligibility for course: {}".format(i))
+            courseDict.update(getCourseInfo(i))
+            elDict[i] = courseDict
     return elDict
 
 """Tests a department"""
