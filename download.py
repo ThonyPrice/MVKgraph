@@ -89,6 +89,8 @@ def getEligibilityDict():
 
 """
 Adds a 'needed by' field to dictionary
+@param dictionary with courses and info
+@return dictionary with added field of 'needed by' courses
 """
 def addNeededBy(d):
     for course in d:
