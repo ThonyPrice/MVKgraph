@@ -8,11 +8,6 @@ class DependencyObject():
         self.recommend = ""
         
     def toDict(self):
-        return {    "courses"   : self.courses,     \
-                    "credits"   : self.credits,     \
-                    "recommend" : self.recommend    }
-
-    def toDict(self):
         return {
             "courses": self.courses,
             "credits": self.credits,
