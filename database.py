@@ -59,6 +59,27 @@ def getCourse(code):
     res = es.get(index="courses", doc_type='course', id=convertToKey(code))
     return res['_source']
 
+
+"""
+Search for a course with non exact string
+"""
+def search(s, results = 5):
+    res = es.search(index="courses", body={"query":{
+        "bool" : {
+            "should" : [
+                {"match":{"name_sv": s}},
+                {"match":{"name_en": s}}
+            ]
+    }}})
+    top = filterRes(res, results)
+    return top
+
+def filterRes(res, results):
+    hits = res["hits"]["hits"]
+    if len(hits) < results:
+        return hits
+    return hits[0:results]
+
 """
 For test purposes (format of courses in database)
 """
