@@ -56,8 +56,11 @@ Search for a course, by it's course code.
 """
 
 def getCourse(code):
-    res = es.get(index="courses", doc_type='course', id=convertToKey(code))
-    return res['_source']
+    try:
+        res = es.get(index="courses", doc_type='course', id=convertToKey(code))
+        return res['_source']    
+    except:
+        return "Not found"
 
 
 """

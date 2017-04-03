@@ -22,8 +22,6 @@ class Handler(BaseHTTPRequestHandler):
                         self.wfile.write(bytes(json.dumps(body)))
                         return
 
-
-        
 try:
             # Create a web server and define the handler to manage the
             # incoming request
