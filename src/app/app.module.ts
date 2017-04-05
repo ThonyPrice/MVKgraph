@@ -7,12 +7,14 @@ import { AlertModule } from 'ng2-bootstrap';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { StartComponent } from './start/start.component';
+import { CourseNodeComponent } from './course-node/course-node.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         SearchComponent,
-        StartComponent
+        StartComponent,
+        CourseNodeComponent
     ],
     imports: [
         BrowserModule,

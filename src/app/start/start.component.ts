@@ -12,4 +12,8 @@ export class StartComponent implements OnInit {
   ngOnInit() {
   }
 
+  searchCourse(course: string) {
+      console.log(course);
+  }
+
 }
