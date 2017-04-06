@@ -1,19 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 
+import { TranslationService } from '../translation.service'
+
 @Component({
   selector: 'app-start',
   templateUrl: './start.component.html',
   styleUrls: ['./start.component.css']
 })
+
 export class StartComponent implements OnInit {
 
-  constructor() { }
+    constructor(
+        private translationService: TranslationService
+    ) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+        
+    }
 
-  searchCourse(course: string) {
-      console.log(course);
-  }
+    searchCourse(course: string) {
+        console.log(course);
+    }
+
+    texts = this.translationService.getEngText();
 
 }

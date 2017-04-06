@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 import { StartComponent } from './start/start.component';
 import { CourseNodeComponent } from './course-node/course-node.component';
+import { TranslationService } from './translation.service';
 
 @NgModule({
     declarations: [
@@ -22,7 +23,9 @@ import { CourseNodeComponent } from './course-node/course-node.component';
         HttpModule,
         AlertModule.forRoot()
     ],
-    providers: [],
+    providers: [
+        TranslationService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
