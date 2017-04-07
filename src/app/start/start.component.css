@@ -1,19 +1,98 @@
+@import url(https://fonts.googleapis.com/css?family=Merienda+One);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
+
+
+html body{
+	background-color: rgb(233, 233, 240);
+}
+
+/* ---- menybaren ---- */
+.navbar-inverse {
+	background-color: rgb(233, 233, 240);
+	font-family: arial;
+}
+
+.language{
+	font-size: 17px;
+	margin-top: 3px;
+}
+
+/* infoikonen*/
+.infoicon{
+	font-size: 22px;
+}
+
+/* KTH course dependencies */
+.appname{
+	text-align: center;
+	font-family: 'Merienda One', cursive;
+	font-size: 50px;
+}
+/*intro text */
+.introtext{
+	font-family: 'Roboto', sans-serif;
+	color:grey;
+	text-align: center;
+}
+
 .inputBar{
-	margin-top: 10%
+	margin-top: 4%;
+	box-shadow: 0 0 30px #888888;
 }
 
 .inputTextBar{
-	margin-top: 10%
+	margin-top: 15%;
 }
 
-.indexText{
-	text-align: center;
+form{
+	margin-bottom: 20px;
 }
-.companyText{
-	text-align: center;
-	color: #5f5f5f;
-	font-style: italic;
+
+/* ---- Alternativ med sträck ---*/
+.lineSearch{
+	border-color:black;
 }
-.mys{
-	color: #f1f1f1;
+
+#courseName{
+	font-weight: bold;
+	margin-top:6px;
+	margin-bottom: 2px;
+	font-size: 16px;
+
+}
+
+.searchExample {
+	font-family: 'Roboto', sans-serif;
+	font-size: 14px;
+}
+
+.searchEx{
+	color:black;
+	cursor:pointer;
+}
+
+.searchEx:hover{
+	text-decoration: none;
+	color:#337ab7;
+	cursor:pointer;
+}
+
+/* ----- Sökresultat knappar-----*/
+
+.btnSearch{
+	background-color: #424242;
+	color:white;
+	font-family: 'Roboto', sans-serif;
+	font-size: 14px;
+	border-color: grey;
+}
+
+.btnSearch:hover{
+	background-color: black;
+	color:white;
+}
+
+.btnSearch:focus{
+	background-color: black;
+	color:white;
 }

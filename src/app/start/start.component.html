@@ -1,21 +1,50 @@
-<div class="container">
-    <div class="row inputTextBar">
-        <div class="col-md-3"></div>
-        <div class="col-md-6 ">
-            <h1 class="inputBar indexText">
-                {{texts.heading}}
-            </h1>
-
-            <form>
-                <div class="input-group inputBar">
-                    <input #course type="text" class="form-control" placeholder="Search for course...">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" (click)="searchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
-                    </div>
-                </div>
-            </form>
-
+<header>
+    <nav class="nav navbar-inverse navbar-static-top">
+        <div class="container">
+            <ul class="nav navbar-nav navbar-right">
+            <li><a class="language" (click)="changeLanguage()">{{texts.language}}</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true"></span></a></li>
+            </ul>
         </div>
-        <div class="col-md-3"></div>
+    </nav>
+</header>
+<main>
+    <div class="container">
+            <!-- Överskrift och introtext -->
+            <div class="row inputTextBar">
+                <h1 class="appname">{{texts.heading}}</h1>
+                <h4 class="introtext">{{texts.subheading}}</h4>
+
+            </div>
+             
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <!-- Sökrutan -->
+                <form>
+                    <div class="input-group inputBar">
+                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."'>
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" (click)="searchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
+                            <button class="btn btn-default"><i class="glyphicon glyphicon-question-sign"></i></button>
+                        </div>
+                    </div>
+                </form>
+                        
+                <!-- sökresultaten -->
+                <div class="searchResult"><a class="searchEx">
+                    <p class="searchExample" id="courseName">Calculus in one variable</p>
+                    <p class="searchExample">SF1624 7,5 hp</p></a>
+                    <hr class="lineSearch">
+                </div>
+                    <div class="searchResult"><a class="searchEx">
+                    <p class="searchExample" id="courseName">Calculus in multiple variables</p>
+                    <p class="searchExample">SF1624 7,5 hp</p></a>
+                    <hr class="lineSearch">
+                </div>
+
+            </div>
+            <div class="col-md-3"></div>
     </div>
-</div>
+
+</main>
+

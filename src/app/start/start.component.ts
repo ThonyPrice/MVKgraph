@@ -10,18 +10,30 @@ import { TranslationService } from '../translation.service'
 
 export class StartComponent implements OnInit {
 
+    selectedLanguage: string;
+    texts: Object;
+
     constructor(
         private translationService: TranslationService
     ) { }
 
     ngOnInit() {
-        
+        this.selectedLanguage = "eng";
+        this.texts = this.translationService.getEngText();
     }
 
     searchCourse(course: string) {
         console.log(course);
     }
 
-    texts = this.translationService.getEngText();
-
+    
+    changeLanguage() {
+        if (this.selectedLanguage == "eng") {
+            this.texts = this.translationService.getSweText();
+            this.selectedLanguage = "swe";
+        } else {
+            this.texts = this.translationService.getEngText();
+            this.selectedLanguage = "eng";
+        }
+    }
 }
