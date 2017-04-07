@@ -1,28 +1,53 @@
-<div class="container">
-    <div class="row inputTextBar">
-        <div class="col-md-3"></div>
-        <div class="col-md-6 ">
-            <h1 class="inputBar indexText">
-                KTH<br>
-                Course Dependencies
-                <h4 class="indexText companyText">
-                    FooCompany
-                </h4>
-                <h6 class="indexText mys">
-                    mysmunk
-                </h6>
-            </h1>
+        <!-- NYTT -->
+        <link href="https://fonts.googleapis.com/css?family=Merienda+One" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
 
-            <form>
-                <div class="input-group inputBar">
-                    <input type="text" class="form-control" placeholder="Search for course..." #course>
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" (click)="searchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
+   <header>
+        <nav class="nav navbar-inverse navbar-static-top">
+            <div class="container">
+                <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" class="language">på Svenska</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true"></span></a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+            <div class="container">
+                    <!-- Överskrift och introtext -->
+                    <div class="row inputTextBar">
+                        <h1 class="appname">KTH Course Dependencies</h1>
+                        <h4 class="introtext">Easily search for a course to see its dependencies, <br>what courses needed to apply for it and what courses it leads up to.</h4>
                     </div>
-                </div>
-            </form>
+             
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <!-- Sökrutan -->
+                        <form>
+                            <div class="input-group inputBar">
+                                <input type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."' #course>
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" (click)="searchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
+                                    <button class="btn btn-default"><i class="glyphicon glyphicon-question-sign"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <!-- sökresultaten -->
+                        <div class="searchResult"><a class="searchEx">
+                            <p class="searchExample" id="courseName">Calculus in one variable</p>
+                            <p class="searchExample">SF1624 7,5 hp</p></a>
+                            <hr class="lineSearch">
+                        </div>
+                         <div class="searchResult"><a class="searchEx">
+                            <p class="searchExample" id="courseName">Calculus in multiple variables</p>
+                            <p class="searchExample">SF1624 7,5 hp</p></a>
+                            <hr class="lineSearch">
+                        </div>
 
-        </div>
-        <div class="col-md-3"></div>
-    </div>
-</div>
+                    </div>
+                    <div class="col-md-3"></div>
+            </div>
+
+            </main>
+
