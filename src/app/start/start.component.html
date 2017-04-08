@@ -32,7 +32,7 @@
                         
                 <!-- sökresultaten -->
                 <div class="searchResult"><a class="searchEx">
-                    <p class="searchExample" id="courseName">Calculus in one variable</p>
+                    <p class="searchExample" id="courseName" *ngIf="courses">{{courses[0]._source.name_sv}}</p>
                     <p class="searchExample">SF1624 7,5 hp</p></a>
                     <hr class="lineSearch">
                 </div>
