@@ -17,6 +17,7 @@ class Handler(BaseHTTPRequestHandler):
                                     body = database.search(self.path[8:])
                         self.send_response(200)
                         self.send_header('Content-type','text/html')
+                        self.send_header("Access-Control-Allow-Origin", "*")
                         self.end_headers()
                         # Send the html message
                         self.wfile.write(bytes(json.dumps(body)))
