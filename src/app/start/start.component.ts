@@ -16,7 +16,6 @@ export class StartComponent implements OnInit {
     texts: Object;
     courses: Course[];
     errorMessage: string;
-    mode = 'Observable';
 
     constructor(
         private translationService: TranslationService,

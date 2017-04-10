@@ -2,7 +2,7 @@
     <nav class="nav navbar-inverse navbar-static-top">
         <div class="container">
             <ul class="nav navbar-nav navbar-right">
-            <li><a class="language" (click)="changeLanguage()">{{texts.language}}</a></li>
+            <li><a class="language" (click)="changeLanguage()">{{texts.languageSwitch}}</a></li>
             <li><a href="#"><span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true"></span></a></li>
             </ul>
         </div>
@@ -31,17 +31,12 @@
                 </form>
                         
                 <!-- sökresultaten -->
-                <div class="searchResult"><a class="searchEx">
-                    <p class="searchExample" id="courseName" *ngIf="courses">{{courses[0]._source.name_sv}}</p>
-                    <p class="searchExample">SF1624 7,5 hp</p></a>
+                <div class="searchResult" *ngFor="let course of courses"><a class="searchEx">
+                    <p class="searchExample" id="courseName">{{course._source.name_sv}}</p>
+                    <p class="searchExample">{{course._source.courseID}} {{course._source.hp}} {{texts.credits}}</p></a>
                     <hr class="lineSearch">
                 </div>
-                    <div class="searchResult"><a class="searchEx">
-                    <p class="searchExample" id="courseName">Calculus in multiple variables</p>
-                    <p class="searchExample">SF1624 7,5 hp</p></a>
-                    <hr class="lineSearch">
-                </div>
-
+                <p *ngIf="errorMessage">{{errorMessage}}</p>
             </div>
             <div class="col-md-3"></div>
     </div>

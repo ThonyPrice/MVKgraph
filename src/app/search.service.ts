@@ -16,14 +16,9 @@ export class SearchService {
 
     searchCourse(course: string): Observable<Course[]> {
         return this.http.get(this.baseUrl.concat(course))
-            .map(this.extractData)
-            .catch(this.handleError);
+            .map((res: Response) => res.json())
+            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 
-    }
-
-    private extractData(res: Response) {
-        let body = res.json();
-        return body;
     }
 
     private handleError(error: Response | any) {

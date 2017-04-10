@@ -6,7 +6,8 @@ const engTexts = {
     placeholder: "Search for course...",
     help: "Enter help text here",
     info: "Enter info text here",
-    language: "På svenska"
+    languageSwitch: "På svenska",
+    credits: "credits"
 }
 
 const sweTexts = {
@@ -15,7 +16,8 @@ const sweTexts = {
     placeholder: "Sök efter kurs...",
     help: "Fyll i hjälptext här",
     info: "Fyll i infotext här",
-    language: "In english"
+    languageSwitch: "In english",
+    credits: "hp"
 }
 
 @Injectable()
