@@ -10,13 +10,15 @@ import { StartComponent } from './start/start.component';
 import { CourseNodeComponent } from './course-node/course-node.component';
 import { TranslationService } from './translation.service';
 import { SearchService } from './search.service';
+import { GraphComponent } from './graph/graph.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         SearchComponent,
         StartComponent,
-        CourseNodeComponent
+        CourseNodeComponent,
+        GraphComponent
     ],
     imports: [
         BrowserModule,
