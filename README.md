@@ -1,28 +1,35 @@
 # GraphVisualization
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0.
+I detta repo hittar vi kod för frontend delen som är byggd med hjälp av angular och D3js. Här kommer en liten guide till hur du kan göra för att testa grafen i en lokal utvecklingsmiljö. Du kommer även behöva ett annat git repo för att testa all funktionalitet (se 4. starta databasserver).
 
-## Development server
+Börja med att clona detta repo.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## 1. Rätt versioner av mjukvara
 
-## Code scaffolding
+För att kunna testa en hemsida som är byggd i angular behöver den köras på en lokal server. För att få det att fungera kan vi använda node.js och npm. 
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
+Kolla om du har rätt versioner genom att köra `node -v` och `npm -v`:
 
-## Build
+```
+>node -v
+v6.10.0
+>npm -v
+3.10.3
+```
+> För att köra hemsidan behövs åtminstone node `6.9.x` (se till att inte köra node 7) samt npm `3.x.x`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+## 2. npm install
 
-## Running unit tests
+Använd terminalen och hitta in i mappen för detta repo. Exempelvis `C:\Users\Jonathan\Documents\GitHub\Graph`.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Kör `npm install`. Då skapas en ny mapp med namnet `node_modules`.
 
-## Running end-to-end tests
+## 3. npm start
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+Nu har vi filerna som behövs för detta repo och kan testa starta en lokal server.
 
-## Further help
+Kör `npm start` eller `ng serve` i projektmappen. Då startas en server som kan nås från [http://localhost:4200](http://localhost:4200).
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## 4. starta databasserver
+
+För att kunna testa den mesta av funktionaliteten i produkten behövs även tillgång till databasen. Hur den aktiveras kan du läsa om på det andra git repot som behövs: [teodor/GraphVisualisation](https://github.com/tedodor/GraphVisualization)

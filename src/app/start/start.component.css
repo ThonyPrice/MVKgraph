@@ -12,6 +12,18 @@ html body{
 	font-family: arial;
 }
 
+.navbar-inverse .navbar-nav>li>a:hover{
+	color:black;
+}
+
+.navbar-inverse .navbar-nav>li>a:active{
+	color:black;
+}
+
+.navbar-inverse .navbar-nav>li>a:focus{
+	color:black;
+}
+
 .language{
 	font-size: 17px;
 	margin-top: 3px;
@@ -20,6 +32,16 @@ html body{
 /* infoikonen*/
 .infoicon{
 	font-size: 22px;
+}
+
+/* ----- POPOVERN -----*/
+.popover{
+    width:300px;
+    height:250px;   
+}
+
+.popover-title{
+	color:red;
 }
 
 /* KTH course dependencies */
