@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { AlertModule } from 'ng2-bootstrap';
+import { D3Service } from 'd3-ng2-service';
 
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
@@ -29,7 +30,8 @@ import { GraphComponent } from './graph/graph.component';
     ],
     providers: [
         TranslationService,
-        SearchService
+        SearchService, 
+        D3Service
     ],
     bootstrap: [AppComponent]
 })

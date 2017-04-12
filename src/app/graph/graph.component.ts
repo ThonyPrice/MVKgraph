@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
+import { D3Service, D3, Selection } from 'd3-ng2-service';
 
 @Component({
   selector: 'app-graph',
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GraphComponent implements OnInit {
 
-  constructor() { }
+	private d3: D3;
+	private parentNativeElement: any;
+	private svg;
 
-  ngOnInit() {
-  }
 
+ 	constructor(element: ElementRef, d3Service: D3Service) {
+ 		this.d3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
+    	this.parentNativeElement = element.nativeElement;
+
+ 	}
+
+
+	 ngOnInit() {
+		
+
+ 	}
 }
