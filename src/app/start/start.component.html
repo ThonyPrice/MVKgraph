@@ -19,10 +19,11 @@
              
             <div class="col-md-3"></div>
             <div class="col-md-6">
+
                 <!-- Sökrutan -->
                 <form>
                     <div class="input-group inputBar">
-                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."'>
+                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."' value="{{lastQuery}}">
                         <div class="input-group-btn">
                             <button class="btn btn-default" (click)="searchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
                     
@@ -31,12 +32,16 @@
                 </form>
                         
                 <!-- sökresultaten -->
-                <div class="searchResult" *ngFor="let course of courses"><a class="searchEx">
-                    <p class="searchExample" id="courseName">{{course._source.name_sv}}</p>
-                    <p class="searchExample">{{course._source.courseID}} {{course._source.hp}} {{texts.credits}}</p></a>
+                <div class="searchResult" *ngFor="let course of searchResult">
+                    <a class="searchEx" [routerLink]="['/graph', course._source.courseID]">
+                        <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'eng'">{{course._source.name_en}}</p>
+                        <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'swe'">{{course._source.name_sv}}</p>
+                        <p class="searchExample">{{course._source.courseID}} {{course._source.hp}} {{texts.credits}}</p>
+                    </a>
                     <hr class="lineSearch">
                 </div>
                 <p *ngIf="errorMessage">{{errorMessage}}</p>
+
             </div>
             <div class="col-md-3"></div>
     </div>

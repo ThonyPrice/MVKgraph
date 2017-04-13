@@ -6,16 +6,16 @@ const engTexts = {
     placeholder: "Search for course...",
     help: "Enter help text here",
     info: "Enter info text here",
-    languageSwitch: "PÂ svenska",
+    languageSwitch: "P√• svenska",
     credits: "credits"
 }
 
 const sweTexts = {
     heading: "KTH kursberoenden",
-    subheading: "Fyll i underrubrikstext h‰r",
-    placeholder: "Sˆk efter kurs...",
-    help: "Fyll i hj‰lptext h‰r",
-    info: "Fyll i infotext h‰r",
+    subheading: "Fyll i underrubrikstext h√§r",
+    placeholder: "S√∂k efter kurs...",
+    help: "Fyll i hj√§lptext h√§r",
+    info: "Fyll i infotext h√§r",
     languageSwitch: "In english",
     credits: "hp"
 }
