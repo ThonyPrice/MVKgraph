@@ -2,8 +2,15 @@
     <nav class="nav navbar-inverse navbar-static-top">
         <div class="container">
             <ul class="nav navbar-nav navbar-right">
-            <li><a class="language" (click)="changeLanguage()">{{texts.languageSwitch}}</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true"></span></a></li>
+                <li><a class="language" (click)="changeLanguage()">{{texts.languageSwitch}}</a></li>
+                <li><a [popover]="infoPopover">
+                    <span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true">
+                        <popover-content #infoPopover
+                                         title="Information"
+                                         [closeOnClickOutside]="true">
+                            KTH Graph visualization är ett projekt i kursen Mjukvarukonstruktion. Idén och uppgiften kommer från företaget Findwise. Vi som skapat denna hemsida är 9 studenter som går vårt andra/tredje år på Datasektionen respektive tredje år på Civilingenjör och Lärare (inriktning data) Sektionen.
+                        </popover-content>
+                    </span></a></li>
             </ul>
         </div>
     </nav>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
+import {PopoverModule} from "ngx-popover";
 
 import { TranslationService } from '../translation.service';
 import { SearchService } from '../search.service';

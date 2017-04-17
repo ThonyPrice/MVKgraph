@@ -5,6 +5,7 @@ import { HttpModule, JsonpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 import { AlertModule } from 'ng2-bootstrap';
 import { D3Service } from 'd3-ng2-service';
+import {PopoverModule} from "ngx-popover";
 
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
@@ -42,7 +43,8 @@ const appRoutes: Routes = [
         HttpModule,
         JsonpModule,
         AlertModule.forRoot(),
-        RouterModule.forRoot(appRoutes)
+        RouterModule.forRoot(appRoutes),
+        PopoverModule
     ],
     providers: [
         TranslationService,
