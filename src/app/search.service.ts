@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-import { Course } from './course';
+//import { Course } from './course';
 
 @Injectable()
 export class SearchService {
@@ -14,7 +14,7 @@ export class SearchService {
 
     constructor(private http: Http) { }
 
-    searchCourse(course: string): Observable<Course[]> {
+    searchCourse(course: string): Observable<any[]> {
         return this.http.get(this.baseUrl.concat(course))
             .map((res: Response) => res.json())
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
