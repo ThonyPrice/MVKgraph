@@ -71,7 +71,8 @@ def search(s, results = 5):
         "bool" : {
             "should" : [
                 {"match":{"name_sv": s}},
-                {"match":{"name_en": s}}
+                {"match":{"name_en": s}},
+                {"match":{"courseID": s}}
             ]
     }}})
     top = filterRes(res, results)
