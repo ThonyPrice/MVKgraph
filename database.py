@@ -70,9 +70,21 @@ def search(s, results = -1):
     res = es.search(index="courses", body={"query":{
         "bool" : {
             "should" : [
-                {"match":{"name_sv": s}},
-                {"match":{"name_en": s}},
-                {"match":{"courseID": s}}
+                {"match_phrase_prefix":{
+                    "name_sv": {
+                        "query": s,
+                        "slop": 10
+                    }}},
+                {"match_phrase_prefix":{
+                    "name_en": {
+                        "query": s,
+                        "slop": 10
+                    }}},
+                {"match_phrase_prefix":{
+                    "courseID": {
+                        "query": s,
+                        "slop": 10
+                    }}}
             ]
     }}})
     top = res["hits"]["hits"]
