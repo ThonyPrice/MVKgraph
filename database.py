@@ -66,7 +66,7 @@ def getCourse(code):
 """
 Search for a course with non exact string
 """
-def search(s, results = 5):
+def search(s, results = -1):
     res = es.search(index="courses", body={"query":{
         "bool" : {
             "should" : [
@@ -75,7 +75,9 @@ def search(s, results = 5):
                 {"match":{"courseID": s}}
             ]
     }}})
-    top = filterRes(res, results)
+    top = res["hits"]["hits"]
+    if results > 0:
+        return top[0:results]
     return top
 
 def filterRes(res, results):
