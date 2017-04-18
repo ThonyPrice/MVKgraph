@@ -13,6 +13,8 @@ export class GraphComponent implements OnInit {
     private parentNativeElement: any;
     private svg;
     testNode: any;
+    errorMessage: string;
+    bla: any;
 
     constructor(element: ElementRef, d3Service: D3Service, private searchService: SearchService ) {
         this.d3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
@@ -23,8 +25,10 @@ export class GraphComponent implements OnInit {
 
 
     ngOnInit() {
-
-        //SearchService.searchCourse('SF1625');
+    	
+        this.searchService.getCourse('SF1625')
+        	.subscribe(course => this.bla = course, error => this.errorMessage=error);
+        
 
         this.testNode = this.createGraphNode(this.dataBaseNode);
         //var testNode = treeData[0];
@@ -79,6 +83,7 @@ export class GraphComponent implements OnInit {
             nodeList = this.setParentNodes(nodeList, height);
             links = this.setLinks(nodeList);
         }
+        console.log(nodeList);
 
         var svg = this.d3.select("#tree").append("svg")
                 .attr("width", width + margin.left + margin.right)
