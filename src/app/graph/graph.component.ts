@@ -1,6 +1,8 @@
-import { Component, OnInit, ElementRef,  } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { D3Service, D3, Selection } from 'd3-ng2-service';
 import { SearchService } from '../search.service';
+import { Observable } from 'rxjs/Observable';
 //import { Platform } from '@angular/core';
 
 @Component({
@@ -8,7 +10,7 @@ import { SearchService } from '../search.service';
     templateUrl: './graph.component.html',
     styleUrls: ['./graph.component.css']
 })
-export class GraphComponent implements OnInit {
+export class GraphComponent implements OnInit{
 
     private d3: any;
     private parentNativeElement: any;
@@ -16,9 +18,14 @@ export class GraphComponent implements OnInit {
     testNode: any;
     errorMessage: string;
     bla: any;
+    currentCourse: string;
 
-
-    constructor(private element: ElementRef, d3Service: D3Service, private searchService: SearchService ) {
+    constructor(private element: ElementRef, 
+        d3Service: D3Service, 
+        private searchService: SearchService, 
+        private router: Router, 
+        private route: ActivatedRoute
+        ) {
         this.d3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
         this.parentNativeElement = element.nativeElement;
 
@@ -28,67 +35,57 @@ export class GraphComponent implements OnInit {
 
     ngOnInit() {
     	
-        this.searchService.getCourse('SF1625')
-        	.subscribe(course => this.bla = course, error => this.errorMessage=error);
-        
+        this.route.params.subscribe((params: Params) =>
+            this.currentCourse = params['courseID']);
+/*
+        this.searchService.getCourse(this.currentCourse)
+        	.subscribe(course => this.createGraphNode(course).subscribe(
+                node => this.createGraph(node)
+                )
+                , error => this.errorMessage=error);
+  */      
 
         this.testNode = this.createGraphNode(this.dataBaseNode);
-        //var testNode = treeData[0];
-        /*var testNode = {
-            "name" : dataBaseNode.name,
-            "children" : getChildren(dataBaseNode),
-            "parents" : getNeededBy(dataBaseNode),
-            "courseInfo" :dataBaseNode 
-        };*/
+        this.createGraph(this.testNode);
+            
 
+    }
+
+
+
+    testData = [{ "neededBy": ["DH2413", "DD2257", "DD2457", "DH2650", "DD2352", "DD2395", "DD2448", "DD2459", "DD2488", "DH2320", "DD2432", "DD2460", "DD2443"], "courseID": "DD1337", "hp": 7.0, "eligibility": { "courses": [["SF2520"], ["SF3850"]], "recommend": "", "credits": "" }, "href": "https://www.kth.se/student/kurser/kurs/DD1337", "name_sv": "Programmering", "name_en": "Programming" }, { "name_sv": "Programmeringsteknik och Matlab", "courseID": "DD1315", "hp": 7.5, "eligibility": { "courses": [[]], "recommend": "", "credits": "" }, "href": "https://www.kth.se/student/kurser/kurs/DD1315", "name_en": "Programming Techniques and Matlab" }, { "name_sv": "Numerisk linj\u00e4rprogrammering", "courseID": "SF3850", "hp": 7.5, "eligibility": { "courses": [["SF2812"], ["SF2520"]], "recommend": "", "credits": "Master degree including at least 30 university credits (hp) in in Mathematics (Calculus, Linear algebra, Differential equations and transform method), and further at least 6 hp in Mathematical Statistics, 6 hp in Numerical analysis and 6 hp in Optimization. " }, "href": "https://www.kth.se/student/kurser/kurs/SF3850", "name_en": "Numerical Linear Programming" }, { "name_sv": "Programmeringsteknik", "courseID": "DD1310", "hp": 6.0, "eligibility": { "courses": [[]], "recommend": "", "credits": "" }, "href": "https://www.kth.se/student/kurser/kurs/DD1310", "name_en": "Programming Techniques" }, { "name_sv": "Programmeringsparadigm", "courseID": "DD1361", "hp": 7.5, "eligibility": { "courses": [], "recommend": "", "credits": ". 7,5 hp in mathematics and 6 hp in computer science or programming technics. " }, "href": "https://www.kth.se/student/kurser/kurs/DD1361", "name_en": "Programming Paradigms" }, {"name_sv": "Numerisk linj\u00e4rprogrammering", "eligibility": {"courses": [["SF2812"], ["SF2520"]], "recommend": "", "credits": "Master degree including at least 30 university credits (hp) in in Mathematics (Calculus, Linear algebra, Differential equations and transform method), and further at least 6 hp in Mathematical Statistics, 6 hp in Numerical analysis and 6 hp in Optimization. "}, "hp": 7.5, "courseID": "SF3850", "href": "https://www.kth.se/student/kurser/kurs/SF3850", "name_en": "Numerical Linear Programming"}];
+    /*Ändra index(0-3) för en annan nod*/
+    dataBaseNode = this.testData[0];
+    /*
+    parent: ett JSON objekt från databasen
+    childObjArray: en lista med JSON objekt som är kursberoenden till parent som ser ut så här:
+    {"name" : "KURSKOD"}
+    */
+
+    createGraph(node){
         var margin = {top: 40, right: 90, bottom: 50, left: 90},
-            width = 800 /*- margin.left - margin.right*/,
-            height = 600 /*- margin.top - margin.bottom*/;
+            width = 800,
+            height = 600;
 
-        /*
-        var canvas = this.d3.select("#tree").append("svg")
-            .attr("width", 500)
-            .attr("height", 500)
-            .append("g")
-            .attr("transform", "translate(50, 50)");
-        */
         var tree = this.d3.tree()
             .size([width, height]);
 
 
-        /*if (this.testNode.parents != null) {
-            this.updateNodesList(nodes, width);
-            nodes = this.setParentNodes(nodes, height);
-            links = this.setLinks(nodes);
-        }*/
 
-
-
-        var root = this.d3.hierarchy(this.testNode);
+        var root = this.d3.hierarchy(node);
         var nodes = tree(root);
-        var links = tree(root).links();
+        //var links = tree(root).links();
         this.updateNodesList(nodes, width, height);
-        
-        //console.log(this.testNode)
-
-        /*if (this.testNode.parents != null) {
-            this.updateNodesList(nodes, width);
-            nodes = this.setParentNodes(nodes, height);
-            links = this.setLinks(nodes);
-        }*/
 
         var nodeList = nodes.descendants();
         if(nodes.data.parents != null){
             nodeList = this.setParentNodes(nodeList, height);
-            links = this.setLinks(nodeList);
+            //links = this.setLinks(nodeList);
         }
         
-
-
-
         var svg = this.d3.select("#tree").append("svg")
-                .attr("width", width/* + margin.left + margin.right*/)
-                .attr("height", height/* + margin.top + margin.bottom*/)
+                .attr("width", width)
+                .attr("height", height)
 
         var link = svg.selectAll(".link")
                 .data(nodeList.slice(1))
@@ -96,57 +93,25 @@ export class GraphComponent implements OnInit {
                 .attr("class", "link")
                 .attr("d", function(d) {
                     return "M" + (width - d.y +50) + "," + (d.x+20) 
-                    	 + "l" + ( (width - d.parent.y) - (width - d.y) )/2 + "," + (0)
-                    	 + "l" + ( 0 ) + "," + (d.parent.x - d.x)
-                    	 + "l" + ( (width - d.parent.y) - (width - d.y) )/2 + "," + (0);
-                     /*"M" + (width - d.y) + "," + d.x
-                     + "C" + (width - d.y) + "," + (d.x + d.parent.x) / 2
-                     + " " + (width -d.parent.y) + "," +  (d.x + d.parent.x) / 2
-                     + " " + (width - d.parent.y) + "," + d.parent.x*/
-					
-                });
-        /*var node = g.selectAll(".node")
-                .data(nodeList)
-            .enter().append("g")
-                .attr("class", function(d){
-                    return "node" + 
-                        (d.children ? " node--internal" : " node--leaf"); })
-                .attr("transform", function(d) { 
-                    return "translate(" + (width - d.y) + "," + d.x + ")"; });
-		
-
-
-        node.append("text")
-            .attr("dy", ".35em")
-            .attr("y", function(d) { return d.children ? -20 : -20;})
-            .style("text-anchor", "middle")
-            .text(function(d) { return d.data.name}); 
-	 	*/ 
+                         + "l" + ( (width - d.parent.y) - (width - d.y) )/2 + "," + (0)
+                         + "l" + ( 0 ) + "," + (d.parent.x - d.x)
+                         + "l" + ( (width - d.parent.y) - (width - d.y) )/2 + "," + (0);
+                    }); 
 
         var box = this.d3.selectAll(".box")
-        	.data(nodeList)
-        	.enter().append("div").attr("class", "box")
-        	.style("left", function(d) {
-        		return (width - d.y) + "px" ;
-        	})
-        	.style("top", function(d) {
-        		return d.x + "px"
-        	})
-        	.append("div").attr("class", "courseHeading")
-        	.append("p").text(function(d) { return d.data.name }).attr("class", "courseCourse");      
+            .data(nodeList)
+            .enter().append("div").attr("class", "box")
+            .style("left", function(d) {
+                return (width - d.y) + "px" ;
+            })
+            .style("top", function(d) {
+                return d.x + "px"
+            })
+            .append("div").attr("class", "courseHeading")
+            .append("p").text(function(d) { return d.data.name }).attr("class", "courseCourse");  
 
     }
 
-
-
-    testData = [{ "_score": 3.459223, "_type": "course", "_id": "68681337", "_source": { "neededBy": ["DH2413", "DD2257", "DD2457", "DH2650", "DD2352", "DD2395", "DD2448", "DD2459", "DD2488", "DH2320", "DD2432", "DD2460", "DD2443"], "courseID": "DD1337", "hp": 7.0, "eligibility": { "courses": [["SF2520"], ["SF3850"]], "recommend": "", "credits": "" }, "href": "https://www.kth.se/student/kurser/kurs/DD1337", "name_sv": "Programmering", "name_en": "Programming" }, "_index": "courses" }, { "_score": 2.8848257, "_type": "course", "_id": "68681315", "_source": { "name_sv": "Programmeringsteknik och Matlab", "courseID": "DD1315", "hp": 7.5, "eligibility": { "courses": [[]], "recommend": "", "credits": "" }, "href": "https://www.kth.se/student/kurser/kurs/DD1315", "name_en": "Programming Techniques and Matlab" }, "_index": "courses" }, { "_score": 2.8848257, "_type": "course", "_id": "83703850", "_source": { "name_sv": "Numerisk linj\u00e4rprogrammering", "courseID": "SF3850", "hp": 7.5, "eligibility": { "courses": [["SF2812"], ["SF2520"]], "recommend": "", "credits": "Master degree including at least 30 university credits (hp) in in Mathematics (Calculus, Linear algebra, Differential equations and transform method), and further at least 6 hp in Mathematical Statistics, 6 hp in Numerical analysis and 6 hp in Optimization. " }, "href": "https://www.kth.se/student/kurser/kurs/SF3850", "name_en": "Numerical Linear Programming" }, "_index": "courses" }, { "_score": 2.8619907, "_type": "course", "_id": "68681310", "_source": { "name_sv": "Programmeringsteknik", "courseID": "DD1310", "hp": 6.0, "eligibility": { "courses": [[]], "recommend": "", "credits": "" }, "href": "https://www.kth.se/student/kurser/kurs/DD1310", "name_en": "Programming Techniques" }, "_index": "courses" }, { "_score": 2.736606, "_type": "course", "_id": "68681361", "_source": { "name_sv": "Programmeringsparadigm", "courseID": "DD1361", "hp": 7.5, "eligibility": { "courses": [], "recommend": "", "credits": ". 7,5 hp in mathematics and 6 hp in computer science or programming technics. " }, "href": "https://www.kth.se/student/kurser/kurs/DD1361", "name_en": "Programming Paradigms" }, "_index": "courses" }, {"_source": {"name_sv": "Numerisk linj\u00e4rprogrammering", "eligibility": {"courses": [["SF2812"], ["SF2520"]], "recommend": "", "credits": "Master degree including at least 30 university credits (hp) in in Mathematics (Calculus, Linear algebra, Differential equations and transform method), and further at least 6 hp in Mathematical Statistics, 6 hp in Numerical analysis and 6 hp in Optimization. "}, "hp": 7.5, "courseID": "SF3850", "href": "https://www.kth.se/student/kurser/kurs/SF3850", "name_en": "Numerical Linear Programming"}}];
-    /*Ändra index(0-3) för en annan nod*/
-    dataBaseNode = this.testData[0]._source;
-    /*
-    parent: ett JSON objekt från databasen
-    childObjArray: en lista med JSON objekt som är kursberoenden till parent som ser ut så här:
-    {"name" : "KURSKOD"}
-    */
     getChildren(parent) {
         var childObjStr = "[";
         if (parent.eligibility.courses[0].length > 0) {
@@ -186,7 +151,7 @@ export class GraphComponent implements OnInit {
     children = en lista med JSON objekt som är beroenden
     courseInfo = JSON objektet som informationen hämtades från
     */
-    createGraphNode(course) {
+    createGraphNode(course):Observable<any> {
         var courseStr = '{"name" : "' + course.courseID + '"';
         if (this.getChildren(course) != "[]") {
             courseStr = courseStr + ', "children" : ' + this.getChildren(course);
@@ -203,7 +168,7 @@ export class GraphComponent implements OnInit {
 
 
     /*
-                                                        ----------------OBS-------------------
+                                ----------------OBS-------------------
     När man kan göra calls, ändra i denna så det finns:
     stoppvillkor, rekursivt call, lägg till så "this.testData[5]._source.courseID" blir ett call från en
     en kurskod
@@ -211,17 +176,16 @@ export class GraphComponent implements OnInit {
     createChildNodes(childList) {
         for(var i = 0; i < childList.length; i++){
             if(childList[i].name == "SF3850"){
-                var courseStr = '{"name" : "' + this.testData[5]._source.courseID + '"';
-                if(this.getChildren(this.testData[5]._source) != "[]"){
-                    courseStr = courseStr + ', "children" : ' +  this.getChildren(this.testData[5]._source);
+                var courseStr = '{"name" : "' + this.testData[5].courseID + '"';
+                if(this.getChildren(this.testData[5]) != "[]"){
+                    courseStr = courseStr + ', "children" : ' +  this.getChildren(this.testData[5]);
                 }
-                if (this.getNeededBy(this.testData[5]._source) != "[]") {
-                    courseStr = courseStr + ', "parents" : ' + this.getNeededBy(this.testData[5]._source);
+                if (this.getNeededBy(this.testData[5]) != "[]") {
+                    courseStr = courseStr + ', "parents" : ' + this.getNeededBy(this.testData[5]);
                 }
                 var obj = JSON.parse(courseStr + "}");
-
+                // här borde det rekursiva callet ligga
                 childList[i] = obj;
-
             }
         }
         return childList;
