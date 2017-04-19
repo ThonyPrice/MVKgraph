@@ -4,14 +4,51 @@
   stroke-width: 3px;
 }
 
->>> .node text { font: 12px sans-serif; }
+>>> .node text { 
+	font: 12px sans-serif;
+}
 
 >>> .node--internal text {
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+}
+
+>>> .node--leaf{
+	text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+	color: white;
 }
 
 >>> .link {
   fill: none;
   stroke: #ccc;
   stroke-width: 2px;
+}
+
+
+/*CSS för nodens utseende*/
+>>> .box {
+	position: absolute;
+	background-color: white;
+	display: inline-block;
+	box-shadow: 0 0 30px #888888;
+}
+>>> .courseCourse{
+	text-align: center;
+	color:black;
+	padding: 10px;
+	padding-right: 30px;
+	padding-left: 30px;
+	font-size: 16px;
+}
+
+>>> .courseContent {
+	margin: 15px;
+	color:black;
+}
+/*länken*/
+>>> .courseLink {
+	color:black;
+	color: rgb(9, 30, 255);
+}
+>>> p {
+	margin-bottom: 0px; /* OBS OBS VIKTIG! */
 }
