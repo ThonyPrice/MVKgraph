@@ -63,9 +63,9 @@ export class GraphComponent implements OnInit{
                                 "recommend": ""
                             }
                         };
-        console.log(waitNode);
+        //console.log(waitNode);
         this.testNode = this.createGraphNode(waitNode);
-        this.createGraph(this.testNode, false);
+        this.createGraph(null, false);
             
 
     }
@@ -80,9 +80,14 @@ export class GraphComponent implements OnInit{
     childObjArray: en lista med JSON objekt som är kursberoenden till parent som ser ut så här:
     {"name" : "KURSKOD"}
     */
+    removeGraph(){
+        this.d3.selectAll(".box").remove();
+        this.d3.selectAll(".link").remove();
+        this.d3.select("svg").remove();
+    }
 
     createGraph(node, afterCall){
-        
+        if(afterCall){
         var margin = {top: 40, right: 90, bottom: 50, left: 90},
             width = this.width,
             height = this.height;
@@ -90,17 +95,14 @@ export class GraphComponent implements OnInit{
         var tree = this.d3.tree()
             .size([width, height]);
        
-        console.log(node)
+        
         if(afterCall){
-            this.d3.selectAll(".box").remove();
-            this.d3.selectAll(".link").remove();
-            this.d3.select("svg").remove();
+            this.removeGraph()
         }
         var root = this.d3.hierarchy(node);
         
 
         var nodes = tree(root);
-        console.log(nodes)
         //var links = tree(root).links();
         this.updateNodesList(nodes, width, height);
 
@@ -111,6 +113,7 @@ export class GraphComponent implements OnInit{
         }
         
             var svg = this.d3.select("#tree").append("svg")
+                    .attr("width", width)
                     .attr("height", height)
         
         var link = svg.selectAll(".link")
@@ -137,12 +140,13 @@ export class GraphComponent implements OnInit{
             })
             .append("div").attr("class", "courseHeading")
             .append("p").text(function(d) { return d.data.name }).attr("class", "courseCourse");  
-
+        }
     }
 
     getChildren(parent) {
+        console.log(parent);
         var childObjStr = "[";
-        if (parent.eligibility.courses[0].length > 0) {
+        if (parent.eligibility.courses.lenght > 0 && parent.eligibility.courses[0].length > 0 ) {
             for (var i = 0; i < parent.eligibility.courses.length; i++) {
                 childObjStr = childObjStr + '{"name" : "' + parent.eligibility.courses[i][0] + '"}';
                 if (i < parent.eligibility.courses.length - 1) {
