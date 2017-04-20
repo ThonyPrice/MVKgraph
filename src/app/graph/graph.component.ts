@@ -19,6 +19,8 @@ export class GraphComponent implements OnInit{
     errorMessage: string;
     bla: any;
     currentCourse: string;
+    width = 800;
+    height = 600;
 
     constructor(private element: ElementRef, 
         d3Service: D3Service, 
@@ -28,6 +30,7 @@ export class GraphComponent implements OnInit{
         ) {
         this.d3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
         this.parentNativeElement = element.nativeElement;
+        
 
 
     }
@@ -35,18 +38,34 @@ export class GraphComponent implements OnInit{
 
     ngOnInit() {
     	
+
+        /*
+        let callAndMap = (pageNo) => call({page: pageNo}).map(res => {course: pageNo, data: res.json()});  // map, and save the page number for recursion later.
+
+        callAndMap(1)
+        .expand(obj => (obj.data.meta.hasMore ? callAndMap(obj.page + 1) : Observable.empty()))
+        //.map(obj => obj.data)    // uncomment this line if you need to map back to original response json
+        .subscribe(callback);
+        */
+
         this.route.params.subscribe((params: Params) =>
             this.currentCourse = params['courseID']);
-/*
-        this.searchService.getCourse(this.currentCourse)
-        	.subscribe(course => this.createGraphNode(course).subscribe(
-                node => this.createGraph(node)
-                )
-                , error => this.errorMessage=error);
-  */      
 
-        this.testNode = this.createGraphNode(this.dataBaseNode);
-        this.createGraph(this.testNode);
+        this.searchService.getCourse(this.currentCourse)
+        	.subscribe(course => this.createGraph(this.createGraphNode(course), true)
+                , error => this.errorMessage=error);
+       
+        console.log(this.dataBaseNode);
+        var waitNode = {"courseID": "Waiting...",
+                            "eligibility":{
+                                "courses":[[]],
+                                "credits": "",
+                                "recommend": ""
+                            }
+                        };
+        console.log(waitNode);
+        this.testNode = this.createGraphNode(waitNode);
+        this.createGraph(this.testNode, false);
             
 
     }
@@ -62,18 +81,26 @@ export class GraphComponent implements OnInit{
     {"name" : "KURSKOD"}
     */
 
-    createGraph(node){
+    createGraph(node, afterCall){
+        
         var margin = {top: 40, right: 90, bottom: 50, left: 90},
-            width = 800,
-            height = 600;
+            width = this.width,
+            height = this.height;
 
         var tree = this.d3.tree()
             .size([width, height]);
-
-
-
+       
+        console.log(node)
+        if(afterCall){
+            this.d3.selectAll(".box").remove();
+            this.d3.selectAll(".link").remove();
+            this.d3.select("svg").remove();
+        }
         var root = this.d3.hierarchy(node);
+        
+
         var nodes = tree(root);
+        console.log(nodes)
         //var links = tree(root).links();
         this.updateNodesList(nodes, width, height);
 
@@ -83,10 +110,9 @@ export class GraphComponent implements OnInit{
             //links = this.setLinks(nodeList);
         }
         
-        var svg = this.d3.select("#tree").append("svg")
-                .attr("width", width)
-                .attr("height", height)
-
+            var svg = this.d3.select("#tree").append("svg")
+                    .attr("height", height)
+        
         var link = svg.selectAll(".link")
                 .data(nodeList.slice(1))
             .enter().append("path")
@@ -98,9 +124,11 @@ export class GraphComponent implements OnInit{
                          + "l" + ( (width - d.parent.y) - (width - d.y) )/2 + "," + (0);
                     }); 
 
+
+                    //[routerLink]="['/graph', course._source.courseID]"
         var box = this.d3.selectAll(".box")
             .data(nodeList)
-            .enter().append("div").attr("class", "box")
+            .enter().append("div").attr("class", "box")//.attr("routerLink", function(d){ return '"[' + "'/graph'" + ", " + d.data.name + ']"'})
             .style("left", function(d) {
                 return (width - d.y) + "px" ;
             })
@@ -126,6 +154,8 @@ export class GraphComponent implements OnInit{
 	    return childObjArray;*/
         return childObjStr + "]";
     };
+
+
 
     /*
     parent: ett JSON objekt från databasen
