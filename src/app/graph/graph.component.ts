@@ -146,11 +146,13 @@ export class GraphComponent implements OnInit{
     getChildren(parent) {
         console.log(parent);
         var childObjStr = "[";
-        if (parent.eligibility.courses.lenght > 0 && parent.eligibility.courses[0].length > 0 ) {
-            for (var i = 0; i < parent.eligibility.courses.length; i++) {
-                childObjStr = childObjStr + '{"name" : "' + parent.eligibility.courses[i][0] + '"}';
-                if (i < parent.eligibility.courses.length - 1) {
-                    childObjStr = childObjStr + ","
+        if (parent.eligibility.courses.length > 0 ) {
+            if(parent.eligibility.courses[0].length > 0){
+                for (var i = 0; i < parent.eligibility.courses.length; i++) {
+                    childObjStr = childObjStr + '{"name" : "' + parent.eligibility.courses[i][0] + '"}';
+                    if (i < parent.eligibility.courses.length - 1) {
+                        childObjStr = childObjStr + ","
+                    }
                 }
             }
         }
