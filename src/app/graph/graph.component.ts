@@ -20,7 +20,8 @@ export class GraphComponent implements OnInit{
     bla: any;
     currentCourse: string;
     width = 800;
-    height = 600;
+    height = 700;
+    loadedCourses:any = [];
 
     constructor(private element: ElementRef, 
         d3Service: D3Service, 
@@ -52,10 +53,17 @@ export class GraphComponent implements OnInit{
             this.currentCourse = params['courseID']);
 
         this.searchService.getCourse(this.currentCourse)
-        	.subscribe(course => this.createGraph(this.createGraphNode(course), true)
+        	.subscribe(course => { this.loadedCourses[this.currentCourse] = course  
+                console.log(course)
+                if(course != "Not found"){
+                this.createGraph(this.createGraphNode(course), true, this.getChildrenRec(course))
+                //console.log(this.loadedCourses);
+                }else{
+                    alert("Kursen fanns inte i databasen");
+                }}
                 , error => this.errorMessage=error);
        
-        console.log(this.dataBaseNode);
+        //console.log(this.dataBaseNode);
         var waitNode = {"courseID": "Waiting...",
                             "eligibility":{
                                 "courses":[[]],
@@ -65,7 +73,7 @@ export class GraphComponent implements OnInit{
                         };
         //console.log(waitNode);
         this.testNode = this.createGraphNode(waitNode);
-        this.createGraph(null, false);
+        this.createGraph(null, false, false);
             
 
     }
@@ -86,8 +94,8 @@ export class GraphComponent implements OnInit{
         this.d3.select("svg").remove();
     }
 
-    createGraph(node, afterCall){
-        if(afterCall){
+    createGraph(node, afterCall, doneRec){
+        if(afterCall && doneRec){
         var margin = {top: 40, right: 90, bottom: 50, left: 90},
             width = this.width,
             height = this.height;
@@ -99,10 +107,15 @@ export class GraphComponent implements OnInit{
         if(afterCall){
             this.removeGraph()
         }
+        if(doneRec){
+            this.removeGraph()
+        }
+        this.createChildNodes(node, this.loadedCourses)
         var root = this.d3.hierarchy(node);
-        
+        //console.log(root)
 
         var nodes = tree(root);
+
         //var links = tree(root).links();
         this.updateNodesList(nodes, width, height);
 
@@ -128,23 +141,51 @@ export class GraphComponent implements OnInit{
                     }); 
 
 
-                    //[routerLink]="['/graph', course._source.courseID]"
+                    //[routerLink]="['/graph', course._source.courseID] '<div class = box [routerLink] = "['+"'/graph'," + d.data.name + ']"'"
         var box = this.d3.selectAll(".box")
             .data(nodeList)
-            .enter().append("div").attr("class", "box")//.attr("routerLink", function(d){ return '"[' + "'/graph'" + ", " + d.data.name + ']"'})
+            .enter().append("div").attr("class", "box")
             .style("left", function(d) {
                 return (width - d.y) + "px" ;
             })
             .style("top", function(d) {
                 return d.x + "px"
-            })
-            .append("div").attr("class", "courseHeading")
+            });
+
+            box.append("div").attr("class", "courseHeading").on("click", (d) => {
+                this.router.navigate(['/graph', d.data.name])
+                window.location.reload() 
+            } )
             .append("p").text(function(d) { return d.data.name }).attr("class", "courseCourse");  
+        
+        var info = box.append("div").on("click", (d)=> {
+            console.log(d.data.name);/*
+            this.searchService.getCourse(d.data.name).subscribe(course => console.log(course),
+                error => this.errorMessage = error 
+                )
+        */}).attr("class", "courseContent");
+
+
+        /*
+                this.searchService.getCourse(this.currentCourse)
+            .subscribe(course => this.createGraph(this.createGraphNode(course), true)
+                , error => this.errorMessage=error);
+       
+        */
+
+        info.append("p").text(function(d){ if(d.data.courseInfo != null){ return d.data.courseInfo.name_sv } });
+        info.append("p").text(function(d){ if(d.data.courseInfo != null){ return d.data.courseInfo.hp + " hp" } })
+        info.append("a").attr("href", function(d){ if(d.data.courseInfo != null){ return d.data.courseInfo.href } })
+            .text((d) => { if(this.loadedCourses[d.data.name] != null) 
+                { return "Course Information" } else {return /*this.searchService.getCourse(d.data.name).subscribe(
+                    course => {this.loadedCourses[course.courseID] = course
+                        console.log(this.loadedCourses)}  , error => this.errorMessage = error
+                    )*/}});
         }
     }
 
     getChildren(parent) {
-        console.log(parent);
+        //console.log(parent);
         var childObjStr = "[";
         if (parent.eligibility.courses.length > 0 ) {
             if(parent.eligibility.courses[0].length > 0){
@@ -198,33 +239,23 @@ export class GraphComponent implements OnInit{
         var obj = JSON.parse(courseStr + '}');
         obj.courseInfo = course;
         if(obj.children != null)
-            obj.children = this.createChildNodes(obj.children);
+            //console.log(this.createChildNodes(obj.children))
+            //obj.children = this.createChildNodes(obj.children);
+        //console.log(obj)
         return obj;
     };
 
 
-    /*
-                                ----------------OBS-------------------
-    När man kan göra calls, ändra i denna så det finns:
-    stoppvillkor, rekursivt call, lägg till så "this.testData[5]._source.courseID" blir ett call från en
-    en kurskod
-    */
-    createChildNodes(childList) {
-        for(var i = 0; i < childList.length; i++){
-            if(childList[i].name == "SF3850"){
-                var courseStr = '{"name" : "' + this.testData[5].courseID + '"';
-                if(this.getChildren(this.testData[5]) != "[]"){
-                    courseStr = courseStr + ', "children" : ' +  this.getChildren(this.testData[5]);
-                }
-                if (this.getNeededBy(this.testData[5]) != "[]") {
-                    courseStr = courseStr + ', "parents" : ' + this.getNeededBy(this.testData[5]);
-                }
-                var obj = JSON.parse(courseStr + "}");
-                // här borde det rekursiva callet ligga
-                childList[i] = obj;
+    /*kan vara användbar om man ska fösöka med rekursiva calls*/
+    createChildNodes(node, arr) {
+        console.log(this.loadedCourses);
+        console.log(arr);
+        console.log(node);
+        if(node.children != null ){
+            for(var i in node.children){
+                console.log(arr[node.children[i].name]);
             }
         }
-        return childList;
     }
 
     /*En funktion som returnerar djupet hos grafen*/
@@ -306,7 +337,31 @@ export class GraphComponent implements OnInit{
         return linkList;
     };
 
+    /*
+                this.searchService.getCourse(this.currentCourse)
+            .subscribe(course => this.createGraph(this.createGraphNode(course), true)
+                , error => this.errorMessage=error);
+       
+    */
 
-
+    getChildrenRec(course){
+        //console.log(course.courseID);
+        if(course.courseID != undefined){
+            if(course.eligibility.courses[0]){
+                if (course.eligibility.courses[0].length > 0){
+                    for(var i = 0; i < course.eligibility.courses.length; i++){
+                        for(var j = 0; j < course.eligibility.courses[i].length; j++){
+                            this.searchService.getCourse(course.eligibility.courses[i][j])
+                            .subscribe(course => {
+                                this.loadedCourses[course.courseID] = course;
+                                this.getChildrenRec(course)
+                            }, error => this.errorMessage = error)
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }	
 
