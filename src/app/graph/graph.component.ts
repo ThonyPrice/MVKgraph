@@ -21,7 +21,7 @@ export class GraphComponent implements OnInit{
     currentCourse: string;
     width = 800;
     height = 700;
-    loadedCourses:any = [];
+    loadedCourses: any = [];
 
     constructor(private element: ElementRef, 
         d3Service: D3Service, 
@@ -52,15 +52,18 @@ export class GraphComponent implements OnInit{
         this.route.params.subscribe((params: Params) =>
             this.currentCourse = params['courseID']);
 
-        this.searchService.getCourse(this.currentCourse)
-        	.subscribe(course => { this.loadedCourses[this.currentCourse] = course  
+        this.route.params
+            .switchMap((params: Params) => this.searchService.getCourse(params['courseID']))
+            .subscribe(course => {
+                this.loadedCourses[this.currentCourse] = course  
                 //console.log(course)
                 if(course != "Not found"){
-                    //this.getChildrenRec(course)
+                    this.getChildrenRec(course)
                     console.log(course);
-                this.createGraph(this.createGraphNode(course), true)
-                //console.log(this.loadedCourses);
-                }else{
+                    //this.createGraph(this.createGraphNode(course), true)
+                    //console.log(this.loadedCourses);
+                    setTimeout(() => { this.createGraph(this.createGraphNode(course), true); }, 3000);
+                } else {
                     alert("Kursen fanns inte i databasen");
                 }}
                 , error => this.errorMessage=error);
@@ -109,8 +112,10 @@ export class GraphComponent implements OnInit{
         if(afterCall){
             this.removeGraph()
         }
-        
-        this.createChildNodes(node, this.loadedCourses)
+
+        console.log(node);
+        node = this.createChildNodes(node);
+        console.log(node);
         var root = this.d3.hierarchy(node);
         //console.log(root)
 
@@ -152,10 +157,12 @@ export class GraphComponent implements OnInit{
                 return d.x + "px"
             });
 
-            box.append("div").attr("class", "courseHeading").on("click", (d) => {
-                this.router.navigate(['/graph', d.data.name])
-                window.location.reload() 
-            } )
+        box.append("div").attr("class", "courseHeading")
+            .append("a").attr("routerLink", function (d) { return ['/graph', d.data.name] })
+            .on("click", (d) => {
+                this.router.navigate(['/graph', d.data.name]);
+                //window.location.reload() 
+            })
             .append("p").text(function(d) { return d.data.name }).attr("class", "courseCourse");  
         
         var info = box.append("div").on("click", (d)=> {
@@ -196,21 +203,20 @@ export class GraphComponent implements OnInit{
                         }else{
                             childObjStr = childObjStr + '"name' + j  + '": "' + parent.eligibility.courses[i][j] + '"';
                         }
-                        if(j < parent.eligibility.courses[i].length -1){
+                        if (j < parent.eligibility.courses[i].length - 1) {
                             childObjStr = childObjStr + ",";
+                        } else {
+                            childObjStr = childObjStr + "}";
                         }
                     }
                     if (i < parent.eligibility.courses.length - 1) {
                         childObjStr = childObjStr + ",";
                     }else{
-                        childObjStr = childObjStr + "}";
+                        childObjStr = childObjStr + "";
                     }
                 }
             }
-        }
-	    /*var childObjArray = JSON.parse(childObjStr + "]");
-	    return childObjArray;*/
-        
+        }        
         return childObjStr + "]";
     };
 
@@ -241,7 +247,7 @@ export class GraphComponent implements OnInit{
     courseInfo = JSON objektet som informationen hämtades från
     */
     createGraphNode(course):Observable<any> {
-        console.log(course)
+        //console.log(course)
         var courseStr = '{"name" : "' + course.courseID + '"';
         if (this.getChildren(course) != "[]") {
             courseStr = courseStr + ', "children" : ' + this.getChildren(course);
@@ -252,26 +258,38 @@ export class GraphComponent implements OnInit{
         console.log(courseStr + "}")
         var obj = JSON.parse(courseStr + '}');
         obj.courseInfo = course;
-        if(obj.children != null)
+        if (obj.children != null) {
             //console.log(this.createChildNodes(obj.children))
             //obj.children = this.createChildNodes(obj.children);
-        console.log(obj)
+        }
+        //console.log(obj)
         return obj;
     };
 
 
     /*kan vara användbar om man ska fösöka med rekursiva calls*/
-    createChildNodes(node, arr) {
+    // DD2460 och SF2705 kan vara kul att testa på
+    createChildNodes(node) {
         //console.log(this.loadedCourses);
         //console.log(arr);
-        //console.log(node);
+        console.log(node);
+        //console.log(node.children);
         if(node){
-            if(node.children != null ){
-                for(var i in node.children){
-                    console.log(arr[node.children[i].name]);
+            if (node.children != null) {
+                //console.log("SE hit");
+                //console.log(this.loadedCourses[node.children[0]]);
+                for (var i in node.children) {
+                    if (this.loadedCourses[node.children[i].name] != undefined) {
+                        var childrenToAdd = JSON.parse(this.getChildren(this.loadedCourses[node.children[i].name]));
+                        if (childrenToAdd.length > 0) {
+                            node.children[i]['children'] = childrenToAdd;
+                            this.createChildNodes(node.children[i]);
+                        }
+                    }
                 }
             }
         }
+        return node;
     }
 
     /*En funktion som returnerar djupet hos grafen*/
@@ -282,7 +300,6 @@ export class GraphComponent implements OnInit{
             while (parent.children != null){
                 d = parent.children[0].depth;
                 parent = parent.children[0];
-
             }
         }
         return d + 1;
@@ -368,15 +385,17 @@ export class GraphComponent implements OnInit{
                     for(var i = 0; i < course.eligibility.courses.length; i++){
                         for(var j = 0; j < course.eligibility.courses[i].length; j++){
                             this.searchService.getCourse(course.eligibility.courses[i][j])
-                            .subscribe(course => {
-                                this.loadedCourses[course.courseID] = course;
-                                this.getChildrenRec(course)
+                                .subscribe(course => {
+                                    //console.log(course);
+                                    this.loadedCourses[course.courseID] = course;
+                                    this.getChildrenRec(course)
                             }, error => this.errorMessage = error)
                         }
                     }
                 }
             }
         }
+        //setTimeout(() => { console.log(this.loadedCourses); }, 2000);
         return true;
     }
 }	
