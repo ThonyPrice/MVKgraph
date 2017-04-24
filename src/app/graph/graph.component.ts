@@ -54,9 +54,11 @@ export class GraphComponent implements OnInit{
 
         this.searchService.getCourse(this.currentCourse)
         	.subscribe(course => { this.loadedCourses[this.currentCourse] = course  
-                console.log(course)
+                //console.log(course)
                 if(course != "Not found"){
-                this.createGraph(this.createGraphNode(course), true, this.getChildrenRec(course))
+                    //this.getChildrenRec(course)
+                    console.log(course);
+                this.createGraph(this.createGraphNode(course), true)
                 //console.log(this.loadedCourses);
                 }else{
                     alert("Kursen fanns inte i databasen");
@@ -72,8 +74,8 @@ export class GraphComponent implements OnInit{
                             }
                         };
         //console.log(waitNode);
-        this.testNode = this.createGraphNode(waitNode);
-        this.createGraph(null, false, false);
+        //this.testNode = this.createGraphNode(waitNode);
+        //this.createGraph(null, false);
             
 
     }
@@ -94,8 +96,8 @@ export class GraphComponent implements OnInit{
         this.d3.select("svg").remove();
     }
 
-    createGraph(node, afterCall, doneRec){
-        if(afterCall && doneRec){
+    createGraph(node, afterCall){
+        if(afterCall){
         var margin = {top: 40, right: 90, bottom: 50, left: 90},
             width = this.width,
             height = this.height;
@@ -107,9 +109,7 @@ export class GraphComponent implements OnInit{
         if(afterCall){
             this.removeGraph()
         }
-        if(doneRec){
-            this.removeGraph()
-        }
+        
         this.createChildNodes(node, this.loadedCourses)
         var root = this.d3.hierarchy(node);
         //console.log(root)
@@ -190,15 +190,27 @@ export class GraphComponent implements OnInit{
         if (parent.eligibility.courses.length > 0 ) {
             if(parent.eligibility.courses[0].length > 0){
                 for (var i = 0; i < parent.eligibility.courses.length; i++) {
-                    childObjStr = childObjStr + '{"name" : "' + parent.eligibility.courses[i][0] + '"}';
+                    for (var j = 0; j < parent.eligibility.courses[i].length; j++){
+                        if(j == 0){
+                            childObjStr = childObjStr + '{"name" : "' + parent.eligibility.courses[i][j] + '"';
+                        }else{
+                            childObjStr = childObjStr + '"name' + j  + '": "' + parent.eligibility.courses[i][j] + '"';
+                        }
+                        if(j < parent.eligibility.courses[i].length -1){
+                            childObjStr = childObjStr + ",";
+                        }
+                    }
                     if (i < parent.eligibility.courses.length - 1) {
-                        childObjStr = childObjStr + ","
+                        childObjStr = childObjStr + ",";
+                    }else{
+                        childObjStr = childObjStr + "}";
                     }
                 }
             }
         }
 	    /*var childObjArray = JSON.parse(childObjStr + "]");
 	    return childObjArray;*/
+        
         return childObjStr + "]";
     };
 
@@ -229,6 +241,7 @@ export class GraphComponent implements OnInit{
     courseInfo = JSON objektet som informationen hämtades från
     */
     createGraphNode(course):Observable<any> {
+        console.log(course)
         var courseStr = '{"name" : "' + course.courseID + '"';
         if (this.getChildren(course) != "[]") {
             courseStr = courseStr + ', "children" : ' + this.getChildren(course);
@@ -236,24 +249,27 @@ export class GraphComponent implements OnInit{
         if (this.getNeededBy(course) != "[]") {
             courseStr = courseStr + ', "parents" : ' + this.getNeededBy(course);
         }
+        console.log(courseStr + "}")
         var obj = JSON.parse(courseStr + '}');
         obj.courseInfo = course;
         if(obj.children != null)
             //console.log(this.createChildNodes(obj.children))
             //obj.children = this.createChildNodes(obj.children);
-        //console.log(obj)
+        console.log(obj)
         return obj;
     };
 
 
     /*kan vara användbar om man ska fösöka med rekursiva calls*/
     createChildNodes(node, arr) {
-        console.log(this.loadedCourses);
-        console.log(arr);
-        console.log(node);
-        if(node.children != null ){
-            for(var i in node.children){
-                console.log(arr[node.children[i].name]);
+        //console.log(this.loadedCourses);
+        //console.log(arr);
+        //console.log(node);
+        if(node){
+            if(node.children != null ){
+                for(var i in node.children){
+                    console.log(arr[node.children[i].name]);
+                }
             }
         }
     }
