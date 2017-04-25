@@ -19,7 +19,7 @@ export class GraphComponent implements OnInit{
     errorMessage: string;
     bla: any;
     currentCourse: string;
-    width = 800;
+    width = 1200;
     height = 700;
     loadedCourses: any = [];
 
@@ -113,11 +113,11 @@ export class GraphComponent implements OnInit{
             this.removeGraph()
         }
 
-        console.log(node);
+        //console.log(node);
         node = this.createChildNodes(node);
-        console.log(node);
+        //console.log(node);
         var root = this.d3.hierarchy(node);
-        //console.log(root)
+        console.log(this.loadedCourses);
 
         var nodes = tree(root);
 
@@ -134,15 +134,20 @@ export class GraphComponent implements OnInit{
                     .attr("width", width)
                     .attr("height", height)
         
+        var color = this.d3.schemeCategory10; /*för andra färger se: https://github.com/d3/d3-scale/blob/master/README.md#schemeCategory20*/
+
         var link = svg.selectAll(".link")
                 .data(nodeList.slice(1))
             .enter().append("path")
                 .attr("class", "link")
-                .attr("d", function(d) {
+                /*.style("stroke", function(d, i){ console.log(d) 
+                    return color[d.depth] })*/
+                .attr("d", function(d, i) {
+                    console.log(i);
                     return "M" + (width - d.y +50) + "," + (d.x+20) 
-                         + "l" + ( (width - d.parent.y) - (width - d.y) )/2 + "," + (0)
+                         + "l" + ( 2*((width - d.parent.y) - (width - d.y)) )/3 + "," + (0)
                          + "l" + ( 0 ) + "," + (d.parent.x - d.x)
-                         + "l" + ( (width - d.parent.y) - (width - d.y) )/2 + "," + (0);
+                         + "l" + ( ((width - d.parent.y) - (width - d.y) ))/3 + "," + (0);
                     }); 
 
 
@@ -150,7 +155,11 @@ export class GraphComponent implements OnInit{
         var box = this.d3.selectAll(".box")
             .data(nodeList)
             .enter().append("div").attr("class", "box")
+            .on("mouseover", function(d){ 
+                })
             .style("left", function(d) {
+                console.log(d);
+                //if(d.data.)
                 return (width - d.y) + "px" ;
             })
             .style("top", function(d) {
@@ -158,19 +167,21 @@ export class GraphComponent implements OnInit{
             });
 
         box.append("div").attr("class", "courseHeading")
-            .append("a").attr("routerLink", function (d) { return ['/graph', d.data.name] })
+            .append("a").attr("routerLink", (d)=> { if (this.loadedCourses[d.data.name]) return ['/graph', d.data.name]})
             .on("click", (d) => {
-                this.router.navigate(['/graph', d.data.name]);
+                if(this.loadedCourses[d.data.name] = "Not found")
+                    this.router.navigate(['/graph', d.data.name]);
+                else 
+                    alert("Kursen finns ej i databasen");
                 //window.location.reload() 
             })
             .append("p").text(function(d) { return d.data.name }).attr("class", "courseCourse");  
         
-        var info = box.append("div").on("click", (d)=> {
-            console.log(d.data.name);/*
-            this.searchService.getCourse(d.data.name).subscribe(course => console.log(course),
-                error => this.errorMessage = error 
-                )
-        */}).attr("class", "courseContent");
+        var info = box.append("div")/*.on("click", (d)=> {
+            console.log(d.data.name);
+            console.log(d); 
+            console.log(this.loadedCourses[d.data.name]);   
+              })*/.attr("class", "courseContent").attr("id", "show");
 
 
         /*
@@ -180,9 +191,13 @@ export class GraphComponent implements OnInit{
        
         */
 
-        info.append("p").text(function(d){ if(d.data.courseInfo != null){ return d.data.courseInfo.name_sv } });
-        info.append("p").text(function(d){ if(d.data.courseInfo != null){ return d.data.courseInfo.hp + " hp" } })
-        info.append("a").attr("href", function(d){ if(d.data.courseInfo != null){ return d.data.courseInfo.href } })
+        info.append("p").text((d)=>{ 
+            if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].name_sv } } );
+        
+        info.append("p").text((d) => { if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].hp + " hp" } })
+        
+        info.append("a").attr("href", (d)=>{ 
+            if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].href } })
             .text((d) => { if(this.loadedCourses[d.data.name] != null) 
                 { return "Course Information" } else {return /*this.searchService.getCourse(d.data.name).subscribe(
                     course => {this.loadedCourses[course.courseID] = course
@@ -255,7 +270,7 @@ export class GraphComponent implements OnInit{
         if (this.getNeededBy(course) != "[]") {
             courseStr = courseStr + ', "parents" : ' + this.getNeededBy(course);
         }
-        console.log(courseStr + "}")
+        
         var obj = JSON.parse(courseStr + '}');
         obj.courseInfo = course;
         if (obj.children != null) {
@@ -272,7 +287,7 @@ export class GraphComponent implements OnInit{
     createChildNodes(node) {
         //console.log(this.loadedCourses);
         //console.log(arr);
-        console.log(node);
+        //console.log(node);
         //console.log(node.children);
         if(node){
             if (node.children != null) {
@@ -376,6 +391,8 @@ export class GraphComponent implements OnInit{
                 , error => this.errorMessage=error);
        
     */
+
+
 
     getChildrenRec(course){
         //console.log(course.courseID);
