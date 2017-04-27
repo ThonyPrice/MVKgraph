@@ -58,7 +58,10 @@ export class GraphComponent implements OnInit{
                 this.loadedCourses[this.currentCourse] = course  
                 //console.log(course)
                 if(course != "Not found"){
-                    this.getChildrenRec(course)
+                    this.getChildrenRec(course);
+                    if(this.checkParents(course)){
+                        this.callParents(course);
+                    }
                     console.log(course);
                     //this.createGraph(this.createGraphNode(course), true)
                     //console.log(this.loadedCourses);
@@ -113,22 +116,38 @@ export class GraphComponent implements OnInit{
             this.removeGraph()
         }
 
+
         //console.log(node);
         node = this.createChildNodes(node);
         //console.log(node);
         var root = this.d3.hierarchy(node);
-        console.log(this.loadedCourses);
+        //console.log(this.loadedCourses);
 
         var nodes = tree(root);
-
+        console.log(nodes);
+        var l = [];
+        this.getNodesInDepth(nodes, l)
+        var heightScale = this.getMaxNodesInDepth(l)
+        var widthScale = this.getGraphDepth(nodes)
+        if(nodes.data.parents != null){
+            widthScale = widthScale+3;
+            if( heightScale < nodes.data.parents.length){
+                heightScale = nodes.data.parents.length;
+            }
+        }else{
+            widthScale = widthScale+2;
+        }
+        height = heightScale * 80;
+        width = widthScale * 320;
         //var links = tree(root).links();
         this.updateNodesList(nodes, width, height);
-
+        //console.log(this.getGraphDepth(nodes));
         var nodeList = nodes.descendants();
         if(nodes.data.parents != null){
             nodeList = this.setParentNodes(nodeList, height);
             //links = this.setLinks(nodeList);
         }
+        console.log(nodeList);
         
             var svg = this.d3.select("#tree").append("svg")
                     .attr("width", width)
@@ -142,12 +161,12 @@ export class GraphComponent implements OnInit{
                 .attr("class", "link")
                 /*.style("stroke", function(d, i){ console.log(d) 
                     return color[d.depth] })*/
-                .attr("d", function(d, i) {
-                    console.log(i);
+                .attr("d", (d, i) => {
+                    //console.log(shift);
                     return "M" + (width - d.y +50) + "," + (d.x+20) 
-                         + "l" + ( 2*((width - d.parent.y) - (width - d.y)) )/3 + "," + (0)
+                         + "l" + ( 2*((width - d.parent.y) - (width - d.y)) + d.parent.height * 30 )/3 + "," + (0)
                          + "l" + ( 0 ) + "," + (d.parent.x - d.x)
-                         + "l" + ( ((width - d.parent.y) - (width - d.y) ))/3 + "," + (0);
+                         + "l" + ( ((width - d.parent.y) - (width - d.y) ) - d.parent.height * 30)/3 + "," + (0);
                     }); 
 
 
@@ -158,7 +177,7 @@ export class GraphComponent implements OnInit{
             .on("mouseover", function(d){ 
                 })
             .style("left", function(d) {
-                console.log(d);
+                //console.log(d);
                 //if(d.data.)
                 return (width - d.y) + "px" ;
             })
@@ -206,6 +225,57 @@ export class GraphComponent implements OnInit{
         }
     }
 
+    getNodesInDepth(node, l){
+        if(node.children != null){
+            l.push(node.children.length * 10 ** node.depth)
+            for (var i = 0; i < node.children.length; ++i) {
+                this.getNodesInDepth(node.children[i], l);
+            }
+        }
+    }
+    getMaxNodesInDepth(l){
+        var p = 0;
+        var i = 0;
+        var li = [0];
+        while (l.length > 0) {
+            while(i<l.length){
+                if(l[i] < 10 ** (p+1)){
+
+                    li[p] = (li[p] + l.splice(i,1)[0])
+                }else{i++}  
+            }
+            i = 0;
+            p++;
+            li.push(0);
+        }
+        var m = 0;
+        for (var i = 0; i < li.length; ++i) {
+            if(m < (li[i]/(10 ** (i)))) {
+                m = li[i]/(10 ** (i));
+            }
+        }
+        return m;
+    }
+
+    callParents(course){
+        for (var i = 0; i < course.neededBy.length; ++i) {
+            this.searchService.getCourse(course.neededBy[i])
+                .subscribe(course => {
+                    //console.log(course);
+                    this.loadedCourses[course.courseID] = course;
+            }, error => this.errorMessage = error)
+        }
+    }    
+
+    checkParents(course){
+
+        if(course.neededBy == null){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     getChildren(parent) {
         //console.log(parent);
         var childObjStr = "[";
@@ -235,8 +305,7 @@ export class GraphComponent implements OnInit{
         return childObjStr + "]";
     };
 
-
-
+    
     /*
     parent: ett JSON objekt från databasen
     nbObjArray: en lista med JSON objekt som har parent som beroende
@@ -333,7 +402,7 @@ export class GraphComponent implements OnInit{
     /*uppdaterar nodernas data så de blir anpassade för neededFor platserna
     width är bredden på den canvas som d3 ritas ut på*/
     updateNodesList(node, width, height) {
-        var d = this.getGraphDepth(node)+1;
+        var d = this.getGraphDepth(node)+2;
         var nodeList = node.descendants(); 
         //this.getNodeList(node, nodeList);
         var nrpDepth = [];
