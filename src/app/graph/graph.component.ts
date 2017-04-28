@@ -72,13 +72,6 @@ export class GraphComponent implements OnInit{
                 , error => this.errorMessage=error);
        
         //console.log(this.dataBaseNode);
-        var waitNode = {"courseID": "Waiting...",
-                            "eligibility":{
-                                "courses":[[]],
-                                "credits": "",
-                                "recommend": ""
-                            }
-                        };
         //console.log(waitNode);
         //this.testNode = this.createGraphNode(waitNode);
         //this.createGraph(null, false);
@@ -116,15 +109,17 @@ export class GraphComponent implements OnInit{
             this.removeGraph()
         }
 
-        
         //console.log(node);
         node = this.createChildNodes(node);
+        var orNodeList = this.addOrNodes(node);
+        console.log(orNodeList);
         //console.log(node);
         var root = this.d3.hierarchy(node);
         //console.log(this.loadedCourses);
 
+
         var nodes = tree(root);
-        console.log(nodes);
+        //console.log(nodes);
         var l = [];
         this.getNodesInDepth(nodes, l)
         var heightScale = this.getMaxNodesInDepth(l)
@@ -153,7 +148,7 @@ export class GraphComponent implements OnInit{
             nodeList = this.setParentNodes(nodeList, height);
             //links = this.setLinks(nodeList);
         }
-        console.log(nodeList);
+        //console.log(nodeList);
         
             var svg = this.d3.select("#tree").append("svg")
                     .attr("width", width)
@@ -177,6 +172,8 @@ export class GraphComponent implements OnInit{
                 /*.style("stroke", function(d, i){ console.log(d) 
                     return color[d.depth] })*/
                 .attr("d", (d) => {
+
+                    
                     //console.log(shift);
                     return "M" + (width - d.y +50) + "," + (d.x+20) 
                          + "l" + ( ((width - d.parent.y) - (width - d.y))/2 + d.parent.height * 20 ) + "," + (0)
@@ -233,6 +230,8 @@ export class GraphComponent implements OnInit{
                 else{ return d.data.name } 
          }).attr("class", "courseCourse");  
 
+        box.append()
+
          cbox.append("div").attr("class", "courseHeading")
              .append("p").text((d)=> { return "EligibilityCredits" })
              .attr("class", "courseCourse");
@@ -247,8 +246,7 @@ export class GraphComponent implements OnInit{
 
         cinfo.append("p").text ((d)=> { return d.credit })
 
-        console.log(this.loadedCourses)
-
+       
 
         /*
                 this.searchService.getCourse(this.currentCourse)
@@ -265,11 +263,34 @@ export class GraphComponent implements OnInit{
         info.append("a").attr("href", (d)=>{ 
             if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].href } })
             .text((d) => { if(this.loadedCourses[d.data.name] != null) 
-                { return "Course Information" } else {return /*this.searchService.getCourse(d.data.name).subscribe(
-                    course => {this.loadedCourses[course.courseID] = course
-                        console.log(this.loadedCourses)}  , error => this.errorMessage = error
-                    )*/}});
+                { return "Course Information" } });
         }
+    }
+
+    /*kan komma till användning*/
+    addOrNodes(node){
+        var tree = this.d3.tree()
+            .size([this.width, this.height]);
+        var t = tree(this.d3.hierarchy(node)).descendants();
+        var resList = [];
+        for (var i = 0; i < t.length; i++) {
+            if(t[i].data.or != null){
+                for (var j = 0; j < t[i].data.or.length; j++) {
+                    var orNode = this.createGraphNode(this.loadedCourses[t[i].data.or[j]])
+                    this.createChildNodes(orNode)
+                    var orNodeList = tree(this.d3.hierarchy(orNode)).descendants();
+                    for(var k = 0; k < orNodeList.length; k++){
+                        orNodeList[k].depth = orNodeList[k].depth +  t[i].depth;
+                        resList.push(orNodeList[k])
+                    }
+                }  
+            }
+        }
+        return resList;
+    }
+
+    updateOrNodeList(nodeList, parentDepth){
+
     }
 
     createCreditNode(node){
@@ -342,13 +363,15 @@ export class GraphComponent implements OnInit{
                         if(j == 0){
                             childObjStr = childObjStr + '{"name" : "' + parent.eligibility.courses[i][j] + '"';
                         }else{
-                            childObjStr = childObjStr + '"name' + j  + '": "' + parent.eligibility.courses[i][j] + '"';
+                            childObjStr = childObjStr + '"or": ["' + parent.eligibility.courses[i][j] + '"';
                         }
                         if (j < parent.eligibility.courses[i].length - 1) {
                             childObjStr = childObjStr + ",";
-                        } else {
-                            childObjStr = childObjStr + "}";
-                        }
+                        } else if (j > 0) {
+                            childObjStr = childObjStr + "]}";
+                        }else {
+                            childObjStr = childObjStr + "}"
+                        };
                     }
                     if (i < parent.eligibility.courses.length - 1) {
                         childObjStr = childObjStr + ",";
@@ -387,6 +410,7 @@ export class GraphComponent implements OnInit{
     courseInfo = JSON objektet som informationen hämtades från
     */
     createGraphNode(course):Observable<any> {
+        console.log(course);
         //console.log(course)
         var courseStr = '{"name" : "' + course.courseID + '"';
         if (this.getChildren(course) != "[]") {
@@ -395,7 +419,6 @@ export class GraphComponent implements OnInit{
         if (this.getNeededBy(course) != "[]") {
             courseStr = courseStr + ', "parents" : ' + this.getNeededBy(course);
         }
-        
         var obj = JSON.parse(courseStr + '}');
         obj.courseInfo = course;
         if (obj.children != null) {
