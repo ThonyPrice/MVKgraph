@@ -116,7 +116,7 @@ export class GraphComponent implements OnInit{
             this.removeGraph()
         }
 
-
+        
         //console.log(node);
         node = this.createChildNodes(node);
         //console.log(node);
@@ -140,9 +140,15 @@ export class GraphComponent implements OnInit{
         height = heightScale * 80;
         width = widthScale * 320;
         //var links = tree(root).links();
+
         this.updateNodesList(nodes, width, height);
+        var credList = [];
+        if(nodes.data.courseInfo.eligibility.credits.length > 5){
+            credList.push(this.createCreditNode(nodes));
+        }
         //console.log(this.getGraphDepth(nodes));
         var nodeList = nodes.descendants();
+        //console.log(nodeList[0].data.courseInfo.eligibility.credits)
         if(nodes.data.parents != null){
             nodeList = this.setParentNodes(nodeList, height);
             //links = this.setLinks(nodeList);
@@ -155,18 +161,27 @@ export class GraphComponent implements OnInit{
         
         var color = this.d3.schemeCategory10; /*för andra färger se: https://github.com/d3/d3-scale/blob/master/README.md#schemeCategory20*/
 
+        var clink = svg.selectAll(".clink")
+                    .data(credList)
+                .enter().append("path")
+                    .attr("class", "clink")
+                    .attr("d", (d)=>{
+                        return "M" + (width - d.y +50) + "," + (d.x+20) 
+                             + "l" + 0 + "," + (d.px - d.x);
+                    })
+
         var link = svg.selectAll(".link")
                 .data(nodeList.slice(1))
             .enter().append("path")
                 .attr("class", "link")
                 /*.style("stroke", function(d, i){ console.log(d) 
                     return color[d.depth] })*/
-                .attr("d", (d, i) => {
+                .attr("d", (d) => {
                     //console.log(shift);
                     return "M" + (width - d.y +50) + "," + (d.x+20) 
-                         + "l" + ( 2*((width - d.parent.y) - (width - d.y)) + d.parent.height * 30 )/3 + "," + (0)
+                         + "l" + ( ((width - d.parent.y) - (width - d.y))/2 + d.parent.height * 20 ) + "," + (0)
                          + "l" + ( 0 ) + "," + (d.parent.x - d.x)
-                         + "l" + ( ((width - d.parent.y) - (width - d.y) ) - d.parent.height * 30)/3 + "," + (0);
+                         + "l" + ( ((width - d.parent.y) - (width - d.y) )/2 - d.parent.height * 20) + "," + (0);
                     }); 
 
 
@@ -185,22 +200,54 @@ export class GraphComponent implements OnInit{
                 return d.x + "px"
             });
 
-        box.append("div").attr("class", "courseHeading")
+        var cbox = this.d3.selectAll(".cbox")
+            .data(credList)
+            .enter().append("div").attr("class", "cbox")
+            .style("left", function(d) {
+                //console.log(d);
+                //if(d.data.)
+                return (width - d.y) + "px" ;
+            })
+            .style("top", function(d) {
+                return d.x + "px"
+            })
+
+        box.append("div").attr("class", (d) => {
+                var r  = "courseHeading ";
+                if(this.loadedCourses[d.data.name].eligibility.credits.length > 5){
+                    return r + "credReq";
+                }else{
+                    return r;
+                }
+            }).attr("id", (d)=> { if(d.depth != 1){ return "courseHeading2" } } )
             .append("a").attr("routerLink", (d)=> { if (this.loadedCourses[d.data.name]) return ['/graph', d.data.name]})
             .on("click", (d) => {
-                if(this.loadedCourses[d.data.name] = "Not found")
+                if(this.loadedCourses[d.data.name] != "Not found")
                     this.router.navigate(['/graph', d.data.name]);
                 else 
                     alert("Kursen finns ej i databasen");
                 //window.location.reload() 
             })
-            .append("p").text(function(d) { return d.data.name }).attr("class", "courseCourse");  
+            .append("p").text((d) => { if(this.loadedCourses[d.data.name] != "Not found"){ 
+                return this.loadedCourses[d.data.name].name_sv }
+                else{ return d.data.name } 
+         }).attr("class", "courseCourse");  
+
+         cbox.append("div").attr("class", "courseHeading")
+             .append("p").text((d)=> { return "EligibilityCredits" })
+             .attr("class", "courseCourse");
         
         var info = box.append("div")/*.on("click", (d)=> {
             console.log(d.data.name);
             console.log(d); 
             console.log(this.loadedCourses[d.data.name]);   
               })*/.attr("class", "courseContent").attr("id", "show");
+
+        var cinfo = cbox.append("div").attr("class", "courseContent");
+
+        cinfo.append("p").text ((d)=> { return d.credit })
+
+        console.log(this.loadedCourses)
 
 
         /*
@@ -211,7 +258,7 @@ export class GraphComponent implements OnInit{
         */
 
         info.append("p").text((d)=>{ 
-            if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].name_sv } } );
+            if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].courseID } } );
         
         info.append("p").text((d) => { if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].hp + " hp" } })
         
@@ -222,6 +269,15 @@ export class GraphComponent implements OnInit{
                     course => {this.loadedCourses[course.courseID] = course
                         console.log(this.loadedCourses)}  , error => this.errorMessage = error
                     )*/}});
+        }
+    }
+
+    createCreditNode(node){
+        if(node.data.courseInfo.eligibility.credits != ""){
+            var objStr = '{"credit" : "' + node.data.courseInfo.eligibility.credits+ '",';
+            objStr = objStr + '"px" : ' + node.x + ', "py" : ' + node.y + ', ';
+            objStr = objStr + '"y" : ' + node.y + ' ,' + '"x" : ' + (node.x + 150) + '}';
+            return JSON.parse(objStr);
         }
     }
 
