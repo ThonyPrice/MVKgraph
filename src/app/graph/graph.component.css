@@ -83,3 +83,57 @@
 >>>#courseHeading2 {
 	background-color: grey !important;
 }
+
+
+/* CSS för navbar */
+
+/* ---- menybaren ---- */
+.navbar-inverse {
+	background-color: #d4d4d4;
+	font-family: arial;
+	box-shadow: 0 0 30px #888888;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+	color: #636363;
+	margin-right: 5px;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover{
+	color:black;
+	cursor: pointer;
+}
+
+.navbar-inverse .navbar-nav>li>a:active{
+	color:black;
+}
+
+.navbar-inverse .navbar-nav>li>a:focus{
+	color:black;
+}
+
+.language{
+	font-size: 17px;
+	margin-top: 3px;
+}
+
+/* infoikonen*/
+.infoicon{
+	font-size: 22px;
+	color: #636363;
+}
+
+.infoicon:hover {
+	color: black;
+	cursor: pointer;
+}
+
+/* ----- POPOVERN -----*/
+.popover{
+    width:300px;
+    height:250px;   
+}
+
+.popover-title{
+	color:red;
+}

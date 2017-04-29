@@ -612,5 +612,9 @@ export class GraphComponent implements OnInit{
         //setTimeout(() => { console.log(this.loadedCourses); }, 2000);
         return true;
     }
+
+    searchCourse(course: string) {
+        this.router.navigate(['/start', course]);
+    }
 }	
 
