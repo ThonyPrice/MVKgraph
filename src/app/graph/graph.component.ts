@@ -22,6 +22,7 @@ export class GraphComponent implements OnInit{
     width = 1200;
     height = 700;
     loadedCourses: any = [];
+    siblings: any = [];
 
     constructor(private element: ElementRef, 
         d3Service: D3Service, 
@@ -48,7 +49,7 @@ export class GraphComponent implements OnInit{
         //.map(obj => obj.data)    // uncomment this line if you need to map back to original response json
         .subscribe(callback);
         */
-
+        this.removeGraph();
         this.route.params.subscribe((params: Params) =>
             this.currentCourse = params['courseID']);
 
@@ -91,7 +92,9 @@ export class GraphComponent implements OnInit{
     */
     removeGraph(){
         this.d3.selectAll(".box").remove();
+        this.d3.selectAll(".cbox").remove();
         this.d3.selectAll(".link").remove();
+        this.d3.selectAll(".clink").remove();
         this.d3.select("svg").remove();
     }
 
@@ -139,10 +142,7 @@ export class GraphComponent implements OnInit{
         //var links = tree(root).links();
 
         
-        var credList = [];
-        if(nodes.data.courseInfo.eligibility.credits.length > 5){
-            credList.push(this.createCreditNode(nodes));
-        }
+        
         //console.log(this.getGraphDepth(nodes));
         var nodeList = this.updateNodesList(nodes, width, height);
         for(var i = 0; i < nodeList.length; i++){
@@ -152,6 +152,10 @@ export class GraphComponent implements OnInit{
         if(nodes.data.parents != null){
             nodeList = this.setParentNodes(nodeList, height);
             //links = this.setLinks(nodeList);
+        }
+        var credList = [];
+        if(nodes.data.courseInfo.eligibility.credits.length > 5){
+            credList.push(this.createCreditNode(nodeList[0]));
         }
         console.log(nodeList);
         
@@ -173,7 +177,13 @@ export class GraphComponent implements OnInit{
         var link = svg.selectAll(".link")
                 .data(nodeList.slice(1))
             .enter().append("path")
-                .attr("class", "link")
+                .attr("class", (d)=> {
+                    if(d.sibling){
+                        return "sibLink"
+                    }else{
+                        return "link";
+                    }
+                })
                 /*.style("stroke", function(d, i){ console.log(d) 
                     return color[d.depth] })*/
                 .attr("d", (d) => {
@@ -188,8 +198,8 @@ export class GraphComponent implements OnInit{
                          + "l" + ( 0 ) + "," + (d.parent.x - d.x)
                          + "l" + ( ((width - d.parent.y) - (width - d.y) )/2 - d.parent.height * 20) + "," + (0);
                     }else{
-                        return "M" + (width - d.y +50) + "," + (d.x+20)
-                             + "l"+ ( 0 ) + "," + (d.sibling.x - d.x)
+                        return "M" + (width - d.y + 100) + "," + (d.x+100)
+                             + "L"+ (width - d.sibling.y + 100) + "," + (d.sibling.x -5 )
                     }
                 }); 
 
@@ -198,7 +208,13 @@ export class GraphComponent implements OnInit{
                     //[routerLink]="['/graph', course._source.courseID] '<div class = box [routerLink] = "['+"'/graph'," + d.data.name + ']"'"
         var box = this.d3.selectAll(".box")
             .data(nodeList)
-            .enter().append("div").attr("class", "box")
+            .enter().append("div").attr("class", "box").attr("id", (d)=>{
+                if(d.isSibling || d.sibling){
+                
+                    //this.siblings.push(1)
+
+                }
+            })
             .on("mouseover", function(d){ 
                 })
             .style("left", function(d) {
@@ -279,6 +295,8 @@ export class GraphComponent implements OnInit{
                 { return "Course Information" } });
         }
     }
+
+    
 
     getNodeListDepth(nodeList){
         var r = 0;

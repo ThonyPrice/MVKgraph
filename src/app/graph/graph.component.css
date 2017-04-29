@@ -22,6 +22,11 @@
   stroke: #ccc;
   stroke-width: 2px;
 }
+>>> .sibLink {
+  fill: none;
+  stroke: rgb(168,168,168);
+  stroke-width: 210px;
+}
 
 >>> .clink {
   fill: none;
@@ -31,7 +36,7 @@
 
 /*CSS för nodens utseende*/
 >>> .box {
-	width: 15%;
+	width: 200px;
 	position: absolute;
 	background-color: white;
 	display: inline-block;
@@ -48,6 +53,11 @@
 >>> .credReq{
 	border-top: double;
 	border-color: rgb(87,87,255);
+}
+
+>>> #graphNav{
+	position:fixed;
+	width: 102%;
 }
 
 >>> .courseCourse{
