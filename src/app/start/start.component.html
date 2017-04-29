@@ -3,14 +3,17 @@
         <div class="container">
             <ul class="nav navbar-nav navbar-right">
                 <li><a class="language" (click)="changeLanguage()">{{texts.languageSwitch}}</a></li>
-                <li><a [popover]="infoPopover">
-                    <span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true">
+                <li>
+                    <a [popover]="infoPopover">
                         <popover-content #infoPopover
-                                         title="Information"
-                                         [closeOnClickOutside]="true">
+                            title="Information"
+                            placement="auto bottom"
+                            [closeOnClickOutside]="true">
                             {{texts.info}}
                         </popover-content>
-                    </span></a></li>
+                        <span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true"></span>
+                    </a>
+                </li>
             </ul>
         </div>
     </nav>
