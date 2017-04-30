@@ -41,12 +41,12 @@ export class StartComponent implements OnInit {
     }
 
     searchCourse(course: string) {
-        this.router.navigate(['/start', course]);
         this.searchService.searchCourse(course)
             .subscribe(
               courses => this.searchResult = courses,
               error => this.errorMessage = <any>error
         );
+        this.router.navigate(['/start', course]);
     }
 
     
