@@ -222,10 +222,13 @@ export class GraphComponent implements OnInit, OnDestroy{
 
         box.append("div").attr("class", (d) => {
                 var r  = "courseHeading ";
-                if(this.loadedCourses[d.data.name].eligibility.credits.length > 5){
-                    return r + "credReq";
-                }else{
-                    return r;
+                if(this.loadedCourses[d.data.name]){
+                    console.log(this.loadedCourses[d.data.name])
+                    if(this.loadedCourses[d.data.name].eligibility.credits.length > 5){
+                        return r + "credReq";
+                    }else{
+                        return r;
+                    }
                 }
             }).attr("id", (d)=> { if(d.depth != 1){ return "courseHeading2" } } )
             .append("a").attr("routerLink", (d)=> { if (this.loadedCourses[d.data.name]) return ['/graph', d.data.name]})
@@ -236,10 +239,10 @@ export class GraphComponent implements OnInit, OnDestroy{
                     alert("Kursen finns ej i databasen");
                 //window.location.reload() 
             })
-            .append("p").text((d) => { if(this.loadedCourses[d.data.name] != "Not found"){ 
+            .append("p").text((d) => { if(this.loadedCourses[d.data.name]){ if(this.loadedCourses[d.data.name] != "Not found"){ 
                 return this.loadedCourses[d.data.name].name_sv }
                 else{ return d.data.name } 
-         }).attr("class", "courseCourse");  
+         }else{return d.data.name}}).attr("class", "courseCourse");  
 
         box.append()
 
@@ -260,7 +263,7 @@ export class GraphComponent implements OnInit, OnDestroy{
         info.append("p").text((d)=>{ 
             if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].courseID } } );
         
-        info.append("p").text((d) => { if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].hp + " hp" } })
+        info.append("p").text((d) => { if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].hp + " hp" }else{return "Course not in database"} })
         
         info.append("a").attr("href", (d)=>{ 
             if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].href } })
