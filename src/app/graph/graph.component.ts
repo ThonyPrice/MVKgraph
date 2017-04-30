@@ -220,11 +220,11 @@ export class GraphComponent implements OnInit, OnDestroy{
                 return d.x + "px"
             })
 
-        box.append("div").attr("class", (d) => {
+            box.append("div").attr("class", (d) => {
                 var r  = "courseHeading ";
                 if(this.loadedCourses[d.data.name]){
                     console.log(this.loadedCourses[d.data.name])
-                    if(this.loadedCourses[d.data.name].eligibility.credits.length > 5){
+                    if(this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1){
                         return r + "credReq";
                     }else{
                         return r;
@@ -244,7 +244,19 @@ export class GraphComponent implements OnInit, OnDestroy{
                 else{ return d.data.name } 
          }else{return d.data.name}}).attr("class", "courseCourse");  
 
-        box.append()
+        box.append("span").attr("class", (d)=>{ 
+            if(this.loadedCourses[d.data.name]){
+                if(this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1){
+                    return "tooltiptext";
+                }
+            } 
+        }).text((d)=>{
+            if(this.loadedCourses[d.data.name]){
+                if(this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1){
+                    return this.loadedCourses[d.data.name].eligibility.credits;
+                }
+            } 
+        })
 
          cbox.append("div").attr("class", "courseHeading")
              .append("p").text((d)=> { return "EligibilityCredits" })

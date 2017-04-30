@@ -94,6 +94,31 @@
 	background-color: grey !important;
 }
 
+/* CSS för tooltip me creditsberoende */
+
+/* Tooltip text */
+>>> .box  .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    bottom: 110%;
+    left: 50%;
+    margin-left: -60px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+>>> .box:hover .tooltiptext {
+    visibility: visible;
+}
+
 
 /* CSS för navbar */
 
