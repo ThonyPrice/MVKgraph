@@ -114,6 +114,7 @@ export class GraphComponent implements OnInit, OnDestroy{
         var heightScale = this.getMaxNodesInDepth(list)
         
         var widthScale = this.getNodeListDepth(list);
+
         if(nodes.data.parents != null){
             widthScale = widthScale+3;
             if( heightScale < nodes.data.parents.length){
@@ -121,6 +122,9 @@ export class GraphComponent implements OnInit, OnDestroy{
             }
         }else{
             widthScale = widthScale+2;
+        }
+        if(heightScale ==1 ){
+            heightScale = 2;
         }
         height = heightScale * 80;
         this.height = height;
@@ -137,7 +141,7 @@ export class GraphComponent implements OnInit, OnDestroy{
         }
         //console.log(nodeList[0].data.courseInfo.eligibility.credits)
         if(nodes.data.parents != null){
-            nodeList = this.setParentNodes(nodeList, height);
+            nodeList = this.setParentNodes(nodeList, height, width);
             //links = this.setLinks(nodeList);
         }
         var credList = [];
@@ -223,7 +227,6 @@ export class GraphComponent implements OnInit, OnDestroy{
             box.append("div").attr("class", (d) => {
                 var r  = "courseHeading ";
                 if(this.loadedCourses[d.data.name]){
-                    console.log(this.loadedCourses[d.data.name])
                     if(this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1){
                         return r + "credReq";
                     }else{
@@ -317,7 +320,7 @@ export class GraphComponent implements OnInit, OnDestroy{
     width är bredden på den canvas som d3 ritas ut på*/
     updateNodesList(node, width, height) {
         var d = this.getGraphDepth(node)+2;
-        console.log(node);
+        //console.log(d)
         var nodeList = node.descendants();
         for(var i = 0; i < nodeList.length; i++){
             if(nodeList[i].data.or != null){
@@ -549,8 +552,9 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     /*lägger till neededBy noder med dess data i nod-listan
     Height är höjden på den canvas som d3 ritas ut på*/
-    setParentNodes(nodeList, height) {
+    setParentNodes(nodeList, height, width) {
         //this.testNode.parents.length
+        var d = this.getNodeListDepth(nodeList)+3;
         for (var i =0; i < nodeList[0].data.parents.length; i++) {
             var nodeObj: any = {};
             var data: any = {};
@@ -560,7 +564,7 @@ export class GraphComponent implements OnInit, OnDestroy{
             nodeObj.data = data;
             nodeObj.parent = nodeList[0];
             nodeObj.x =  height * ((i + 1) / (nodeList[0].data.parents.length +2 ));
-            nodeObj.y = 0;
+            nodeObj.y = width * (1/d);
             //console.log(nodeObj);
             nodeList.push(nodeObj);
         }
