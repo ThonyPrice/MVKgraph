@@ -189,7 +189,7 @@ export class GraphComponent implements OnInit, OnDestroy{
                          + "l" + ( 0 ) + "," + (d.parent.x - d.x)
                          + "l" + ( ((width - d.parent.y) - (width - d.y) )/2 - d.parent.height * 20) + "," + (0);
                     }else{
-                        return "M" + (width - d.y + 100) + "," + (d.x+100)
+                        return "M" + (width - d.y + 100) + "," + (d.x+40)/* +100 */
                              + "L"+ (width - d.sibling.y + 100) + "," + (d.sibling.x -5 )
                     }
                 }); 
@@ -269,9 +269,9 @@ export class GraphComponent implements OnInit, OnDestroy{
             console.log(d.data.name);
             console.log(d); 
             console.log(this.loadedCourses[d.data.name]);   
-              })*/.attr("class", "courseContent").attr("id", "show");
+              })*/.attr("class", (d)=> { if(d.depth == 1){ return "selCourseContent" }else{ return "courseContent"} }).attr("id", "show");
 
-        var cinfo = cbox.append("div").attr("class", "courseContent");
+        var cinfo = cbox.append("div").attr("class", "credCourseContent");
 
         cinfo.append("p").text ((d)=> { return d.credit })
 

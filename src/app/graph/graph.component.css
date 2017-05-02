@@ -68,11 +68,22 @@
 	padding-left: 30px;
 	font-size: 10px;
 }
+>>> .selCourseContent {
+	margin: 15px;
+	color:black;
+	/*visibility: hidden;*/
+}
+
+>>> .credCourseContent{
+	margin: 15px;
+	color:black;
+}
 
 >>> .courseContent {
 	margin: 15px;
 	color:black;
-	/*display: none;*/
+	display: none;
+	/*visibility: hidden;*/
 }
 /*länken*/
 >>> .courseLink {
@@ -117,6 +128,10 @@
 /* Show the tooltip text when you mouse over the tooltip container */
 >>> .box:hover .tooltiptext {
     visibility: visible;
+}
+>>> .box:hover .courseContent {
+    display: inline-block;
+    /*visibility: visible;*/
 }
 
 
