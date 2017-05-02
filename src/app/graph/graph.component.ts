@@ -23,6 +23,8 @@ export class GraphComponent implements OnInit, OnDestroy{
     height = 700;
     loadedCourses: any = [];
     siblings: any = [];
+    private coursesInQueue;
+    private baseNode;
 
     constructor(private element: ElementRef, 
         d3Service: D3Service, 
@@ -41,23 +43,28 @@ export class GraphComponent implements OnInit, OnDestroy{
     ngOnInit() {
 
         this.removeGraph();
+        this.coursesInQueue = 0;
+
         this.route.params.subscribe((params: Params) =>
             this.currentCourse = params['courseID']);
 
         this.route.params
             .switchMap((params: Params) => this.searchService.getCourse(params['courseID']))
-            .subscribe(course => {
+            .subscribe((course: any) => {
                 this.loadedCourses[this.currentCourse] = course  
                 //console.log(course)
                 if(course != "Not found"){
-                    this.getChildrenRec(course);
+                    this.baseNode = this.createGraphNode(course);
+
+                    if (course.eligibility.courses[0] && course.eligibility.courses[0].length > 0) {
+                        this.getChildrenRec(course);
+                    } else {
+                        this.createGraph(this.baseNode, true);
+                    }
+
                     if(this.checkParents(course)){
                         this.callParents(course);
                     }
-                    console.log(course);
-                    //this.createGraph(this.createGraphNode(course), true)
-                    //console.log(this.loadedCourses);
-                    setTimeout(() => { this.createGraph(this.createGraphNode(course), true); }, 3000);
                 } else {
                     alert("Kursen fanns inte i databasen");
                 }}
@@ -584,17 +591,21 @@ export class GraphComponent implements OnInit, OnDestroy{
         return linkList;
     };
 
-    getChildrenRec(course){
+    getChildrenRec(course) {
         if(course.courseID != undefined){
             if(course.eligibility.courses[0]){
-                if (course.eligibility.courses[0].length > 0){
-                    for(var i = 0; i < course.eligibility.courses.length; i++){
-                        for(var j = 0; j < course.eligibility.courses[i].length; j++){
+                if (course.eligibility.courses[0].length > 0) {
+                    for (var i = 0; i < course.eligibility.courses.length; i++) {
+                        for (var j = 0; j < course.eligibility.courses[i].length; j++) {
+                            this.coursesInQueue++;
                             this.searchService.getCourse(course.eligibility.courses[i][j])
                                 .subscribe(course => {
-                                    //console.log(course);
                                     this.loadedCourses[course.courseID] = course;
                                     this.getChildrenRec(course)
+                                    this.coursesInQueue--;
+                                    if (this.coursesInQueue == 0) {
+                                        this.createGraph(this.baseNode, true);
+                                    }
                                 }, error => this.errorMessage = error)
                         }
                     }

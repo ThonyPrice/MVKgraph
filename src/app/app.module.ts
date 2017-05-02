@@ -8,13 +8,13 @@ import { D3Service } from 'd3-ng2-service';
 import {PopoverModule} from "ngx-popover";
 
 import { AppComponent } from './app.component';
-import { SearchComponent } from './search/search.component';
 import { StartComponent } from './start/start.component';
 import { CourseNodeComponent } from './course-node/course-node.component';
 import { TranslationService } from './translation.service';
 import { SearchService } from './search.service';
 import { GraphComponent } from './graph/graph.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { CourseNotFoundComponent } from './course-not-found/course-not-found.component';
 
 const appRoutes: Routes = [
     { path: 'start/:query', component: StartComponent },
@@ -31,11 +31,11 @@ const appRoutes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
-        SearchComponent,
         StartComponent,
         CourseNodeComponent,
         GraphComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        CourseNotFoundComponent
     ],
     imports: [
         BrowserModule,
