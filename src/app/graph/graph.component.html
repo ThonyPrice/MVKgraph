@@ -5,7 +5,7 @@
             <!-- Search -->
             <form class="navbar-form navbar-left">
                 <div class="input-group inputBar">
-                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."'>
+                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."' (keyup.enter)="searchCourse(course.value)">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" (click)="searchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
                         </div>
