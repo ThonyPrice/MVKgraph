@@ -26,7 +26,7 @@ class Handler(BaseHTTPRequestHandler):
                         return
 
 def cleanPath(path):
-            return path.replace("%C3%A4", "ä").replace("%C3%A5", "å").replace("%C3%B6", "ö")
+            return path.replace("%C3%A4", "ä").replace("%C3%A5", "å").replace("%C3%B6", "ö").replace("%20", " ")
             
             
 try:
