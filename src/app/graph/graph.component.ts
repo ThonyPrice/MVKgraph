@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { D3Service, D3, Selection } from 'd3-ng2-service';
 import { SearchService } from '../search.service';
+import { TranslationService } from '../translation.service';
 import { Observable } from 'rxjs/Observable';
 //import { Platform } from '@angular/core';
 
@@ -15,18 +16,25 @@ export class GraphComponent implements OnInit, OnDestroy{
     private d3: any;
     private parentNativeElement: any;
     private svg;
+
     errorMessage: string;
     currentCourse: string;
+    texts: Object;
+    selectedLanguage: string;
+
     width = 1200;
     height = 700;
     loadedCourses: any = [];
     siblings: any = [];
+
     private coursesInQueue;
     private baseNode;
 
-    constructor(private element: ElementRef, 
+    constructor(
+        private element: ElementRef, 
         d3Service: D3Service, 
         private searchService: SearchService, 
+        private translationService: TranslationService,
         private router: Router, 
         private route: ActivatedRoute
         ) {
@@ -39,6 +47,12 @@ export class GraphComponent implements OnInit, OnDestroy{
 
 
     ngOnInit() {
+
+        this.texts = this.translationService.getText();
+        this.selectedLanguage = this.translationService.getLanguage();
+        if (this.selectedLanguage == undefined) {
+            this.selectedLanguage = "eng";
+        }
 
         this.removeGraph();
         this.coursesInQueue = 0;
@@ -599,6 +613,12 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     searchCourse(course: string) {
         this.router.navigate(['/start', course]);
+    }
+
+    changeLanguage() {
+        this.texts = this.translationService.switchLanguage();
+        this.selectedLanguage = this.translationService.getLanguage();
+        console.log(this.selectedLanguage);
     }
 }	
 

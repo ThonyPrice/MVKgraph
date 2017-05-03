@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 
 const engTexts = {
     heading: "KTH Course Dependencies",
@@ -19,15 +19,35 @@ const sweTexts = {
 }
 
 @Injectable()
-export class TranslationService {
+export class TranslationService implements OnInit {
+
+    selectedLanguage: string;
 
     constructor() { }
 
-    getSweText() {
-        return sweTexts;
+    ngOnInit() {
+        this.selectedLanguage = "eng";
     }
 
-    getEngText() {
-        return engTexts;
+    getLanguage() {
+        return this.selectedLanguage;
+    }
+
+    switchLanguage() {
+        if (this.selectedLanguage == "eng") {
+            this.selectedLanguage = "swe";
+            return sweTexts;
+        } else {
+            this.selectedLanguage = "eng";
+            return engTexts;
+        }
+    }
+
+    getText() {
+        if (this.selectedLanguage == "eng") {
+            return engTexts;
+        } else {
+            return sweTexts;
+        }
     }
 }

@@ -15,7 +15,6 @@ import { SearchService } from '../search.service';
 
 export class StartComponent implements OnInit {
 
-    selectedLanguage: string;
     texts: Object;
     searchResult: any;
     errorMessage: string;
@@ -27,10 +26,10 @@ export class StartComponent implements OnInit {
         private translationService: TranslationService,
         private searchService: SearchService
     ) { }
-
+    
     ngOnInit() {
-        this.selectedLanguage = "eng";
-        this.texts = this.translationService.getEngText();
+        
+        this.texts = this.translationService.getText();
 
         this.route.params.subscribe((params: Params) =>
             this.lastQuery = params['query']);
@@ -51,12 +50,6 @@ export class StartComponent implements OnInit {
 
     
     changeLanguage() {
-        if (this.selectedLanguage == "eng") {
-            this.texts = this.translationService.getSweText();
-            this.selectedLanguage = "swe";
-        } else {
-            this.texts = this.translationService.getEngText();
-            this.selectedLanguage = "eng";
-        }
+        this.texts = this.translationService.switchLanguage();
     }
 }
