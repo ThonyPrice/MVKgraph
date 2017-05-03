@@ -15,9 +15,7 @@ export class GraphComponent implements OnInit, OnDestroy{
     private d3: any;
     private parentNativeElement: any;
     private svg;
-    testNode: any;
     errorMessage: string;
-    bla: any;
     currentCourse: string;
     width = 1200;
     height = 700;
@@ -55,15 +53,12 @@ export class GraphComponent implements OnInit, OnDestroy{
                 //console.log(course)
                 if(course != "Not found"){
                     this.baseNode = this.createGraphNode(course);
-
-                    if (course.eligibility.courses[0] && course.eligibility.courses[0].length > 0) {
+                    if (this.checkParents(course)) {
+                        this.callParents(course);
+                    } else if (course.eligibility.courses[0] && course.eligibility.courses[0].length > 0) {
                         this.getChildrenRec(course);
                     } else {
                         this.createGraph(this.baseNode, true);
-                    }
-
-                    if(this.checkParents(course)){
-                        this.callParents(course);
                     }
                 } else {
                     alert("Kursen fanns inte i databasen");
@@ -75,11 +70,6 @@ export class GraphComponent implements OnInit, OnDestroy{
         this.removeGraph();
     }
 
-
-
-    testData = [{ "neededBy": ["DH2413", "DD2257", "DD2457", "DH2650", "DD2352", "DD2395", "DD2448", "DD2459", "DD2488", "DH2320", "DD2432", "DD2460", "DD2443"], "courseID": "DD1337", "hp": 7.0, "eligibility": { "courses": [["SF2520"], ["SF3850"]], "recommend": "", "credits": "" }, "href": "https://www.kth.se/student/kurser/kurs/DD1337", "name_sv": "Programmering", "name_en": "Programming" }, { "name_sv": "Programmeringsteknik och Matlab", "courseID": "DD1315", "hp": 7.5, "eligibility": { "courses": [[]], "recommend": "", "credits": "" }, "href": "https://www.kth.se/student/kurser/kurs/DD1315", "name_en": "Programming Techniques and Matlab" }, { "name_sv": "Numerisk linj\u00e4rprogrammering", "courseID": "SF3850", "hp": 7.5, "eligibility": { "courses": [["SF2812"], ["SF2520"]], "recommend": "", "credits": "Master degree including at least 30 university credits (hp) in in Mathematics (Calculus, Linear algebra, Differential equations and transform method), and further at least 6 hp in Mathematical Statistics, 6 hp in Numerical analysis and 6 hp in Optimization. " }, "href": "https://www.kth.se/student/kurser/kurs/SF3850", "name_en": "Numerical Linear Programming" }, { "name_sv": "Programmeringsteknik", "courseID": "DD1310", "hp": 6.0, "eligibility": { "courses": [[]], "recommend": "", "credits": "" }, "href": "https://www.kth.se/student/kurser/kurs/DD1310", "name_en": "Programming Techniques" }, { "name_sv": "Programmeringsparadigm", "courseID": "DD1361", "hp": 7.5, "eligibility": { "courses": [], "recommend": "", "credits": ". 7,5 hp in mathematics and 6 hp in computer science or programming technics. " }, "href": "https://www.kth.se/student/kurser/kurs/DD1361", "name_en": "Programming Paradigms" }, {"name_sv": "Numerisk linj\u00e4rprogrammering", "eligibility": {"courses": [["SF2812"], ["SF2520"]], "recommend": "", "credits": "Master degree including at least 30 university credits (hp) in in Mathematics (Calculus, Linear algebra, Differential equations and transform method), and further at least 6 hp in Mathematical Statistics, 6 hp in Numerical analysis and 6 hp in Optimization. "}, "hp": 7.5, "courseID": "SF3850", "href": "https://www.kth.se/student/kurser/kurs/SF3850", "name_en": "Numerical Linear Programming"}];
-    /*Ändra index(0-3) för en annan nod*/
-    dataBaseNode = this.testData[0];
     /*
     parent: ett JSON objekt från databasen
     childObjArray: en lista med JSON objekt som är kursberoenden till parent som ser ut så här:
@@ -122,9 +112,12 @@ export class GraphComponent implements OnInit, OnDestroy{
         
         var widthScale = this.getNodeListDepth(list);
 
+        if (nodes.data.courseInfo.eligibility.credits.length > 5 && heightScale < 5) {
+            heightScale = 5;
+        }
         if(nodes.data.parents != null){
             widthScale = widthScale+3;
-            if( heightScale < nodes.data.parents.length){
+            if (heightScale < nodes.data.parents.length) {
                 heightScale = nodes.data.parents.length;
             }
         }else{
@@ -167,9 +160,11 @@ export class GraphComponent implements OnInit, OnDestroy{
                     .data(credList)
                 .enter().append("path")
                     .attr("class", "clink")
-                    .attr("d", (d)=>{
-                        return "M" + (width - d.y +50) + "," + (d.x+20) 
-                             + "l" + 0 + "," + (d.px - d.x);
+            .attr("d", (d) => {
+                console.log(d);
+                console.log(this.width)
+                return "M" + (width - d.y + 50) + "," + (d.x + 20)
+                    + "l" + 0 + "," + ((d.px - d.x));
                     })
 
         var link = svg.selectAll(".link")
@@ -394,36 +389,23 @@ export class GraphComponent implements OnInit, OnDestroy{
                 }
             }
         }
-        /*var p = 0;
-        var i = 0;
-        var li = [0];
-        while (l.length > 0) {
-            while(i<l.length){
-                if(l[i] < 10 ** (p+1)){
-
-                    li[p] = (li[p] + l.splice(i,1)[0])
-                }else{i++}  
-            }
-            i = 0;
-            p++;
-            li.push(0);
-        }
-        var m = 0;
-        for (var i = 0; i < li.length; ++i) {
-            if(m < (li[i]/(10 ** (i)))) {
-                m = li[i]/(10 ** (i));
-            }
-        }
-        return m;*/
         return r;
     }
 
     callParents(course){
+        this.coursesInQueue += course.neededBy.length;
         for (var i = 0; i < course.neededBy.length; ++i) {
             this.searchService.getCourse(course.neededBy[i])
                 .subscribe(course => {
-                    //console.log(course);
                     this.loadedCourses[course.courseID] = course;
+                    this.coursesInQueue--;
+                    if (this.coursesInQueue == 0) {
+                        if (course.eligibility.courses[0] && course.eligibility.courses[0].length > 0) {
+                            this.getChildrenRec(course);
+                        } else {
+                            this.createGraph(this.baseNode, true);
+                        }
+                    }
             }, error => this.errorMessage = error)
         }
     }    
