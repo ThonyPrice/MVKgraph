@@ -43,7 +43,7 @@
 	box-shadow: 0 0 30px #888888;
 }
 >>> .cbox {
-	width: 15%;
+	width: 200px;
 	position: absolute;
 	background-color: white;
 	display: inline-block;
