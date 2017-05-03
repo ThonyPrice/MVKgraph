@@ -44,10 +44,10 @@ export class TranslationService implements OnInit {
     }
 
     getText() {
-        if (this.selectedLanguage == "eng") {
-            return engTexts;
-        } else {
+        if (this.selectedLanguage == "swe") {
             return sweTexts;
+        } else {
+            return engTexts;
         }
     }
 }

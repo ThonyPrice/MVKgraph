@@ -20,6 +20,7 @@ const appRoutes: Routes = [
     { path: 'start/:query', component: StartComponent },
     { path: 'start', component: StartComponent },
     { path: 'graph/:courseID', component: GraphComponent },
+    { path: 'course-not-found', component: CourseNotFoundComponent },
     {
         path: '',
         redirectTo: '/start',

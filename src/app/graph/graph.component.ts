@@ -75,7 +75,7 @@ export class GraphComponent implements OnInit, OnDestroy{
                         this.createGraph(this.baseNode, true);
                     }
                 } else {
-                    alert("Kursen fanns inte i databasen");
+                    this.router.navigate(['/course-not-found']);
                 }}
                 , error => this.errorMessage=error);
     }
@@ -256,7 +256,6 @@ export class GraphComponent implements OnInit, OnDestroy{
                     this.router.navigate(['/graph', d.data.name]);
                 else 
                     alert("Kursen finns ej i databasen");
-                //window.location.reload() 
             })
             .append("p").text((d) => { if(this.loadedCourses[d.data.name]){ if(this.loadedCourses[d.data.name] != "Not found"){ 
                 return this.loadedCourses[d.data.name].name_sv }
