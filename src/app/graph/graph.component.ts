@@ -224,7 +224,7 @@ export class GraphComponent implements OnInit, OnDestroy{
                 return (width - d.y) + "px" ;
             })
             .style("top", function(d) {
-                return d.x + "px"
+                return (d.x+100) + "px"
             });
 
         var cbox = this.d3.selectAll(".cbox")
@@ -236,7 +236,7 @@ export class GraphComponent implements OnInit, OnDestroy{
                 return (width - d.y) + "px" ;
             })
             .style("top", function(d) {
-                return d.x + "px"
+                return (d.x+100) + "px"
             })
 
             box.append("div").attr("class", (d) => {
@@ -320,6 +320,8 @@ export class GraphComponent implements OnInit, OnDestroy{
             .style("bottom", "0px")
             .style("left", "0px")
             .text("Latest Data fetch: 15 mars 2017");
+        console.log(nodeList[0])
+        window.scrollTo(nodeList[0].y, (this.width -nodeList[0].x)/2);
         }
 /*<div style ="position:fixed;bottom:0px;left:0px">Latest Data fetch: 15 mars 2017</div>*/
 
