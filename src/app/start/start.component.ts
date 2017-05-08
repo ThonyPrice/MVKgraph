@@ -20,6 +20,7 @@ export class StartComponent implements OnInit {
     searchResult: any;
     errorMessage: string;
     lastQuery: string;
+    emptyResult: boolean;
 
     constructor(
         private route: ActivatedRoute,
@@ -30,9 +31,12 @@ export class StartComponent implements OnInit {
     
     ngOnInit() {
 
+        this.emptyResult = false;
+
         this.selectedLanguage = this.translationService.getLanguage();
         if (this.selectedLanguage == undefined) {
             this.selectedLanguage = "eng";
+            this.translationService.setLanguage(this.selectedLanguage);
         }
 
         this.texts = this.translationService.getText();
@@ -42,7 +46,14 @@ export class StartComponent implements OnInit {
 
         this.route.params
             .switchMap((params: Params) => this.searchService.searchCourse(params['query']))
-            .subscribe((courses: any) => this.searchResult = courses);
+            .subscribe((courses: any) => {
+                this.searchResult = courses
+                console.log(courses[0]);
+                if (!courses[0] && this.lastQuery != null) {
+                    console.log();
+                    this.emptyResult = true;
+                }
+            });
     }
 
     searchCourse(course: string) {

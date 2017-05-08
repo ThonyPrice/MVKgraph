@@ -6,7 +6,8 @@ const engTexts = {
     placeholder: "Search for course...",
     info: "KTH Graph visualization is a project in the course Mjukvarukontruktion. The idea and the assignment is from the company Findwise. We who created this webpage are Jens Berntsen, Jonathan Bäckström, Sara Ervin, Emmeli Fall, David Kirsch, Niclas Lindqvist, Thony Price & William Skagerström.",
     languageSwitch: "På svenska",
-    credits: "credits"
+    credits: "credits",
+    noResult: "No results found"
 }
 
 const sweTexts = {
@@ -15,22 +16,23 @@ const sweTexts = {
     placeholder: "Sök efter kurs...",
     info: "KTH Graph visualization är ett projekt i kursen Mjukvarukonstruktion. Idén och uppgiften kommer från företaget Findwise. Vi som skapat denna hemsida är Jens Berntsen, Jonathan Bäckström, Sara Ervin, Emmeli Fall, David Kirsch, Niclas Lindqvist, Thony Price & William Skagerström.",
     languageSwitch: "In english",
-    credits: "hp"
+    credits: "hp",
+    noResult: "Inga resultat hittade"
 }
 
 @Injectable()
-export class TranslationService implements OnInit {
+export class TranslationService {
 
     selectedLanguage: string;
 
     constructor() { }
 
-    ngOnInit() {
-        this.selectedLanguage = "eng";
-    }
-
     getLanguage() {
         return this.selectedLanguage;
+    }
+
+    setLanguage(language: string) {
+        this.selectedLanguage = language;
     }
 
     switchLanguage() {
