@@ -110,10 +110,13 @@
 /* Tooltip text */
 >>> .box  .tooltiptext {
     visibility: hidden;
+    top: -5px;
+    right: 105%; 
     width: 120px;
+    /*width: 120px;
     bottom: 110%;
     left: 50%;
-    margin-left: -60px;
+    margin-left: -60px;*/
     background-color: black;
     color: #fff;
     text-align: center;
@@ -122,7 +125,7 @@
  
     /* Position the tooltip text - see examples below! */
     position: absolute;
-    z-index: 1;
+    z-index: 3;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */

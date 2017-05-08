@@ -24,6 +24,7 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     width = 1200;
     height = 700;
+    loading: boolean = true;
     loadedCourses: any = [];
     siblings: any = [];
     listOfNodes: any;
@@ -76,7 +77,8 @@ export class GraphComponent implements OnInit, OnDestroy{
                     }
                 } else {
                     this.router.navigate(['/course-not-found']);
-                }}
+                }
+                }
                 , error => this.errorMessage=error);
     }
 
@@ -98,6 +100,7 @@ export class GraphComponent implements OnInit, OnDestroy{
     }
 
     createGraph(node, afterCall){
+        this.loading = false;
         if(afterCall){
         var margin = {top: 40, right: 90, bottom: 50, left: 90},
             width = this.width,
@@ -251,8 +254,10 @@ export class GraphComponent implements OnInit, OnDestroy{
             }).attr("id", (d)=> { if(d.depth != 1){ return "courseHeading2" } } )
             .append("a").attr("routerLink", (d)=> { if (this.loadedCourses[d.data.name]) return ['/graph', d.data.name]})
             .on("click", (d) => {
-                if(this.loadedCourses[d.data.name] != "Not found")
+                if(this.loadedCourses[d.data.name] != "Not found"){
+                    this.loading = true;
                     this.router.navigate(['/graph', d.data.name]);
+                    }
                 else 
                     alert("Error 404: Not found(in database");
             }).append("p").text((d) => { if(this.loadedCourses[d.data.name]){ if(this.loadedCourses[d.data.name] != "Not found"){ 
