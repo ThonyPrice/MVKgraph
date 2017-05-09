@@ -580,7 +580,8 @@ export class GraphComponent implements OnInit, OnDestroy{
     courseInfo = JSON objektet som informationen hämtades från
     */
     createGraphNode(course) {
-        //console.log(course)
+        console.log("Se hit:");
+        console.log(course)
         var courseStr = '{"name" : "' + course.courseID + '"';
         if (this.getChildren(course) != "[]") {
             courseStr = courseStr + ', "children" : ' + this.getChildren(course);
@@ -588,6 +589,7 @@ export class GraphComponent implements OnInit, OnDestroy{
         if (this.getNeededBy(course) != "[]") {
             courseStr = courseStr + ', "parents" : ' + this.getNeededBy(course);
         }
+        console.log(courseStr);
         var obj = JSON.parse(courseStr + '}');
         obj.courseInfo = course;
         if (obj.children != null) {
