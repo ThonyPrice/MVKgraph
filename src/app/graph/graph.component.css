@@ -194,5 +194,16 @@
 /* searchResults */
 
 .searchResults {
+	background: white;
+	position: absolute;
+}
+
+.courseResult {
 	color: white;
+	padding: 15px;
+	border-bottom: 1px solid #d4d4d4;
+}
+
+>>> .searchExample {
+	color: black;
 }

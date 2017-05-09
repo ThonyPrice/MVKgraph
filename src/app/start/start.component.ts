@@ -22,6 +22,7 @@ export class StartComponent implements OnInit {
     lastQuery: string;
     emptyResult: boolean;
     loading: boolean = true;
+    nrResults: number;
 
     constructor(
         private route: ActivatedRoute,
@@ -48,13 +49,13 @@ export class StartComponent implements OnInit {
         this.route.params
             .switchMap((params: Params) => this.searchService.searchCourse(params['query']))
             .subscribe((courses: any) => {
-                console.log(courses);
                 this.loading = false;
                 this.searchResult = courses
                 if (!courses[0] && this.lastQuery != null) {
                     this.emptyResult = true;
                 } else {
                     this.emptyResult = false;
+                    this.nrResults = courses.length;
                 }
             });
     }
@@ -68,6 +69,7 @@ export class StartComponent implements OnInit {
                 if (courses[0]) {
                     this.searchResult = courses;
                     this.emptyResult = false;
+                    this.nrResults = courses.length;
                 }
             },
               error => this.errorMessage = <any>error

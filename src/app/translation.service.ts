@@ -8,7 +8,8 @@ const engTexts = {
     languageSwitch: "På svenska",
     credits: "credits",
     emptyResult: "No results found",
-    notInDatabase: "The course is not in the database"
+    notInDatabase: "The course is not in the database",
+    nrResults: " results"
 }
 
 const sweTexts = {
@@ -19,7 +20,8 @@ const sweTexts = {
     languageSwitch: "In english",
     credits: "hp",
     emptyResult: "Inga resultat hittade",
-    notInDatabase: "Kursen finns inte i databasen"
+    notInDatabase: "Kursen finns inte i databasen",
+    nrResults: " resultat"
 }
 
 @Injectable()
