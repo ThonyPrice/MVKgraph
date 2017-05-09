@@ -199,17 +199,21 @@ export class GraphComponent implements OnInit, OnDestroy{
                     return color[d.depth] })*/
                 .attr("d", (d) => {
                     if(d.isSibling){
-                        return "M" + (width - d.y +50) + ", " + (d.parent.x+20)
-                             + "l" + ( ((width - d.parent.y) - (width - d.y)) ) + "," + (0)
+                        /*return "M" + (width - d.y +50) + ", " + (d.parent.x+20)
+                             + "l" + ( ((width - d.parent.y) - (width - d.y)) ) + "," + (0)*/
+                        return "M" + (width - d.y) + "," + (d.x) 
+                         + "l" + ( ((width - d.parent.y) - (width - d.y))/2 + d.parent.height * 30 ) + "," + (0)
+                         + "l" + ( 0 ) + "," + (d.parent.x - d.x+20)
+                         + "l" + ( ((width - d.parent.y) - (width - d.y) )/2 - d.parent.height * 30) + "," + (0);
                     }
                     else if(d.parent){
                     //console.log(shift);
                     return "M" + (width - d.y +50) + "," + (d.x+20) 
-                         + "l" + ( ((width - d.parent.y) - (width - d.y))/2 + d.parent.height * 20 ) + "," + (0)
+                         + "l" + ( ((width - d.parent.y) - (width - d.y))/2 + d.parent.height * 30 ) + "," + (0)
                          + "l" + ( 0 ) + "," + (d.parent.x - d.x)
-                         + "l" + ( ((width - d.parent.y) - (width - d.y) )/2 - d.parent.height * 20) + "," + (0);
+                         + "l" + ( ((width - d.parent.y) - (width - d.y) )/2 - d.parent.height * 30) + "," + (0);
                     }else{
-                        return "M" + (width - d.y + 100) + "," + (d.x+40)/* +100 */
+                        return "M" + (width - d.y + 100) + "," + (d.x+45)/* +100 */
                              + "L"+ (width - d.sibling.y + 100) + "," + (d.sibling.x -5 )
                     }
                 }); 
@@ -329,7 +333,7 @@ export class GraphComponent implements OnInit, OnDestroy{
                     return "Course Website"
                 }else{ 
                     return "Kurshemsida"
-                }}}).attr("class", "courseWeb");
+                }}}).attr("class", "courseWeb").attr("target", "_blank");
 
         var fetchDate = this.d3.selectAll(".fetchDate")
             .data("d")
@@ -404,22 +408,37 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     /*kan komma till användning*/
     addOrNodes(orNode, deep){
+        //console.log(orNode.data.name)
+        var resList = [];
         var tree = this.d3.tree()
             .size([this.width, this.height]);
-        var node = this.loadedCourses[orNode.data.or[0]];
-        var resList = [];
-        console.log(node);
-        if(node){
-            var t = tree(this.d3.hierarchy(node)).descendants();
+        var x = orNode.data.or;
+        for(var i = 0; i < x.length; i ++){
+        
+            var node = this.loadedCourses[x[i]];
             
-            for (var j = 0; j < t.length; j++) {
-                var orNode = this.createGraphNode(this.loadedCourses[t[j].data.courseID])
-                this.createChildNodes(orNode)
-                var orNodeList = tree(this.d3.hierarchy(orNode)).descendants();
-                for (var k = 0; k < orNodeList.length; k++){
-                    orNodeList[k].depth = orNodeList[k].depth + deep;
-                    resList.push(orNodeList[k])
+
+            if(node){
+                var t = tree(this.d3.hierarchy(node)).descendants();
+                
+                for (var j = 0; j < t.length; j++) {
+                    var orNode2 = this.createGraphNode(this.loadedCourses[t[j].data.courseID])
+                    this.createChildNodes(orNode2)
+                    var orNodeList = tree(this.d3.hierarchy(orNode2)).descendants();
+                    for (var k = 0; k < orNodeList.length; k++){
+                        orNodeList[k].depth = orNodeList[k].depth + deep;
+                        resList.push(orNodeList[k])
+                    }
                 }
+            }else{
+                var newNode: any = {};
+                newNode.data = {"name": x[i] };
+                newNode.depth = deep;
+                newNode.height = 0;
+                newNode.x = 0;
+                newNode.y = 0;
+                newNode.parent = null
+                resList.push(newNode)
             }
         }
         return resList;
@@ -430,50 +449,67 @@ export class GraphComponent implements OnInit, OnDestroy{
     updateNodesList(node, width, height) {
         var d = this.getGraphDepth(node)+2;
         var nodeList = node.descendants();
+        var orNodeList = [];
+        console.log(nodeList)
         for(var i = 0; i < nodeList.length; i++){
             if(nodeList[i].data.or != null){
-                var orNodeList = this.addOrNodes(nodeList[i],nodeList[i].depth );
-                
-                if(orNodeList.length!= 0){
-                    orNodeList[0].sibling = nodeList[i];
-                    nodeList[i].isSibling = true;
-                }else{
-                    var newNode: any = {};
-                    newNode.data = {"name": nodeList[i].data.or[0] };
-                    newNode.depth = nodeList[i].depth;
-                    newNode.height = 0;
-                    newNode.sibling = nodeList[i];
-                    newNode.parent = null;
-                    newNode.x = 0;
-                    newNode.y = 0;
-                    orNodeList.push(newNode);
-                }
+                //console.log(nodeList[i])
+                var orNodeList2 = this.addOrNodes(nodeList[i],nodeList[i].depth );
+                var x = 0;
+                    for(var j = 0; j < orNodeList2.length; j++){
+                        x++;
+                            orNodeList2[j].sibling = nodeList[i];
+                            nodeList[i].isSibling = true;   
+                         
+                    }
+                    orNodeList2.splice(0, 0, i)
+                   
+                    orNodeList.push(orNodeList2)
             }
         }
+        
         if(orNodeList != undefined){
+            var index = 0;
+            var x = 1;
             for(var i = 0; i < orNodeList.length; i++){
-                nodeList.push(orNodeList[i])
+                index +=  x;
+                x = 1;
+                for(var j = 1; j < orNodeList[i].length; j++){
+                    console.log(index, index+j )
+                    nodeList.splice(index+j , 0, orNodeList[i][j])
+                    x++;
+                }
+                
             }
         }
         //this.getNodeList(node, nodeList);
         var nrpDepth = [];
+        //nodeList.sort(this.compare)
         for (var i = 0; i < nodeList.length; i++){
             nrpDepth.push(this.getNodesPerDepth(nodeList[i].depth, nodeList))
         }
-        var cd = 1;
+        var nodeDnr = [];
         for (var i = 0; i < nodeList.length; i++) {
             nodeList[i].depth++;
-            nodeList[i].y = width * ((nodeList[i].depth) / d);
-            nodeList[i].x = height * (cd / (nrpDepth[i]+1));
-            if(cd < nrpDepth[i])
-                cd++;
+            if(nodeDnr[nodeList[i].depth] == undefined)
+                nodeDnr[nodeList[i].depth] = 1;
             else
-                cd = 1; 
+                nodeDnr[nodeList[i].depth] += 1; 
+            nodeList[i].y = width * ((nodeList[i].depth) / d);
+            nodeList[i].x = height * (nodeDnr[nodeList[i].depth] / (nrpDepth[i]+1));
+            
         }
+        console.log(nodeList)
         return nodeList;
     };
 
-
+    compare(a,b){return a.depth-b.depth} /*{
+        if (a.depth < b.depth)
+            return -1;
+        if (a.depth > b.depth)
+            return 1;
+        return 0;
+}*/
     createCreditNode(node){
         if(node.data.courseInfo.eligibility.credits != ""){
             var objStr = '{"credit" : "' + node.data.courseInfo.eligibility.credits+ '",';
@@ -546,8 +582,10 @@ export class GraphComponent implements OnInit, OnDestroy{
                     for (var j = 0; j < parent.eligibility.courses[i].length; j++){
                         if(j == 0){
                             childObjStr = childObjStr + '{"name" : "' + parent.eligibility.courses[i][j] + '"';
-                        }else{
+                        }else if (j == 1){
                             childObjStr = childObjStr + '"or": ["' + parent.eligibility.courses[i][j] + '"';
+                        }else{
+                            childObjStr = childObjStr + '"' + parent.eligibility.courses[i][j] + '"';
                         }
                         if (j < parent.eligibility.courses[i].length - 1) {
                             childObjStr = childObjStr + ",";
