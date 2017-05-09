@@ -406,16 +406,20 @@ export class GraphComponent implements OnInit, OnDestroy{
     addOrNodes(orNode, deep){
         var tree = this.d3.tree()
             .size([this.width, this.height]);
-        var node = this.loadedCourses[orNode.data.or[0]]
-        var t = tree(this.d3.hierarchy(node)).descendants();
+        var node = this.loadedCourses[orNode.data.or[0]];
         var resList = [];
-        for (var j = 0; j < t.length; j++) {
-            var orNode = this.createGraphNode(this.loadedCourses[t[j].data.courseID])
-            this.createChildNodes(orNode)
-            var orNodeList = tree(this.d3.hierarchy(orNode)).descendants();
-            for (var k = 0; k < orNodeList.length; k++){
-                orNodeList[k].depth = orNodeList[k].depth + deep;
-                resList.push(orNodeList[k])
+        console.log(node);
+        if(node){
+            var t = tree(this.d3.hierarchy(node)).descendants();
+            
+            for (var j = 0; j < t.length; j++) {
+                var orNode = this.createGraphNode(this.loadedCourses[t[j].data.courseID])
+                this.createChildNodes(orNode)
+                var orNodeList = tree(this.d3.hierarchy(orNode)).descendants();
+                for (var k = 0; k < orNodeList.length; k++){
+                    orNodeList[k].depth = orNodeList[k].depth + deep;
+                    resList.push(orNodeList[k])
+                }
             }
         }
         return resList;
@@ -429,8 +433,21 @@ export class GraphComponent implements OnInit, OnDestroy{
         for(var i = 0; i < nodeList.length; i++){
             if(nodeList[i].data.or != null){
                 var orNodeList = this.addOrNodes(nodeList[i],nodeList[i].depth );
-                orNodeList[0].sibling = nodeList[i];
-                nodeList[i].isSibling = true;
+                
+                if(orNodeList.length!= 0){
+                    orNodeList[0].sibling = nodeList[i];
+                    nodeList[i].isSibling = true;
+                }else{
+                    var newNode: any = {};
+                    newNode.data = {"name": nodeList[i].data.or[0] };
+                    newNode.depth = nodeList[i].depth;
+                    newNode.height = 0;
+                    newNode.sibling = nodeList[i];
+                    newNode.parent = null;
+                    newNode.x = 0;
+                    newNode.y = 0;
+                    orNodeList.push(newNode);
+                }
             }
         }
         if(orNodeList != undefined){
