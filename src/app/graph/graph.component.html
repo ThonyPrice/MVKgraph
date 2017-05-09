@@ -2,6 +2,8 @@
 <div class="row">
     <nav class="nav navbar-inverse navbar-static-top" id = "graphNav">
         <div class="container">
+            
+
             <!-- Search -->
             <form class="navbar-form navbar-left">
                 <div class="input-group inputBar col-md-12">
@@ -18,7 +20,6 @@
                                 <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'swe'">{{course._source.name_sv}}</p>
                                 <!--<p class="searchExample">{{course._source.courseID}} {{course._source.hp}} {{texts.credits}}</p>-->
                             </a>
-                            <hr class="lineSearch">
                         </div>
                     </div>
                 </div>
@@ -35,7 +36,12 @@
                             {{texts.info}}
                         </popover-content>
                         <span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true"></span>
-                    </a></li>
+                    </a>
+                </li>
+                <li>
+                    <!-- Home -->
+                    <a [routerLink]="['/start', '']"><span class="glyphicon glyphicon-home"></span></a>
+                </li>
             </ul>
         </div>
     </nav>
