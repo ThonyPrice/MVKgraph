@@ -339,7 +339,6 @@ export class GraphComponent implements OnInit, OnDestroy{
             .style("bottom", "0px")
             .style("left", "0px")
             .text("Latest Data fetch: 15 mars 2017");
-        console.log(nodeList[0])
         window.scrollTo(nodeList[0].y, (this.width -nodeList[0].x)/2);
         }
 /*<div style ="position:fixed;bottom:0px;left:0px">Latest Data fetch: 15 mars 2017</div>*/
@@ -407,7 +406,6 @@ export class GraphComponent implements OnInit, OnDestroy{
     addOrNodes(orNode, deep){
         var tree = this.d3.tree()
             .size([this.width, this.height]);
-        //console.log(orNode)
         var node = this.loadedCourses[orNode.data.or[0]]
         var t = tree(this.d3.hierarchy(node)).descendants();
         var resList = [];
@@ -415,24 +413,23 @@ export class GraphComponent implements OnInit, OnDestroy{
             var orNode = this.createGraphNode(this.loadedCourses[t[j].data.courseID])
             this.createChildNodes(orNode)
             var orNodeList = tree(this.d3.hierarchy(orNode)).descendants();
-            for(var k = 0; k < orNodeList.length; k++){
-                orNodeList[k].depth = orNodeList[k].depth +  deep;
+            for (var k = 0; k < orNodeList.length; k++){
+                orNodeList[k].depth = orNodeList[k].depth + deep;
                 resList.push(orNodeList[k])
             }
-        }  
+        }
         return resList;
     };
+
     /*uppdaterar nodernas data så de blir anpassade för neededFor platserna
     width är bredden på den canvas som d3 ritas ut på*/
     updateNodesList(node, width, height) {
         var d = this.getGraphDepth(node)+2;
-        //console.log(d)
         var nodeList = node.descendants();
         for(var i = 0; i < nodeList.length; i++){
             if(nodeList[i].data.or != null){
                 var orNodeList = this.addOrNodes(nodeList[i],nodeList[i].depth );
                 orNodeList[0].sibling = nodeList[i];
-                //orNodeList[0].parent = nodeList[i].parent;
                 nodeList[i].isSibling = true;
             }
         }
@@ -580,8 +577,6 @@ export class GraphComponent implements OnInit, OnDestroy{
     courseInfo = JSON objektet som informationen hämtades från
     */
     createGraphNode(course) {
-        console.log("Se hit:");
-        console.log(course)
         var courseStr = '{"name" : "' + course.courseID + '"';
         if (this.getChildren(course) != "[]") {
             courseStr = courseStr + ', "children" : ' + this.getChildren(course);
@@ -589,7 +584,6 @@ export class GraphComponent implements OnInit, OnDestroy{
         if (this.getNeededBy(course) != "[]") {
             courseStr = courseStr + ', "parents" : ' + this.getNeededBy(course);
         }
-        console.log(courseStr);
         var obj = JSON.parse(courseStr + '}');
         obj.courseInfo = course;
         if (obj.children != null) {
