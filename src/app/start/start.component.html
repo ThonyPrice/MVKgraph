@@ -1,4 +1,7 @@
 <header>
+    <div style="position: fixed; top:0px; left: 5px;" *ngIf ="loading">
+        Loading...
+    </div>
     <nav class="nav navbar-inverse navbar-static-top">
         <div class="container">
             <ul class="nav navbar-nav navbar-right">
@@ -42,16 +45,18 @@
                 </form>
                         
                 <!-- sökresultaten -->
-                <div class="searchResult" *ngFor="let course of searchResult">
-                    <a class="searchEx" [routerLink]="['/graph', course._source.courseID]">
-                        <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'eng'">{{course._source.name_en}}</p>
-                        <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'swe'">{{course._source.name_sv}}</p>
-                        <p class="searchExample">{{course._source.courseID}} {{course._source.hp}} {{texts.credits}}</p>
-                    </a>
-                    <hr class="lineSearch">
+                <div *ngIf="!emptyResult">
+                    <div class="searchResult" *ngFor="let course of searchResult">
+                        <a class="searchEx" [routerLink]="['/graph', course._source.courseID]">
+                            <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'eng'">{{course._source.name_en}}</p>
+                            <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'swe'">{{course._source.name_sv}}</p>
+                            <p class="searchExample">{{course._source.courseID}} {{course._source.hp}} {{texts.credits}}</p>
+                        </a>
+                        <hr class="lineSearch">
+                    </div>
                 </div>
                 <p *ngIf="errorMessage">{{errorMessage}}</p>
-                <p *ngIf="emptyResult">{{texts.noResult}}</p>
+                <p *ngIf="emptyResult">{{texts.emptyResult}}</p>
 
             </div>
             <div class="col-md-3"></div>

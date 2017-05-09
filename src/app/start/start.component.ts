@@ -21,6 +21,7 @@ export class StartComponent implements OnInit {
     errorMessage: string;
     lastQuery: string;
     emptyResult: boolean;
+    loading: boolean = true;
 
     constructor(
         private route: ActivatedRoute,
@@ -47,19 +48,28 @@ export class StartComponent implements OnInit {
         this.route.params
             .switchMap((params: Params) => this.searchService.searchCourse(params['query']))
             .subscribe((courses: any) => {
+                console.log(courses);
+                this.loading = false;
                 this.searchResult = courses
-                console.log(courses[0]);
                 if (!courses[0] && this.lastQuery != null) {
-                    console.log();
                     this.emptyResult = true;
+                } else {
+                    this.emptyResult = false;
                 }
             });
     }
 
     searchCourse(course: string) {
+        this.loading = true;
         this.searchService.searchCourse(course)
             .subscribe(
-              courses => this.searchResult = courses,
+            courses => {
+                this.loading = false;
+                if (courses[0]) {
+                    this.searchResult = courses;
+                    this.emptyResult = false;
+                }
+            },
               error => this.errorMessage = <any>error
         );
         this.router.navigate(['/start', course]);

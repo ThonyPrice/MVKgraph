@@ -4,23 +4,43 @@
         <div class="container">
             <!-- Search -->
             <form class="navbar-form navbar-left">
-                <div class="input-group inputBar">
-                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."' (keyup.enter)="searchCourse(course.value)">
+                <div class="input-group inputBar col-md-12">
+                    <div class="row">
+                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."' (keyup)="quickSearchCourse(course.value)">
                         <div class="input-group-btn">
-                            <button type="button" class="btn btn-default" (click)="searchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
+                            <button type="button" class="btn btn-default" (click)="quickSearchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
                         </div>
+                    </div>
+                    <div class="searchResults row">
+                        <div class="courseResult" *ngFor="let course of searchResult">
+                            <a class="searchEx" [routerLink]="['/graph', course._source.courseID]">
+                                <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'eng'">{{course._source.name_en}}</p>
+                                <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'swe'">{{course._source.name_sv}}</p>
+                                <!--<p class="searchExample">{{course._source.courseID}} {{course._source.hp}} {{texts.credits}}</p>-->
+                            </a>
+                            <hr class="lineSearch">
+                        </div>
+                    </div>
                 </div>
             </form>
 
             <!-- Info and language switch -->
             <ul class="nav navbar-nav navbar-right">
                 <li><a class="language" (click)="changeLanguage()">{{texts.languageSwitch}}</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true"></span></a></li>
+                <li><a [popover]="infoPopover">
+                        <popover-content #infoPopover
+                            title="Information"
+                            placement="auto bottom"
+                            [closeOnClickOutside]="true">
+                            {{texts.info}}
+                        </popover-content>
+                        <span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true"></span>
+                    </a></li>
             </ul>
         </div>
     </nav>
     <div style="position: fixed; top:60px; left: 5px;" *ngIf ="loading">
-        loading...
+        Loading...
     </div>
     <div class="col-md-8" style ="top:100px"><span id='tree'></span> </div>
     <div class="col-md-4"> <div id='vid-container'> <embed id='vid'/></div></div>

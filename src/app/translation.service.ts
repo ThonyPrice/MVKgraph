@@ -7,7 +7,8 @@ const engTexts = {
     info: "KTH Graph visualization is a project in the course Mjukvarukontruktion. The idea and the assignment is from the company Findwise. We who created this webpage are Jens Berntsen, Jonathan Bäckström, Sara Ervin, Emmeli Fall, David Kirsch, Niclas Lindqvist, Thony Price & William Skagerström.",
     languageSwitch: "På svenska",
     credits: "credits",
-    noResult: "No results found"
+    emptyResult: "No results found",
+    notInDatabase: "The course is not in the database"
 }
 
 const sweTexts = {
@@ -17,7 +18,8 @@ const sweTexts = {
     info: "KTH Graph visualization är ett projekt i kursen Mjukvarukonstruktion. Idén och uppgiften kommer från företaget Findwise. Vi som skapat denna hemsida är Jens Berntsen, Jonathan Bäckström, Sara Ervin, Emmeli Fall, David Kirsch, Niclas Lindqvist, Thony Price & William Skagerström.",
     languageSwitch: "In english",
     credits: "hp",
-    noResult: "Inga resultat hittade"
+    emptyResult: "Inga resultat hittade",
+    notInDatabase: "Kursen finns inte i databasen"
 }
 
 @Injectable()

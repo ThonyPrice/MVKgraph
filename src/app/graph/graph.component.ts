@@ -17,9 +17,10 @@ export class GraphComponent implements OnInit, OnDestroy{
     private parentNativeElement: any;
     private svg;
 
+    searchResult: any;
     errorMessage: string;
     currentCourse: string;
-    texts: Object;
+    texts: any;
     selectedLanguage: string;
 
     width = 1200;
@@ -54,6 +55,7 @@ export class GraphComponent implements OnInit, OnDestroy{
         this.selectedLanguage = this.translationService.getLanguage();
         if (this.selectedLanguage == undefined) {
             this.selectedLanguage = "eng";
+            this.translationService.setLanguage(this.selectedLanguage);
         }
 
         this.removeGraph();
@@ -234,8 +236,6 @@ export class GraphComponent implements OnInit, OnDestroy{
             .data(credList)
             .enter().append("div").attr("class", "cbox")
             .style("left", function(d) {
-                //console.log(d);
-                //if(d.data.)
                 return (width - d.y) + "px" ;
             })
             .style("top", function(d) {
@@ -253,21 +253,30 @@ export class GraphComponent implements OnInit, OnDestroy{
                 }
             }).attr("id", (d)=> { if(d.depth != 1){ return "courseHeading2" } } )
             .append("a").attr("routerLink", (d)=> { if (this.loadedCourses[d.data.name]) return ['/graph', d.data.name]})
-            .on("click", (d) => {
-                if(this.loadedCourses[d.data.name] != "Not found"){
+                .on("click", (d) => {
+                    if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
                     this.loading = true;
                     this.router.navigate(['/graph', d.data.name]);
+                }
+                else {
+                    alert(this.texts.notInDatabase);
+                }
+            }).append("p").text((d) => {
+                if (this.loadedCourses[d.data.name]) {
+                    if (this.loadedCourses[d.data.name] != "Not found") { 
+                        if(this.selectedLanguage == "eng"){
+                          return this.loadedCourses[d.data.name].name_en
+                        }else{
+                          return this.loadedCourses[d.data.name].name_sv
+                        }
                     }
-                else 
-                    alert("Error 404: Not found(in database");
-            }).append("p").text((d) => { if(this.loadedCourses[d.data.name]){ if(this.loadedCourses[d.data.name] != "Not found"){ 
-                if(this.selectedLanguage == "eng"){
-                    return this.loadedCourses[d.data.name].name_en
-                }else{
-                    return this.loadedCourses[d.data.name].name_sv
-                } }
-                else{ return d.data.name } 
-         }else{return d.data.name}}).attr("class", "courseCourse");  
+                    else {
+                        return d.data.name
+                    } 
+                } else {
+                        return d.data.name
+                }
+            }).attr("class", "courseCourse");  
 
         box.append("span").attr("class", (d)=>{ 
             if(this.loadedCourses[d.data.name]){
@@ -293,20 +302,25 @@ export class GraphComponent implements OnInit, OnDestroy{
             })
              .attr("class", "courseCourse");
         
-        var info = box.append("div")/*.on("click", (d)=> {
-            console.log(d.data.name);
-            console.log(d); 
-            console.log(this.loadedCourses[d.data.name]);   
-              })*/.attr("class", (d)=> { if(d.depth == 1){ return "selCourseContent" }else{ return "courseContent"} }).attr("id", "show");
+         var info = box.append("div")
+             .attr("class", (d) => { if (d.depth == 1) { return "selCourseContent" } else { return "courseContent" } }).attr("id", "show");
 
         var cinfo = cbox.append("div").attr("class", "credCourseContent");
 
         cinfo.append("p").text ((d)=> { return d.credit })
 
-        info.append("p").text((d)=>{ 
-            if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].courseID } } );
-        
-        info.append("p").text((d) => { if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].hp + " hp" }else{return "Course not in database"} })
+        info.append("p")
+            .text((d) => { 
+                if (this.loadedCourses[d.data.name]) { return this.loadedCourses[d.data.name].courseID }
+            });
+
+        info.append("p").text((d) => {
+            if (this.loadedCourses[d.data.name]) {
+                return this.loadedCourses[d.data.name].hp + " " + this.texts.credits;
+            } else {
+                return this.texts.notInDatabase;
+            }
+        }).attr("class", "notInDatabase");
         
         info.append("a").attr("href", (d)=>{ 
             if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].href } })
@@ -334,17 +348,33 @@ export class GraphComponent implements OnInit, OnDestroy{
     changeLanguage() {
         this.texts = this.translationService.switchLanguage();
         this.selectedLanguage = this.translationService.getLanguage();
-        this.d3.selectAll(".courseCourse").data(this.listOfNodes).text((d)=> { if(this.selectedLanguage == "eng"){
-            return this.loadedCourses[d.data.name].name_en
-        }else{
-            return this.loadedCourses[d.data.name].name_sv
-        } });
-        this.d3.selectAll(".courseWeb").text((d)=>{
-            if(this.selectedLanguage == "eng"){ 
-                return "Course Website"
-            }else{ 
-                return "Kurshemsida"
-            }  
+        this.d3.selectAll(".courseCourse").data(this.listOfNodes).text((d) => {
+            if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
+                if (this.selectedLanguage == "eng") {
+                    return this.loadedCourses[d.data.name].name_en
+                } else {
+                    return this.loadedCourses[d.data.name].name_sv
+                }
+            } else {
+                return d.data.name;
+            }
+        });
+        this.d3.selectAll(".notInDatabase").data(this.listOfNodes).text((d) => {
+            if (!this.loadedCourses[d.data.name] || this.loadedCourses[d.data.name] == "Not found") {
+                return this.texts.notInDatabase;
+            }
+            else {
+                return this.loadedCourses[d.data.name].hp + " " + this.texts.credits;
+            }
+        });
+        this.d3.selectAll(".courseWeb").text((d) => {
+            if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
+                if (this.selectedLanguage == "eng") {
+                    return "Course Website"
+                } else {
+                    return "Kurshemsida"
+                }
+            }
         });
         this.d3.select(".cbox").select(".courseCourse").text((d)=> {
             if(this.selectedLanguage == "eng"){
@@ -671,8 +701,16 @@ export class GraphComponent implements OnInit, OnDestroy{
         return true;
     }
 
-    searchCourse(course: string) {
-        this.router.navigate(['/start', course]);
+    quickSearchCourse(course: string) {
+        this.loading = true;
+        this.searchService.searchCourse(course)
+            .subscribe(
+            courses => {
+                this.loading = false;
+                this.searchResult = courses;
+            },
+            error => this.errorMessage = <any>error
+            );
     }
 
     
