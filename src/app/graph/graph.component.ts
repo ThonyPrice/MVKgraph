@@ -202,16 +202,16 @@ export class GraphComponent implements OnInit, OnDestroy{
                         /*return "M" + (width - d.y +50) + ", " + (d.parent.x+20)
                              + "l" + ( ((width - d.parent.y) - (width - d.y)) ) + "," + (0)*/
                         return "M" + (width - d.y) + "," + (d.x) 
-                         + "l" + ( ((width - d.parent.y) - (width - d.y))/2 + d.parent.height * 30 ) + "," + (0)
+                         + "l" + ( ((width - d.parent.y) - (width - d.y)+ d.parent.height * 10)/2 + 50  ) + "," + (0)
                          + "l" + ( 0 ) + "," + (d.parent.x - d.x+20)
-                         + "l" + ( ((width - d.parent.y) - (width - d.y) )/2 - d.parent.height * 30) + "," + (0);
+                         + "l" + ( ((width - d.parent.y) - (width - d.y) - d.parent.height * 10)/2 + 50 ) + "," + (0);
                     }
                     else if(d.parent){
                     //console.log(shift);
                     return "M" + (width - d.y +50) + "," + (d.x+20) 
-                         + "l" + ( ((width - d.parent.y) - (width - d.y))/2 + d.parent.height * 30 ) + "," + (0)
+                         + "l" + ( ((width - d.parent.y) - (width - d.y)+ d.parent.height * 10)/2  ) + "," + (0)
                          + "l" + ( 0 ) + "," + (d.parent.x - d.x)
-                         + "l" + ( ((width - d.parent.y) - (width - d.y) )/2 - d.parent.height * 30) + "," + (0);
+                         + "l" + ( ((width - d.parent.y) - (width - d.y) - d.parent.height * 10)/2 ) + "," + (0);
                     }else{
                         return "M" + (width - d.y + 100) + "," + (d.x+45)/* +100 */
                              + "L"+ (width - d.sibling.y + 100) + "," + (d.sibling.x -5 )
@@ -467,19 +467,18 @@ export class GraphComponent implements OnInit, OnDestroy{
                     orNodeList.push(orNodeList2)
             }
         }
-        
         if(orNodeList != undefined){
-            var index = 0;
-            var x = 1;
+            var index = orNodeList[0][0];
+            
+            var x = 0;
             for(var i = 0; i < orNodeList.length; i++){
                 index +=  x;
                 x = 1;
                 for(var j = 1; j < orNodeList[i].length; j++){
-                    console.log(index, index+j )
                     nodeList.splice(index+j , 0, orNodeList[i][j])
                     x++;
                 }
-                
+            
             }
         }
         //this.getNodeList(node, nodeList);
@@ -488,28 +487,30 @@ export class GraphComponent implements OnInit, OnDestroy{
         for (var i = 0; i < nodeList.length; i++){
             nrpDepth.push(this.getNodesPerDepth(nodeList[i].depth, nodeList))
         }
-        var nodeDnr = [];
+        var nodeDnr = []; //behandlar djupet
+        var nodeHnr = []; // behandlar "height" för noderna
         for (var i = 0; i < nodeList.length; i++) {
             nodeList[i].depth++;
             if(nodeDnr[nodeList[i].depth] == undefined)
                 nodeDnr[nodeList[i].depth] = 1;
             else
-                nodeDnr[nodeList[i].depth] += 1; 
+                nodeDnr[nodeList[i].depth] += 1;
+
+            if(nodeHnr[nodeList[i].depth] == undefined)
+                nodeHnr[nodeList[i].depth] = 0;
+            else
+                nodeHnr[nodeList[i].depth] += 1;
+            if(nodeList[i].children)
+                nodeList[i].height = nodeHnr[nodeList[i].depth]
+            else
+                nodeList[i].height = 0;  
             nodeList[i].y = width * ((nodeList[i].depth) / d);
             nodeList[i].x = height * (nodeDnr[nodeList[i].depth] / (nrpDepth[i]+1));
             
         }
-        console.log(nodeList)
         return nodeList;
     };
 
-    compare(a,b){return a.depth-b.depth} /*{
-        if (a.depth < b.depth)
-            return -1;
-        if (a.depth > b.depth)
-            return 1;
-        return 0;
-}*/
     createCreditNode(node){
         if(node.data.courseInfo.eligibility.credits != ""){
             var objStr = '{"credit" : "' + node.data.courseInfo.eligibility.credits+ '",';
