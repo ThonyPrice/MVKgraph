@@ -230,7 +230,7 @@ export class GraphComponent implements OnInit, OnDestroy{
             .style("left", function(d) {
                 //console.log(d);
                 //if(d.data.)
-                return (width - d.y) + "px" ;
+                return (width - d.y+10) + "px" ;
             })
             .style("top", function(d) {
                 return (d.x+100) + "px"
@@ -240,7 +240,7 @@ export class GraphComponent implements OnInit, OnDestroy{
             .data(credList)
             .enter().append("div").attr("class", "cbox")
             .style("left", function(d) {
-                return (width - d.y) + "px" ;
+                return (width - d.y + 10) + "px" ;
             })
             .style("top", function(d) {
                 return (d.x+100) + "px"
