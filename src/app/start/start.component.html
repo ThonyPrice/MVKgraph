@@ -47,7 +47,7 @@
                 <!-- sökresultaten -->
                 <div *ngIf="!emptyResult">
                     <p *ngIf="nrResults > 0">{{nrResults}} {{texts.nrResults}}</p>
-                    <hr class="lineSearch">
+                    <hr *ngIf="nrResults" class="lineSearch">
                     <div class="searchResult" *ngFor="let course of searchResult">
                         <a class="searchEx" [routerLink]="['/graph', course._source.courseID]">
                             <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'eng'">{{course._source.name_en}}</p>

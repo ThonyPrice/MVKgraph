@@ -52,6 +52,7 @@ export class StartComponent implements OnInit {
                 this.loading = false;
                 this.searchResult = courses
                 if (!courses[0] && this.lastQuery != null) {
+                    console.log("TRUUE");
                     this.emptyResult = true;
                 } else {
                     this.emptyResult = false;

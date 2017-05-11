@@ -153,21 +153,17 @@ export class GraphComponent implements OnInit, OnDestroy{
 
         
         
-        //console.log(this.getGraphDepth(nodes));
         var nodeList = this.updateNodesList(nodes, width, height);
         for(var i = 0; i < nodeList.length; i++){
             nodeList[i].depth--;
         }
-        //console.log(nodeList[0].data.courseInfo.eligibility.credits)
         if(nodes.data.parents != null){
             nodeList = this.setParentNodes(nodeList, height, width);
-            //links = this.setLinks(nodeList);
         }
         var credList = [];
         if(nodes.data.courseInfo.eligibility.credits.length > 5){
             credList.push(this.createCreditNode(nodeList[0]));
         }
-        console.log(nodeList);
         this.listOfNodes = nodeList;
         
             var svg = this.d3.select("#tree").append("svg")
@@ -450,7 +446,6 @@ export class GraphComponent implements OnInit, OnDestroy{
         var d = this.getGraphDepth(node)+2;
         var nodeList = node.descendants();
         var orNodeList = [];
-        console.log(nodeList)
         for(var i = 0; i < nodeList.length; i++){
             if(nodeList[i].data.or != null){
                 //console.log(nodeList[i])
@@ -467,7 +462,7 @@ export class GraphComponent implements OnInit, OnDestroy{
                     orNodeList.push(orNodeList2)
             }
         }
-        if(orNodeList != undefined){
+        if (orNodeList.length != 0) {
             var index = orNodeList[0][0];
             
             var x = 0;
