@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { D3Service, D3, Selection } from 'd3-ng2-service';
+
 import { SearchService } from '../search.service';
 import { TranslationService } from '../translation.service';
 import { Observable } from 'rxjs/Observable';
@@ -18,6 +19,7 @@ export class GraphComponent implements OnInit, OnDestroy{
     private svg;
 
     searchResult: any;
+    dropDownVisible: boolean = true;
     errorMessage: string;
     currentCourse: string;
     texts: any;
@@ -67,7 +69,6 @@ export class GraphComponent implements OnInit, OnDestroy{
             .switchMap((params: Params) => this.searchService.getCourse(params['courseID']))
             .subscribe((course: any) => {
                 this.loadedCourses[this.currentCourse] = course  
-                //console.log(course)
                 if(course != "Not found"){
                     this.baseNode = this.createGraphNode(course);
                     if (this.checkParents(course)) {
@@ -86,6 +87,7 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     ngOnDestroy() {
         this.removeGraph();
+        //this.searchResult.unsubscribe();
     }
 
     /*
@@ -781,11 +783,14 @@ export class GraphComponent implements OnInit, OnDestroy{
             courses => {
                 this.loading = false;
                 this.searchResult = courses;
+                this.dropDownVisible = true;
             },
             error => this.errorMessage = <any>error
             );
     }
 
-    
+    hideDropDown() {
+        this.dropDownVisible = false;
+    }
 }	
 

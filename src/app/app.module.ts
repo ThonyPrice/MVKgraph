@@ -15,6 +15,7 @@ import { SearchService } from './search.service';
 import { GraphComponent } from './graph/graph.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CourseNotFoundComponent } from './course-not-found/course-not-found.component';
+import { ClickOutsideDirective } from './click-outside.directive';
 
 const appRoutes: Routes = [
     { path: 'start/:query', component: StartComponent },
@@ -36,7 +37,8 @@ const appRoutes: Routes = [
         CourseNodeComponent,
         GraphComponent,
         PageNotFoundComponent,
-        CourseNotFoundComponent
+        CourseNotFoundComponent,
+        ClickOutsideDirective
     ],
     imports: [
         BrowserModule,

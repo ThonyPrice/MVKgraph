@@ -6,19 +6,19 @@
 
             <!-- Search -->
             <form class="navbar-form navbar-left">
-                <div class="input-group inputBar col-md-12">
+                <div (clickOutside)="hideDropDown()" class="input-group inputBar col-md-12">
                     <div class="row">
                         <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."' (keyup)="quickSearchCourse(course.value)">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" (click)="quickSearchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
                         </div>
                     </div>
-                    <div class="searchResults row">
+                    <div *ngIf="dropDownVisible" class="searchResults row">
                         <div class="courseResult" *ngFor="let course of searchResult">
-                            <a class="searchEx" [routerLink]="['/graph', course._source.courseID]">
-                                <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'eng'">{{course._source.name_en}}</p>
-                                <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'swe'">{{course._source.name_sv}}</p>
-                                <!--<p class="searchExample">{{course._source.courseID}} {{course._source.hp}} {{texts.credits}}</p>-->
+                            <a (click)="hideDropDown()" class="searchEx" [routerLink]="['/graph', course._source.courseID]">
+                                <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'eng'"><strong>{{course._source.courseID}} {{course._source.name_en}}</strong></p>
+                                <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'swe'"><strong>{{course._source.courseID}} {{course._source.name_sv}}</strong></p>
+                                <p class="searchExample">{{course._source.hp}} {{texts.credits}}</p>
                             </a>
                         </div>
                     </div>

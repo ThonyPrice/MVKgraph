@@ -36,7 +36,7 @@
                 <!-- Sökrutan -->
                 <form>
                     <div class="input-group inputBar">
-                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."' value="{{lastQuery}}" (keyup.enter)="searchCourse(course.value)">
+                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."' value="{{lastQuery}}" (keyup)="searchCourse(course.value)" (blur)="reroute(course.value)">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" (click)="searchCourse(course.value)"><i class="glyphicon glyphicon-search"></i></button>
                     
@@ -45,7 +45,7 @@
                 </form>
                         
                 <!-- sökresultaten -->
-                <div *ngIf="!emptyResult">
+                <!--<div *ngIf="!emptyResult">-->
                     <p *ngIf="nrResults > 0">{{nrResults}} {{texts.nrResults}}</p>
                     <hr *ngIf="nrResults" class="lineSearch">
                     <div class="searchResult" *ngFor="let course of searchResult">
@@ -56,7 +56,7 @@
                         </a>
                         <hr class="lineSearch">
                     </div>
-                </div>
+                <!--</div>-->
                 <p *ngIf="errorMessage">{{errorMessage}}</p>
                 <p *ngIf="emptyResult">{{texts.emptyResult}}</p>
 
