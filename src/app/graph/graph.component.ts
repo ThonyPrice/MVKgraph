@@ -186,13 +186,13 @@ export class GraphComponent implements OnInit, OnDestroy{
         var link = svg.selectAll(".link")
                 .data(nodeList.slice(1))
             .enter().append("path")
-                .attr("class", (d)=> {
+                .attr("class", "link")/*(d)=> {
                     if(d.sibling){
                         return "sibLink"
                     }else{
                         return "link";
                     }
-                })
+                }*/
                 /*.style("stroke", function(d, i){ console.log(d) 
                     return color[d.depth] })*/
                 .attr("d", (d) => {
@@ -210,11 +210,21 @@ export class GraphComponent implements OnInit, OnDestroy{
                          + "l" + ( ((width - d.parent.y) - (width - d.y)+ d.parent.height * 10)/2  ) + "," + (0)
                          + "l" + ( 0 ) + "," + (d.parent.x - d.x)
                          + "l" + ( ((width - d.parent.y) - (width - d.y) - d.parent.height * 10)/2 ) + "," + (0);
-                    }else{
-                        return "M" + (width - d.y + 100) + "," + (d.x+45)/* +100 */
-                             + "L"+ (width - d.sibling.y + 100) + "," + (d.sibling.x -5 )
                     }
                 }); 
+
+
+        var sibLink = svg.selectAll(".sibLink")
+                        .data(nodeList.slice(1))
+                            .enter()
+                        .append("path")
+                        .attr("class", "sibLink")
+                        .attr("d", (d)=>{
+                            if(d.sibling && !d.parent){
+                                return "M" + (width - d.y + 100) + "," + (d.x+45)/* +100 */
+                                     + "L"+ (width - d.sibling.y + 100) + "," + (d.sibling.x -5 )
+                            }
+                        })
 
         var box = this.d3.selectAll(".box")
             .data(nodeList)
@@ -233,6 +243,12 @@ export class GraphComponent implements OnInit, OnDestroy{
             .style("top", function(d) {
                 return (d.x+100) + "px"
             });
+
+        /*box.text((d)=> {
+            if(d.isSibling){
+                return "s"
+            }
+        })*/
 
         var cbox = this.d3.selectAll(".cbox")
             .data(credList)
@@ -418,7 +434,6 @@ export class GraphComponent implements OnInit, OnDestroy{
 
             if(node){
                 var t = tree(this.d3.hierarchy(node)).descendants();
-                
                 for (var j = 0; j < t.length; j++) {
                     var orNode2 = this.createGraphNode(this.loadedCourses[t[j].data.courseID])
                     this.createChildNodes(orNode2)
@@ -450,7 +465,7 @@ export class GraphComponent implements OnInit, OnDestroy{
         var orNodeList = [];
         for(var i = 0; i < nodeList.length; i++){
             if(nodeList[i].data.or != null){
-                //console.log(nodeList[i])
+                console.log(nodeList[i])
                 var orNodeList2 = this.addOrNodes(nodeList[i],nodeList[i].depth );
                 var x = 0;
                     for(var j = 0; j < orNodeList2.length; j++){
@@ -478,6 +493,8 @@ export class GraphComponent implements OnInit, OnDestroy{
             
             }
         }
+        console.log(orNodeList)
+        console.log(nodeList)
         //this.getNodeList(node, nodeList);
         var nrpDepth = [];
         //nodeList.sort(this.compare)
@@ -510,7 +527,8 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     createCreditNode(node){
         if(node.data.courseInfo.eligibility.credits != ""){
-            var objStr = '{"credit" : "' + node.data.courseInfo.eligibility.credits+ '",';
+            var credDep = node.data.courseInfo.eligibility.credits.replace(/"/g, "'");
+            var objStr = '{"credit" : "' + credDep+ '",';
             objStr = objStr + '"px" : ' + node.x + ', "py" : ' + node.y + ', ';
             objStr = objStr + '"y" : ' + node.y + ' ,' + '"x" : ' + (node.x + 150) + '}';
             return JSON.parse(objStr);
