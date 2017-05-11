@@ -270,15 +270,17 @@ export class GraphComponent implements OnInit, OnDestroy{
                     }
                 }
             }).attr("id", (d)=> { if(d.depth != 1){ return "courseHeading2" } } )
-            .append("a").attr("routerLink", (d)=> { if (this.loadedCourses[d.data.name]) return ['/graph', d.data.name]})
+            .append("a").attr("routerLink", (d)=> {if(d.depth !=1){ if (this.loadedCourses[d.data.name]) return ['/graph', d.data.name]}})
                 .on("click", (d) => {
-                    if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
-                    this.loading = true;
-                    this.router.navigate(['/graph', d.data.name]);
+                    if(d.depth != 1){
+                        if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
+                        this.loading = true;
+                        this.router.navigate(['/graph', d.data.name]);
+                    }else {
+                        alert(this.texts.notInDatabase);
+                    }    
                 }
-                else {
-                    alert(this.texts.notInDatabase);
-                }
+                
             }).append("p").text((d) => {
                 if (this.loadedCourses[d.data.name]) {
                     if (this.loadedCourses[d.data.name] != "Not found") { 
@@ -488,10 +490,7 @@ export class GraphComponent implements OnInit, OnDestroy{
             var preIndex = 0;
             var x = 0;
             for(var i = 0; i < orNodeList.length; i++){
-                
                     index = orNodeList[i][0] + x;
-                
-                console.log(orNodeList[i])
                 for(var j = 1; j < orNodeList[i].length; j++){
                     console.log(index+j)
                     nodeList.splice(index+j , 0, orNodeList[i][j])
@@ -501,8 +500,6 @@ export class GraphComponent implements OnInit, OnDestroy{
             
             }
         }
-        console.log(orNodeList)
-        console.log(nodeList)
         //this.getNodeList(node, nodeList);
         var nrpDepth = [];
         //nodeList.sort(this.compare)
