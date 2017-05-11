@@ -357,6 +357,8 @@ export class GraphComponent implements OnInit, OnDestroy{
             .text("Latest Data fetch: 15 mars 2017");
         window.scrollTo(nodeList[0].y, (this.width -nodeList[0].x)/2);
         }
+
+        
 /*<div style ="position:fixed;bottom:0px;left:0px">Latest Data fetch: 15 mars 2017</div>*/
 
     }
@@ -427,8 +429,7 @@ export class GraphComponent implements OnInit, OnDestroy{
         var x = orNode.data.or;
         for(var i = 0; i < x.length; i ++){
         
-            var node = this.loadedCourses[x[i]];
-            
+            var node = this.loadedCourses[x[i]];    
 
             if(node){
                 var t = tree(this.d3.hierarchy(node)).descendants();
@@ -463,31 +464,38 @@ export class GraphComponent implements OnInit, OnDestroy{
         var orNodeList = [];
         for(var i = 0; i < nodeList.length; i++){
             if(nodeList[i].data.or != null){
-                console.log(nodeList[i])
                 var orNodeList2 = this.addOrNodes(nodeList[i],nodeList[i].depth );
-                var x = 0;
+                var orNodes = [];
                     for(var j = 0; j < orNodeList2.length; j++){
-                        x++;
-                            orNodeList2[j].sibling = nodeList[i];
-                            nodeList[i].isSibling = true;   
+                            if(nodeList[i].depth == orNodeList2[j].depth){
+                                orNodeList2[j].sibling = nodeList[i];
+                                nodeList[i].isSibling = true;  
+                                orNodes.push(orNodeList2[j])
+                            }else{
+                                nodeList.push(orNodeList2[j])
+                            }
+                            
                          
                     }
-                    orNodeList2.splice(0, 0, i)
-                   
-                    orNodeList.push(orNodeList2)
+                    orNodes.splice(0, 0, i);
+                    orNodeList.push(orNodes)
             }
         }
         if (orNodeList.length != 0) {
             var index = orNodeList[0][0];
-            
+            var preIndex = 0;
             var x = 0;
             for(var i = 0; i < orNodeList.length; i++){
-                index +=  x;
-                x = 1;
+                
+                    index = orNodeList[i][0] + x;
+                
+                console.log(orNodeList[i])
                 for(var j = 1; j < orNodeList[i].length; j++){
+                    console.log(index+j)
                     nodeList.splice(index+j , 0, orNodeList[i][j])
                     x++;
                 }
+
             
             }
         }
