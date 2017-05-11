@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
-import {PopoverModule} from "ngx-popover";
+import { PopoverModule } from "ngx-popover";
 
 import { TranslationService } from '../translation.service';
 import { SearchService } from '../search.service';
@@ -52,7 +52,6 @@ export class StartComponent implements OnInit {
                 this.loading = false;
                 this.searchResult = courses
                 if (!courses[0] && this.lastQuery != null) {
-                    console.log("TRUUE");
                     this.emptyResult = true;
                 } else {
                     this.emptyResult = false;
@@ -63,6 +62,8 @@ export class StartComponent implements OnInit {
 
     searchCourse(course: string) {
         this.loading = true;
+        this.nrResults = 0;
+        this.searchResult = [];
         this.searchService.searchCourse(course)
             .subscribe(
             courses => {
@@ -71,16 +72,21 @@ export class StartComponent implements OnInit {
                     this.searchResult = courses;
                     this.emptyResult = false;
                     this.nrResults = courses.length;
+                } else {
+                    this.emptyResult = true;
                 }
             },
               error => this.errorMessage = <any>error
         );
-        this.router.navigate(['/start', course]);
     }
 
     
     changeLanguage() {
         this.texts = this.translationService.switchLanguage();
         this.selectedLanguage = this.translationService.getLanguage();
+    }
+
+    reroute(course: string) {
+        this.router.navigate(['/start', course]);
     }
 }
