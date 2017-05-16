@@ -249,6 +249,25 @@ export class GraphComponent implements OnInit, OnDestroy{
                 return "s"
             }
         })*/
+        var orLegend = this.d3.selectAll(".legend")
+            .data(nodeList).enter()
+            .append("div")
+            .attr("class", "legend")
+            .style("left", (d)=>{
+                if(d.isSibling){
+                    return (width - d.y+37) + "px" ;
+                }
+            })
+            .style("top", (d)=>{
+                if(d.isSibling){
+                    return (d.x+83) + "px";
+                }
+            })
+            .text((d)=> {
+                if(d.isSibling){
+                    return this.translationService.getText().legend;
+                }
+            });
 
         var cbox = this.d3.selectAll(".cbox")
             .data(credList)
@@ -411,6 +430,13 @@ export class GraphComponent implements OnInit, OnDestroy{
                 return "Senaste datahämtningen: 15 mars 2017"
             }
         })
+        this.d3.selectAll(".legend").text((d)=>{
+            if(this.selectedLanguage == "eng"){
+                return "\xa0At least one course required"
+            }else{
+                return "Krävs minst en av följande kurser:"
+            }
+        })
         //console.log(this.selectedLanguage);
     }
 
@@ -492,7 +518,6 @@ export class GraphComponent implements OnInit, OnDestroy{
             for(var i = 0; i < orNodeList.length; i++){
                     index = orNodeList[i][0] + x;
                 for(var j = 1; j < orNodeList[i].length; j++){
-                    console.log(index+j)
                     nodeList.splice(index+j , 0, orNodeList[i][j])
                     x++;
                 }

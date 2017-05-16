@@ -9,7 +9,8 @@ const engTexts = {
     credits: "credits",
     emptyResult: "No results found",
     notInDatabase: "The course is not in the database",
-    nrResults: " results"
+    nrResults: " results",
+    legend: "\xa0At least one course is required"
 }
 
 const sweTexts = {
@@ -21,7 +22,8 @@ const sweTexts = {
     credits: "hp",
     emptyResult: "Inga resultat hittade",
     notInDatabase: "Kursen finns inte i databasen",
-    nrResults: " resultat"
+    nrResults: " resultat", 
+    legend: "Krävs minst en av följande kurser:"
 }
 
 @Injectable()
