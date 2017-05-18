@@ -808,7 +808,7 @@ export class GraphComponent implements OnInit, OnDestroy{
             .subscribe(
             courses => {
                 this.loading = false;
-                this.searchResult = courses;
+                this.searchResult = courses.slice(0, 5);
                 this.dropDownVisible = true;
             },
             error => this.errorMessage = <any>error
