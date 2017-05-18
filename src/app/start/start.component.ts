@@ -75,6 +75,8 @@ export class StartComponent implements OnInit {
                         this.emptyResult = false;
                         this.nrResults = courses.length;
                     } else {
+                        this.searchResult = [];
+                        this.nrResults = 0;
                         this.emptyResult = true;
                     }
                 },
