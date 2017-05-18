@@ -37,6 +37,7 @@
 >>> .legend{
 	position: absolute;
 	display: inline-block;
+	width: 180px;
 }
 /*CSS för nodens utseende*/
 >>> .box {
