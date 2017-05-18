@@ -100,6 +100,7 @@ export class GraphComponent implements OnInit, OnDestroy{
         this.d3.selectAll(".cbox").remove();
         this.d3.selectAll(".link").remove();
         this.d3.selectAll(".clink").remove();
+        this.d3.selectAll(".legend").remove();
         this.d3.select("svg").remove();
     }
 
@@ -386,57 +387,60 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     }
     changeLanguage() {
-        this.texts = this.translationService.switchLanguage();
-        this.selectedLanguage = this.translationService.getLanguage();
-        this.d3.selectAll(".courseCourse").data(this.listOfNodes).text((d) => {
-            if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
-                if (this.selectedLanguage == "eng") {
-                    return this.loadedCourses[d.data.name].name_en
+        if(!this.loading){
+            this.texts = this.translationService.switchLanguage();
+            this.selectedLanguage = this.translationService.getLanguage();
+            this.d3.selectAll(".courseCourse").data(this.listOfNodes).text((d) => {
+                if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
+                    if (this.selectedLanguage == "eng") {
+                        return this.loadedCourses[d.data.name].name_en
+                    } else {
+                        return this.loadedCourses[d.data.name].name_sv
+                    }
                 } else {
-                    return this.loadedCourses[d.data.name].name_sv
+                    return d.data.name;
                 }
-            } else {
-                return d.data.name;
-            }
-        });
-        this.d3.selectAll(".notInDatabase").data(this.listOfNodes).text((d) => {
-            if (!this.loadedCourses[d.data.name] || this.loadedCourses[d.data.name] == "Not found") {
-                return this.texts.notInDatabase;
-            }
-            else {
-                return this.loadedCourses[d.data.name].hp + " " + this.texts.credits;
-            }
-        });
-        this.d3.selectAll(".courseWeb").text((d) => {
-            if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
-                if (this.selectedLanguage == "eng") {
-                    return "Course Website"
-                } else {
-                    return "Kurshemsida"
+            });
+            this.d3.selectAll(".notInDatabase").data(this.listOfNodes).text((d) => {
+                if (!this.loadedCourses[d.data.name] || this.loadedCourses[d.data.name] == "Not found") {
+                    return this.texts.notInDatabase;
                 }
-            }
-        });
-        this.d3.select(".cbox").select(".courseCourse").text((d)=> {
-            if(this.selectedLanguage == "eng"){
-                return "Credits Eligibility Text"
-            }else{
-                return "HP Beroendetext"
-            }
-        });
-        this.d3.select(".fetchDate").text((d)=> {
-            if(this.selectedLanguage == "eng"){
-                return "Latest data fetch: 15 mars 2017"
-            }else{
-                return "Senaste datahämtningen: 15 mars 2017"
-            }
-        })
-        this.d3.selectAll(".legend").text((d)=>{
-            if(this.selectedLanguage == "eng"){
-                return "\xa0At least one course required"
-            }else{
-                return "Krävs minst en av följande kurser:"
-            }
-        })
+                else {
+                    return this.loadedCourses[d.data.name].hp + " " + this.texts.credits;
+                }
+            });
+            this.d3.selectAll(".courseWeb").text((d) => {
+                if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
+                    if (this.selectedLanguage == "eng") {
+                        return "Course Website"
+                    } else {
+                        return "Kurshemsida"
+                    }
+                }
+            });
+            this.d3.select(".cbox").select(".courseCourse").text((d)=> {
+                if(this.selectedLanguage == "eng"){
+                    return "Credits Eligibility Text"
+                }else{
+                    return "HP Beroendetext"
+                }
+            });
+            this.d3.select(".fetchDate").text((d)=> {
+                if(this.selectedLanguage == "eng"){
+                    return "Latest data fetch: 15 mars 2017"
+                }else{
+                    return "Senaste datahämtningen: 15 mars 2017"
+                }
+            })
+            this.d3.selectAll(".legend").data(this.listOfNodes).text((d)=>{
+                if(this.selectedLanguage == "eng" && d.isSibling){
+                    return "\xa0At least one course required"
+                }else if (this.selectedLanguage == "swe" && d.isSibling){
+                    return "Krävs minst en av följande kurser:"
+                }
+            })
+        }
+
         //console.log(this.selectedLanguage);
     }
 
