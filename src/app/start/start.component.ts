@@ -21,7 +21,7 @@ export class StartComponent implements OnInit {
     errorMessage: string;
     lastQuery: string;
     emptyResult: boolean;
-    loading: boolean = true;
+    loading: boolean;
     nrResults: number;
 
     constructor(
@@ -33,6 +33,7 @@ export class StartComponent implements OnInit {
     
     ngOnInit() {
 
+        this.loading = true;
         this.emptyResult = false;
 
         this.selectedLanguage = this.translationService.getLanguage();
@@ -64,20 +65,27 @@ export class StartComponent implements OnInit {
         this.loading = true;
         this.nrResults = 0;
         this.searchResult = [];
-        this.searchService.searchCourse(course)
-            .subscribe(
-            courses => {
-                this.loading = false;
-                if (courses[0]) {
-                    this.searchResult = courses;
-                    this.emptyResult = false;
-                    this.nrResults = courses.length;
-                } else {
-                    this.emptyResult = true;
-                }
-            },
-              error => this.errorMessage = <any>error
-        );
+        if (course != "") {
+            this.searchService.searchCourse(course)
+                .subscribe(
+                courses => {
+                    this.loading = false;
+                    if (courses[0]) {
+                        this.searchResult = courses;
+                        this.emptyResult = false;
+                        this.nrResults = courses.length;
+                    } else {
+                        this.searchResult = [];
+                        this.nrResults = 0;
+                        this.emptyResult = true;
+                    }
+                },
+                error => this.errorMessage = <any>error
+                );
+        } else {
+            this.loading = false;
+            this.emptyResult = true;
+        }
     }
 
     
