@@ -23,7 +23,7 @@ export class SearchService {
     getCourse(courseID: string): any {
         return this.http.get(this.getCourseBaseUrl.concat(courseID))
             .map((res: Response) => res.json())
-            //.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
 }

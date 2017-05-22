@@ -18,8 +18,9 @@ export class GraphComponent implements OnInit, OnDestroy{
     private parentNativeElement: any;
     private svg;
 
+    stillInGraphPage: boolean;
     searchResult: any;
-    dropDownVisible: boolean = true;
+    dropDownVisible: boolean;
     errorMessage: string;
     currentCourse: string;
     texts: any;
@@ -27,7 +28,7 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     width = 1200;
     height = 700;
-    loading: boolean = true;
+    loading: boolean;
     loadedCourses: any = [];
     siblings: any = [];
     listOfNodes: any;
@@ -53,6 +54,10 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     ngOnInit() {
 
+        this.loading = true;
+        this.dropDownVisible = true;
+        this.stillInGraphPage = true;
+
         this.texts = this.translationService.getText();
         this.selectedLanguage = this.translationService.getLanguage();
         if (this.selectedLanguage == undefined) {
@@ -68,8 +73,8 @@ export class GraphComponent implements OnInit, OnDestroy{
         this.route.params
             .switchMap((params: Params) => this.searchService.getCourse(params['courseID']))
             .subscribe((course: any) => {
-                this.loadedCourses[this.currentCourse] = course  
-                if(course != "Not found"){
+                this.loadedCourses[this.currentCourse] = course
+                if (course != "Not found") {
                     this.baseNode = this.createGraphNode(course);
                     if (this.checkParents(course)) {
                         this.callParents(course);
@@ -87,7 +92,7 @@ export class GraphComponent implements OnInit, OnDestroy{
 
     ngOnDestroy() {
         this.removeGraph();
-        //this.searchResult.unsubscribe();
+        this.stillInGraphPage = false;
     }
 
     /*
@@ -104,284 +109,289 @@ export class GraphComponent implements OnInit, OnDestroy{
         this.d3.select("svg").remove();
     }
 
-    createGraph(node, afterCall){
-        this.loading = false;
-        if(afterCall){
-        var margin = {top: 40, right: 90, bottom: 50, left: 90},
-            width = this.width,
-            height = this.height;
+    createGraph(node, afterCall) {
+        if (this.stillInGraphPage) {
+            this.loading = false;
+            if (afterCall) {
+                var margin = { top: 40, right: 90, bottom: 50, left: 90 },
+                    width = this.width,
+                    height = this.height;
 
-        var tree = this.d3.tree()
-            .size([width, height]);
-       
-        
-        if(afterCall){
-            this.removeGraph()
-        }
-
-        node = this.createChildNodes(node);
-        var root = this.d3.hierarchy(node);
-        //console.log(this.loadedCourses);
+                var tree = this.d3.tree()
+                    .size([width, height]);
 
 
-        var nodes = tree(root);
-        //console.log(nodes);
-        var list = this.updateNodesList(nodes, width, height);
+                if (afterCall) {
+                    this.removeGraph()
+                }
 
-        var l = [];
-        this.getNodesInDepth(nodes, l)
-        var heightScale = this.getMaxNodesInDepth(list)
-        
-        var widthScale = this.getNodeListDepth(list);
+                node = this.createChildNodes(node);
+                var root = this.d3.hierarchy(node);
+                //console.log(this.loadedCourses);
 
-        if (nodes.data.courseInfo.eligibility.credits.length > 5 && heightScale < 5) {
-            heightScale = 5;
-        }
-        if(nodes.data.parents != null){
-            widthScale = widthScale+3;
-            if (heightScale < nodes.data.parents.length) {
-                heightScale = nodes.data.parents.length;
-            }
-        }else{
-            widthScale = widthScale+2;
-        }
-        if(heightScale ==1 ){
-            heightScale = 2;
-        }
-        height = heightScale * 80;
-        this.height = height;
-        width = widthScale * 320;
-        this.width = width;
-        //var links = tree(root).links();
 
-        
-        
-        var nodeList = this.updateNodesList(nodes, width, height);
-        for(var i = 0; i < nodeList.length; i++){
-            nodeList[i].depth--;
-        }
-        if(nodes.data.parents != null){
-            nodeList = this.setParentNodes(nodeList, height, width);
-        }
-        var credList = [];
-        if(nodes.data.courseInfo.eligibility.credits.length > 5){
-            credList.push(this.createCreditNode(nodeList[0]));
-        }
-        this.listOfNodes = nodeList;
-        
-            var svg = this.d3.select("#tree").append("svg")
+                var nodes = tree(root);
+                //console.log(nodes);
+                var list = this.updateNodesList(nodes, width, height);
+
+                var l = [];
+                this.getNodesInDepth(nodes, l)
+                var heightScale = this.getMaxNodesInDepth(list)
+
+                var widthScale = this.getNodeListDepth(list);
+
+                if (nodes.data.courseInfo.eligibility.credits.length > 5 && heightScale < 5) {
+                    heightScale = 5;
+                }
+                if (nodes.data.parents != null) {
+                    widthScale = widthScale + 3;
+                    if (heightScale < nodes.data.parents.length) {
+                        heightScale = nodes.data.parents.length;
+                    }
+                } else {
+                    widthScale = widthScale + 2;
+                }
+                if (heightScale == 1) {
+                    heightScale = 2;
+                }
+                height = heightScale * 80;
+                this.height = height;
+                width = widthScale * 320;
+                this.width = width;
+                //var links = tree(root).links();
+
+
+
+                var nodeList = this.updateNodesList(nodes, width, height);
+                for (var i = 0; i < nodeList.length; i++) {
+                    nodeList[i].depth--;
+                }
+                if (nodes.data.parents != null) {
+                    nodeList = this.setParentNodes(nodeList, height, width);
+                }
+                var credList = [];
+                if (nodes.data.courseInfo.eligibility.credits.length > 5) {
+                    credList.push(this.createCreditNode(nodeList[0]));
+                }
+                this.listOfNodes = nodeList;
+
+                var svg = this.d3.select("#tree").append("svg")
                     .attr("width", width)
                     .attr("height", height)
-        
-        var color = this.d3.schemeCategory10; /*för andra färger se: https://github.com/d3/d3-scale/blob/master/README.md#schemeCategory20*/
 
-        var clink = svg.selectAll(".clink")
+                var color = this.d3.schemeCategory10; /*för andra färger se: https://github.com/d3/d3-scale/blob/master/README.md#schemeCategory20*/
+
+                var clink = svg.selectAll(".clink")
                     .data(credList)
-                .enter().append("path")
+                    .enter().append("path")
                     .attr("class", "clink")
-            .attr("d", (d) => {
-                return "M" + (width - d.y + 50) + "," + (d.x + 20)
-                    + "l" + 0 + "," + ((d.px - d.x));
+                    .attr("d", (d) => {
+                        return "M" + (width - d.y + 50) + "," + (d.x + 20)
+                            + "l" + 0 + "," + ((d.px - d.x));
                     })
 
-        var link = svg.selectAll(".link")
-                .data(nodeList.slice(1))
-            .enter().append("path")
-                .attr("class", "link")/*(d)=> {
+                var link = svg.selectAll(".link")
+                    .data(nodeList.slice(1))
+                    .enter().append("path")
+                    .attr("class", "link")/*(d)=> {
                     if(d.sibling){
                         return "sibLink"
                     }else{
                         return "link";
                     }
                 }*/
-                /*.style("stroke", function(d, i){ console.log(d) 
-                    return color[d.depth] })*/
-                .attr("d", (d) => {
+                    /*.style("stroke", function(d, i){ console.log(d) 
+                        return color[d.depth] })*/
+                    .attr("d", (d) => {
+                        if (d.isSibling) {
+                            /*return "M" + (width - d.y +50) + ", " + (d.parent.x+20)
+                                 + "l" + ( ((width - d.parent.y) - (width - d.y)) ) + "," + (0)*/
+                            return "M" + (width - d.y) + "," + (d.x)
+                                + "l" + (((width - d.parent.y) - (width - d.y) + d.parent.height * 10) / 2 + 50) + "," + (0)
+                                + "l" + (0) + "," + (d.parent.x - d.x + 20)
+                                + "l" + (((width - d.parent.y) - (width - d.y) - d.parent.height * 10) / 2 + 50) + "," + (0);
+                        }
+                        else if (d.parent) {
+                            //console.log(shift);
+                            return "M" + (width - d.y + 50) + "," + (d.x + 20)
+                                + "l" + (((width - d.parent.y) - (width - d.y) + d.parent.height * 10) / 2) + "," + (0)
+                                + "l" + (0) + "," + (d.parent.x - d.x)
+                                + "l" + (((width - d.parent.y) - (width - d.y) - d.parent.height * 10) / 2) + "," + (0);
+                        }
+                    });
+
+
+                var sibLink = svg.selectAll(".sibLink")
+                    .data(nodeList.slice(1))
+                    .enter()
+                    .append("path")
+                    .attr("class", "sibLink")
+                    .attr("d", (d) => {
+                        if (d.sibling && !d.parent) {
+                            return "M" + (width - d.y + 100) + "," + (d.x + 45)/* +100 */
+                                + "L" + (width - d.sibling.y + 100) + "," + (d.sibling.x - 5)
+                        }
+                    })
+
+                var box = this.d3.selectAll(".box")
+                    .data(nodeList)
+                    .enter().append("div").attr("class", "box").attr("id", (d) => {
+                        if (d.isSibling || d.sibling) {
+                            //this.siblings.push(1)
+                        }
+                    })
+                    .on("mouseover", function (d) {
+                    })
+                    .style("left", function (d) {
+                        //console.log(d);
+                        //if(d.data.)
+                        return (width - d.y + 10) + "px";
+                    })
+                    .style("top", function (d) {
+                        return (d.x + 100) + "px"
+                    });
+
+                /*box.text((d)=> {
                     if(d.isSibling){
-                        /*return "M" + (width - d.y +50) + ", " + (d.parent.x+20)
-                             + "l" + ( ((width - d.parent.y) - (width - d.y)) ) + "," + (0)*/
-                        return "M" + (width - d.y) + "," + (d.x) 
-                         + "l" + ( ((width - d.parent.y) - (width - d.y)+ d.parent.height * 10)/2 + 50  ) + "," + (0)
-                         + "l" + ( 0 ) + "," + (d.parent.x - d.x+20)
-                         + "l" + ( ((width - d.parent.y) - (width - d.y) - d.parent.height * 10)/2 + 50 ) + "," + (0);
+                        return "s"
                     }
-                    else if(d.parent){
-                    //console.log(shift);
-                    return "M" + (width - d.y +50) + "," + (d.x+20) 
-                         + "l" + ( ((width - d.parent.y) - (width - d.y)+ d.parent.height * 10)/2  ) + "," + (0)
-                         + "l" + ( 0 ) + "," + (d.parent.x - d.x)
-                         + "l" + ( ((width - d.parent.y) - (width - d.y) - d.parent.height * 10)/2 ) + "," + (0);
-                    }
-                }); 
+                })*/
+                var orLegend = this.d3.selectAll(".legend")
+                    .data(nodeList).enter()
+                    .append("div")
+                    .attr("class", "legend")
+                    .style("left", (d) => {
+                        if (d.isSibling) {
+                            return (width - d.y + 37) + "px";
+                        }
+                    })
+                    .style("top", (d) => {
+                        if (d.isSibling) {
+                            return (d.x + 83) + "px";
+                        }
+                    })
+                    .text((d) => {
+                        if (d.isSibling) {
+                            return this.translationService.getText().legend;
+                        }
+                    });
 
+                var cbox = this.d3.selectAll(".cbox")
+                    .data(credList)
+                    .enter().append("div").attr("class", "cbox")
+                    .style("left", function (d) {
+                        return (width - d.y + 10) + "px";
+                    })
+                    .style("top", function (d) {
+                        return (d.x + 100) + "px"
+                    })
 
-        var sibLink = svg.selectAll(".sibLink")
-                        .data(nodeList.slice(1))
-                            .enter()
-                        .append("path")
-                        .attr("class", "sibLink")
-                        .attr("d", (d)=>{
-                            if(d.sibling && !d.parent){
-                                return "M" + (width - d.y + 100) + "," + (d.x+45)/* +100 */
-                                     + "L"+ (width - d.sibling.y + 100) + "," + (d.sibling.x -5 )
-                            }
-                        })
-
-        var box = this.d3.selectAll(".box")
-            .data(nodeList)
-            .enter().append("div").attr("class", "box").attr("id", (d)=>{
-                if(d.isSibling || d.sibling){
-                    //this.siblings.push(1)
-                }
-            })
-            .on("mouseover", function(d){ 
-                })
-            .style("left", function(d) {
-                //console.log(d);
-                //if(d.data.)
-                return (width - d.y+10) + "px" ;
-            })
-            .style("top", function(d) {
-                return (d.x+100) + "px"
-            });
-
-        /*box.text((d)=> {
-            if(d.isSibling){
-                return "s"
-            }
-        })*/
-        var orLegend = this.d3.selectAll(".legend")
-            .data(nodeList).enter()
-            .append("div")
-            .attr("class", "legend")
-            .style("left", (d)=>{
-                if(d.isSibling){
-                    return (width - d.y+37) + "px" ;
-                }
-            })
-            .style("top", (d)=>{
-                if(d.isSibling){
-                    return (d.x+83) + "px";
-                }
-            })
-            .text((d)=> {
-                if(d.isSibling){
-                    return this.translationService.getText().legend;
-                }
-            });
-
-        var cbox = this.d3.selectAll(".cbox")
-            .data(credList)
-            .enter().append("div").attr("class", "cbox")
-            .style("left", function(d) {
-                return (width - d.y + 10) + "px" ;
-            })
-            .style("top", function(d) {
-                return (d.x+100) + "px"
-            })
-
-            box.append("div").attr("class", (d) => {
-                var r  = "courseHeading ";
-                if(this.loadedCourses[d.data.name]){
-                    if(this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1){
-                        return r + "credReq";
-                    }else{
-                        return r;
-                    }
-                }
-            }).attr("id", (d)=> { if(d.depth != 1){ return "courseHeading2" } } )
-            .append("a").attr("routerLink", (d)=> {if(d.depth !=1){ if (this.loadedCourses[d.data.name]) return ['/graph', d.data.name]}})
-                .on("click", (d) => {
-                    if(d.depth != 1){
-                        if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
-                        this.loading = true;
-                        this.router.navigate(['/graph', d.data.name]);
-                    }else {
-                        alert(this.texts.notInDatabase);
-                    }    
-                }
-                
-            }).append("p").text((d) => {
-                if (this.loadedCourses[d.data.name]) {
-                    if (this.loadedCourses[d.data.name] != "Not found") { 
-                        if(this.selectedLanguage == "eng"){
-                          return this.loadedCourses[d.data.name].name_en
-                        }else{
-                          return this.loadedCourses[d.data.name].name_sv
+                box.append("div").attr("class", (d) => {
+                    var r = "courseHeading ";
+                    if (this.loadedCourses[d.data.name]) {
+                        if (this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1) {
+                            return r + "credReq";
+                        } else {
+                            return r;
                         }
                     }
-                    else {
-                        return d.data.name
-                    } 
-                } else {
-                        return d.data.name
-                }
-            }).attr("class", "courseCourse");  
+                }).attr("id", (d) => { if (d.depth != 1) { return "courseHeading2" } })
+                    .append("a").attr("routerLink", (d) => { if (d.depth != 1) { if (this.loadedCourses[d.data.name]) return ['/graph', d.data.name] } })
+                    .on("click", (d) => {
+                        if (d.depth != 1) {
+                            if (this.loadedCourses[d.data.name] && this.loadedCourses[d.data.name] != "Not found") {
+                                this.loading = true;
+                                this.router.navigate(['/graph', d.data.name]);
+                            } else {
+                                alert(this.texts.notInDatabase);
+                            }
+                        }
 
-        box.append("span").attr("class", (d)=>{ 
-            if(this.loadedCourses[d.data.name]){
-                if(this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1){
-                    return "tooltiptext";
-                }
-            } 
-        }).text((d)=>{
-            if(this.loadedCourses[d.data.name]){
-                if(this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1){
-                    return this.loadedCourses[d.data.name].eligibility.credits;
-                }
-            } 
-        })
+                    }).append("p").text((d) => {
+                        if (this.loadedCourses[d.data.name]) {
+                            if (this.loadedCourses[d.data.name] != "Not found") {
+                                if (this.selectedLanguage == "eng") {
+                                    return this.loadedCourses[d.data.name].name_en
+                                } else {
+                                    return this.loadedCourses[d.data.name].name_sv
+                                }
+                            }
+                            else {
+                                return d.data.name
+                            }
+                        } else {
+                            return d.data.name
+                        }
+                    }).attr("class", "courseCourse");
 
-         cbox.append("div").attr("class", "courseHeading")
-             .append("p").text((d)=> {
-                if(this.selectedLanguage == "eng"){
-                    return "Credits Eligibility Text"
-                }else{
-                    return "HP Beroendetext"
-                }
-            })
-             .attr("class", "courseCourse");
-        
-         var info = box.append("div")
-             .attr("class", (d) => { if (d.depth == 1) { return "selCourseContent" } else { return "courseContent" } }).attr("id", "show");
+                box.append("span").attr("class", (d) => {
+                    if (this.loadedCourses[d.data.name]) {
+                        if (this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1) {
+                            return "tooltiptext";
+                        }
+                    }
+                }).text((d) => {
+                    if (this.loadedCourses[d.data.name]) {
+                        if (this.loadedCourses[d.data.name].eligibility.credits.length > 5 && d.depth != 1) {
+                            return this.loadedCourses[d.data.name].eligibility.credits;
+                        }
+                    }
+                })
 
-        var cinfo = cbox.append("div").attr("class", "credCourseContent");
+                cbox.append("div").attr("class", "courseHeading")
+                    .append("p").text((d) => {
+                        if (this.selectedLanguage == "eng") {
+                            return "Credits Eligibility Text"
+                        } else {
+                            return "HP Beroendetext"
+                        }
+                    })
+                    .attr("class", "courseCourse");
 
-        cinfo.append("p").text ((d)=> { return d.credit })
+                var info = box.append("div")
+                    .attr("class", (d) => { if (d.depth == 1) { return "selCourseContent" } else { return "courseContent" } }).attr("id", "show");
 
-        info.append("p")
-            .text((d) => { 
-                if (this.loadedCourses[d.data.name]) { return this.loadedCourses[d.data.name].courseID }
-            });
+                var cinfo = cbox.append("div").attr("class", "credCourseContent");
 
-        info.append("p").text((d) => {
-            if (this.loadedCourses[d.data.name]) {
-                return this.loadedCourses[d.data.name].hp + " " + this.texts.credits;
-            } else {
-                return this.texts.notInDatabase;
+                cinfo.append("p").text((d) => { return d.credit })
+
+                info.append("p")
+                    .text((d) => {
+                        if (this.loadedCourses[d.data.name]) { return this.loadedCourses[d.data.name].courseID }
+                    });
+
+                info.append("p").text((d) => {
+                    if (this.loadedCourses[d.data.name]) {
+                        return this.loadedCourses[d.data.name].hp + " " + this.texts.credits;
+                    } else {
+                        return this.texts.notInDatabase;
+                    }
+                }).attr("class", "notInDatabase");
+
+                info.append("a").attr("href", (d) => {
+                    if (this.loadedCourses[d.data.name]) { return this.loadedCourses[d.data.name].href }
+                })
+                    .text((d) => {
+                        if (this.loadedCourses[d.data.name] != null) {
+                            if (this.selectedLanguage == "eng") {
+                                return "Course Website"
+                            } else {
+                                return "Kurshemsida"
+                            }
+                        }
+                    }).attr("class", "courseWeb").attr("target", "_blank");
+
+                var fetchDate = this.d3.selectAll(".fetchDate")
+                    .data("d")
+                    .enter().append("div")
+                    .attr("class", "fetchDate")
+                    .style("position", "fixed")
+                    .style("bottom", "0px")
+                    .style("left", "0px")
+                    .text("Latest Data fetch: 15 mars 2017");
+                window.scrollTo(nodeList[0].y, (this.width - nodeList[0].x) / 2);
             }
-        }).attr("class", "notInDatabase");
-        
-        info.append("a").attr("href", (d)=>{ 
-            if(this.loadedCourses[d.data.name]){ return this.loadedCourses[d.data.name].href } })
-            .text((d) => { if(this.loadedCourses[d.data.name] != null) 
-                {if(this.selectedLanguage == "eng"){ 
-                    return "Course Website"
-                }else{ 
-                    return "Kurshemsida"
-                }}}).attr("class", "courseWeb").attr("target", "_blank");
-
-        var fetchDate = this.d3.selectAll(".fetchDate")
-            .data("d")
-            .enter().append("div")
-            .attr("class", "fetchDate")
-            .style("position", "fixed")
-            .style("bottom", "0px")
-            .style("left", "0px")
-            .text("Latest Data fetch: 15 mars 2017");
-        window.scrollTo(nodeList[0].y, (this.width -nodeList[0].x)/2);
         }
-
         
 /*<div style ="position:fixed;bottom:0px;left:0px">Latest Data fetch: 15 mars 2017</div>*/
 
