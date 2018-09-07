@@ -1,0 +1,214 @@
+>>> .node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+>>> .node text { 
+	font: 12px sans-serif;
+}
+
+>>> .node--internal text {
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+}
+
+>>> .node--leaf{
+	text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+	color: white;
+}
+
+>>> .link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+>>> .sibLink {
+  fill: none;
+  stroke: rgb(168,168,168);
+  stroke-width: 210px;
+}
+
+>>> .clink {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+
+>>> .legend{
+	position: absolute;
+	display: inline-block;
+	width: 180px;
+}
+/*CSS för nodens utseende*/
+>>> .box {
+	width: 200px;
+	position: absolute;
+	background-color: white;
+	display: inline-block;
+	box-shadow: 0 0 30px #888888;
+}
+>>> .cbox {
+	width: 200px;
+	position: absolute;
+	background-color: white;
+	display: inline-block;
+	box-shadow: 0 0 30px #888888;
+}
+
+>>> .credReq{
+	border-top: double;
+	border-color: rgb(87,87,255);
+}
+
+>>> #graphNav{
+	position:fixed;
+	width: 102%;
+}
+
+>>> .courseCourse{
+	text-align: center;
+	color:white;
+	padding: 10px;
+	padding-right: 30px;
+	padding-left: 30px;
+	font-size: 10px;
+}
+>>> .selCourseContent {
+	margin: 15px;
+	color:black;
+	/*visibility: hidden;*/
+}
+
+>>> .credCourseContent{
+	margin: 15px;
+	color:black;
+}
+
+>>> .courseContent {
+	margin: 15px;
+	color:black;
+	display: none;
+	/*visibility: hidden;*/
+}
+/*länken*/
+>>> .courseLink {
+	color:black;
+	color: rgb(9, 30, 255);
+}
+
+>>> .courseHeading{
+	background-color: black;
+}
+>>> p {
+	margin-bottom: 0px; /* OBS OBS VIKTIG! */
+}
+
+>>> .box:hover {
+	z-index: 1;
+}
+>>>#courseHeading2 {
+	background-color: grey !important;
+}
+
+/* CSS för tooltip me creditsberoende */
+
+/* Tooltip text */
+>>> .box  .tooltiptext {
+    visibility: hidden;
+    top: -5px;
+    right: 105%; 
+    width: 120px;
+    /*width: 120px;
+    bottom: 110%;
+    left: 50%;
+    margin-left: -60px;*/
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 3;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+>>> .box:hover .tooltiptext {
+    visibility: visible;
+}
+>>> .box:hover .courseContent {
+    display: inline-block;
+    /*visibility: visible;*/
+}
+
+
+/* CSS för navbar */
+
+/* ---- menybaren ---- */
+.navbar-inverse {
+	background-color: #d4d4d4;
+	font-family: arial;
+	box-shadow: 0 0 30px #888888;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+	color: #636363;
+	margin-right: 5px;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover{
+	color:black;
+	cursor: pointer;
+}
+
+.navbar-inverse .navbar-nav>li>a:active{
+	color:black;
+}
+
+.navbar-inverse .navbar-nav>li>a:focus{
+	color:black;
+}
+
+.language{
+	font-size: 17px;
+	margin-top: 3px;
+}
+
+/* infoikonen */
+.infoicon{
+	font-size: 22px;
+	color: #636363;
+}
+
+.infoicon:hover {
+	color: black;
+	cursor: pointer;
+}
+
+/* ----- POPOVERN ----- */
+.popover{
+    width:300px;
+    height:250px;   
+}
+
+.popover-title{
+	color:red;
+}
+
+/* searchResults */
+
+.searchResults {
+	background: white;
+	position: absolute;
+}
+
+.courseResult {
+	color: white;
+	padding: 15px;
+	border-bottom: 1px solid #d4d4d4;
+}
+
+>>> .searchExample {
+	color: black;
+}

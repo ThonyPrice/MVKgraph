@@ -1,0 +1,50 @@
+/* Styling enligt prototypen */
+html body{
+	background-color: rgb(233, 233, 240);
+	font-family: 'Roboto', sans-serif;
+}
+
+p {
+	margin-bottom: 0px; /* OBS OBS VIKTIG! */
+}
+
+/* -----Noden -----*/
+.node {
+	background-color: white;
+	display: inline-block;
+	box-shadow: 0 0 30px #888888;
+}
+
+/* överskriften */
+.heading {
+	background-color: black;
+}
+.course{
+	text-align: center;
+	color:white;
+	padding: 10px;
+	padding-right: 30px;
+	padding-left: 30px;
+	font-size: 16px;
+}
+
+/* för noder till vänster/höger i gråskala*/
+#heading2 {
+	background-color: grey !important;
+}
+
+/* ----datan för kursen---- */
+.content {
+	margin: 15px;
+	color:black;
+}
+/*länken*/
+.link {
+	color:black;
+	color: rgb(9, 30, 255);
+}
+
+/* ---- hovra över så den kommer ner ----- */
+#show{
+	display: none;
+}

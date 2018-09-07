@@ -1,0 +1,68 @@
+<header>
+    <div style="position: fixed; top:0px; left: 5px;" *ngIf ="loading">
+        Loading...
+    </div>
+    <nav class="nav navbar-inverse navbar-static-top">
+        <div class="container">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class="language" (click)="changeLanguage()">{{texts.languageSwitch}}</a></li>
+                <li>
+                    <a [popover]="infoPopover">
+                        <popover-content #infoPopover
+                            title="Information"
+                            placement="auto bottom"
+                            [closeOnClickOutside]="true">
+                            {{texts.info}}
+                        </popover-content>
+                        <span class="glyphicon glyphicon-info-sign infoicon" aria-hidden="true"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="container">
+            <!-- Överskrift och introtext -->
+            <div class="row inputTextBar">
+                <h1 class="appname">{{texts.heading}}</h1>
+                <h4 class="introtext">{{texts.subheading}}</h4>
+
+            </div>
+             
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+
+                <!-- Sökrutan -->
+                <form>
+                    <div class="input-group inputBar">
+                        <input #course type="text" autofocus class="form-control" placeholder='"SF1625", "Calculus..."' value="{{lastQuery}}" (keyup)="searchCourse(course.value)" (keyup.enter)="reroute(course.value)">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" (click)="reroute(course.value)"><i class="glyphicon glyphicon-search"></i></button>
+                    
+                        </div>
+                    </div>
+                </form>
+                        
+                <!-- sökresultaten -->
+                <!--<div *ngIf="!emptyResult">-->
+                    <p *ngIf="nrResults > 0">{{nrResults}} {{texts.nrResults}}</p>
+                    <hr *ngIf="nrResults" class="lineSearch">
+                    <div class="searchResult" *ngFor="let course of searchResult">
+                        <a class="searchEx" [routerLink]="['/graph', course._source.courseID]">
+                            <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'eng'">{{course._source.name_en}}</p>
+                            <p class="searchExample" id="courseName" *ngIf="selectedLanguage == 'swe'">{{course._source.name_sv}}</p>
+                            <p class="searchExample">{{course._source.courseID}} {{course._source.hp}} {{texts.credits}}</p>
+                        </a>
+                        <hr class="lineSearch">
+                    </div>
+                <!--</div>-->
+                <p *ngIf="errorMessage">{{errorMessage}}</p>
+                <p *ngIf="emptyResult">{{texts.emptyResult}}</p>
+
+            </div>
+            <div class="col-md-3"></div>
+    </div>
+
+</main>
+
