@@ -26,6 +26,6 @@ Product is currently available at *link coming soon*
 + Thony Price [Github](https://github.com/thonyprice)
 + Jens Berntsen [GitHub](https://github.com/jensbern)
 + Teodor Karlgren [GitHub](https://github.com/tedodor)
-+ Emelie Fall [GitHub](https://github.com/newstevejobs)
++ Emmeli Fall [GitHub](https://github.com/newstevejobs)
 + Niklas Lindqvist [GitHub](https://github.com/nlindqvist)
 + William Skagerström [GitHub](https://github.com/wska)
